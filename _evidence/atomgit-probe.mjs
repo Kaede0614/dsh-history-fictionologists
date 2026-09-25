@@ -6,8 +6,8 @@
  *
  *   node _evidence/atomgit-probe.mjs > _evidence/atomgit-probe.txt
  *
- * It reads the token from `.atomgit-token` (or %ATOMGIT_TOKEN%) and **never prints it** —
- * only its length and a 2-character prefix.
+ * It reads the token from `.atomgit-token` (or %ATOMGIT_TOKEN%) and **never prints any part
+ * of it** — not even a prefix, because this report is committed to the repository.
  *
  * Why the transport matters: "this repository does not exist" answers 404 over Node's
  * `fetch`, 403 over `git ls-remote`, and 401 through PowerShell's web cmdlets. The release
@@ -27,7 +27,7 @@ const { token, source } = resolveAtomgitToken({ root: ROOT })
 const authed = token === null ? {} : { 'PRIVATE-TOKEN': token }
 
 console.log(`api        ${API}`)
-console.log(`token      ${token === null ? 'NONE' : `found via ${source}, ${token.length} chars, prefix ${token.slice(0, 2)}***`}`)
+console.log(`token      ${token === null ? 'NONE' : `found via ${source}, ${token.length} characters (content never printed)`}`)
 console.log('')
 
 async function probe(label, path, headers = {}) {

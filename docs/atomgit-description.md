@@ -117,15 +117,18 @@ Invoke-RestMethod "https://api.atomgit.com/api/v5/repos/<owner>/<repo>/branches"
 Invoke-WebRequest "https://api.atomgit.com/api/v5/repos/<owner>/<repo>/releases/tags/v0.2.0"
 # -> 404
 
-# 同一个「不存在」，**不同端点和不同传输层给的状态码都不一样**（实测，见 _evidence/atomgit-probe.txt）
-#   GET /repos/:owner/:repo            （匿名） -> 401 {"message":"401 Unauthorized"}
-#   GET /repos/:owner/:repo/branches   （匿名） -> 404 {"error_message":"Project not found:…"}
-#   git ls-remote https://atomgit.com/:owner/:repo.git -> 403 project could not be found
-# 发布脚本走 Node fetch，且**存在性探测专门问 /branches** —— 只有子资源能区分
-# 「确实没有」和「没登录」。这条差异已写进 lib/atomgit-kit.mjs 的 describeAtomgitFailure 注释。
+# 同一个「不存在」，**不同端点、不同传输层、甚至不同次调用给的状态码都不一样**
+# （实测，见 _evidence/atomgit-probe.txt）：
+#   匿名 GET /repos/:owner/:repo            -> 401（第一次跑） / 404（第二次跑）← 同一请求两种答案
+#   匿名 GET /repos/:owner/:repo/branches   -> 404
+#   git ls-remote https://atomgit.com/...   -> 403 project could not be found
+#   带令牌  以上全部                         -> 稳定 404 {"error_message":"Project not found:…"}
+#
+# 结论写进了 lib/atomgit-kit.mjs：**绝不从「未授权响应」推断任何事**。
+# 本工具链的每一次调用都带令牌，只看带令牌时的 404。
 ```
 
-再跑一遍全部只读探针（脚本只读、只 GET，**从不打印令牌**）：
+再跑一遍全部只读探针（脚本只读、只 GET，**一个字符的令牌都不打印**）：
 
 ```powershell
 node _evidence/atomgit-probe.mjs | Tee-Object -FilePath _evidence/atomgit-probe.txt

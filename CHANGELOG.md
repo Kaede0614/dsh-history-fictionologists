@@ -102,8 +102,10 @@ AtomGit 不是「换了个域名的 GitHub」。四条实测差异各自能让�
 - 预演输出实测：正确定位 `main` / HEAD、识别 `v0.2.0` **已在远端**、
   正文取自 `docs/release-notes-v0.2.0.md`（3774 字符）。
 - **AtomGit 只读探针**（`_evidence/atomgit-probe.mjs`，输出落在 `_evidence/atomgit-probe.txt`）：
-  确认账号存在、确认本工具链用的子资源端点在不存在的仓库上回 **404 `Project not found`**
-  （而裸仓库端点回 401、`git ls-remote` 回 403——同一件事三种码，见 `docs/atomgit-description.md` §5）。
+  确认账号存在；确认**带令牌**时「仓库不存在」稳定回 **404 `Project not found`**。
+  同一件事在别的条件下会给出别的码——匿名访问裸仓库端点**两次跑分别得到 401 和 404**
+  （同一请求、两个答案），`git ls-remote` 给 403。因此 `lib/atomgit-kit.mjs` 里定了一条硬规矩：
+  **绝不从「未授权响应」推断任何事**，只看带令牌的结果。
 
 ### 独立复核与修复（发布前）
 
