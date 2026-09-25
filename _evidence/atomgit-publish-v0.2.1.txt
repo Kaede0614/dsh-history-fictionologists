@@ -93,3 +93,63 @@ EXIT=0
 
 **仍未验证**：GitHub 支路（scripts/release.mjs）的真实写入路径——本机没有 GitHub 令牌，
 其写分支仍只有假 etch 的离线用例与逻辑推演。这条债**本版不还**，如实记着。
+---
+
+## [3/3] v0.2.1 正式发布（**本节记录于 v0.2.1 tag 之后**）
+
+tag `v0.2.1` 指向 `66cc557`（工作区 `66cc5576`），本节是在这个 tag 打出去之后补记的，
+因此**不在** v0.2.1 那次 tag 所包含的版本里。
+
+```
+$ node scripts/release-atomgit.mjs --repo Scombriformes/dsh-history-fictionologists --publish
+package      dsh-history-fictionologists@0.2.1
+repository   Scombriformes/dsh-history-fictionologists  (https://atomgit.com/Scombriformes/dsh-history-fictionologists)
+tag          v0.2.1  (not on the remote yet)
+branch       main  HEAD 66cc5576
+notes        docs/release-notes-v0.2.1.md (5331 chars)
+mode         PUBLISH (writes to AtomGit)
+tarball      dsh-history-fictionologists-0.2.1.tgz — 22 files, 122.7 kB, sha256 7f489eb73ed8e2c5… (read-back verified byte-for-byte against disk)
+token        found via .atomgit-token
+       pushed branch main
+       pushed tag v0.2.1
+       GET    /repos/Scombriformes/dsh-history-fictionologists/releases/tags/v0.2.1 -> 404
+       POST   /repos/Scombriformes/dsh-history-fictionologists/releases -> 200
+       uploaded dsh-history-fictionologists-0.2.1.tgz (122.7 kB)
+
+verified     https://atomgit.com/Scombriformes/dsh-history-fictionologists/releases/tag/v0.2.1
+             dsh-history-fictionologists-0.2.1.tgz  id=218040
+download     https://atomgit.com/Scombriformes/dsh-history-fictionologists/releases/download/v0.2.1/dsh-history-fictionologists-0.2.1.tgz
+             125662 bytes, sha256 7f489eb73ed8e2c5… MATCHES the built tarball
+
+RESULT: PUBLISHED (artifact verified end-to-end)  [5 API steps]
+tarball: C:\Users\masha\Desktop\hsr-history-fictionologists\dsh-history-fictionologists-0.2.1.tgz  (kept)
+```
+EXIT=0
+
+## 脚本之外的独立验证（不信脚本自己的自述）
+
+```
+$ git ls-remote --heads --tags atomgit
+66cc557665eb1ab9e21c1ec297ed8437e230bf47        refs/heads/main
+d299e573f1717312c8eb8e3a4023eb8e0822f8c0        refs/tags/v0.2.1
+66cc557665eb1ab9e21c1ec297ed8437e230bf47        refs/tags/v0.2.1^{}
+7d04686f726b43c264ad82aa4051c4018b8d2dc3        refs/tags/v0.2.1-rc.1
+a3f33bdef2e61072264dae8471adbb43a09c3225        refs/tags/v0.2.1-rc.1^{}
+  -> tag 指向的 commit 与本地 HEAD 一致
+
+$ GET /api/v5/repos/Scombriformes/dsh-history-fictionologists/releases/tags/v0.2.1
+status=200 tag=v0.2.1 name=v0.2.1 — dsh-history-fictionologists release_status=latest
+created_at=2026-09-26T04:28:11+08:00  body_chars=5331
+  asset: type=source id=undefined name=v0.2.1.zip
+  asset: type=source id=undefined name=v0.2.1.tar.gz
+  asset: type=source id=undefined name=v0.2.1.tar.bz2
+  asset: type=source id=undefined name=v0.2.1.tar
+  asset: type=attach id=218040 name=dsh-history-fictionologists-0.2.1.tgz
+  -> 4 个自动源码包 + 我们传的 1 个附件；附件 id 稳定存在（复核者列为「未验证 #4」的疑点，此地实测）
+
+$ Invoke-WebRequest https://atomgit.com/Scombriformes/dsh-history-fictionologists/releases/download/v0.2.1/dsh-history-fictionologists-0.2.1.tgz
+downloaded bytes  = 125662
+downloaded SHA256 = 7F489EB73ED8E2C59670BAD22484E8531B6989D6BC4FA3A5F37AA6F7CD7312A0
+expected   SHA256 = 7F489EB73ED8E2C59670BAD22484E8531B6989D6BC4FA3A5F37AA6F7CD7312A0
+  -> 用 PowerShell 而非本仓库脚本下载，哈希逐位相同；解包后 22 个文件 22/22 SHA256 MATCH
+```
