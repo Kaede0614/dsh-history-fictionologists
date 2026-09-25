@@ -1,7 +1,7 @@
 # GitHub 仓库描述文案（dsh-history-fictionologists）
 
-> 事实来源：`package.json`（v0.2.0 / MIT / `private: true`）、`README.md`、`lib/shell.js`（6 个 `gs_*` 工具）、
-> 实跑 `node --test`（102 用例 / 101 pass / 1 skip / 0 fail / 约 1.5 秒）。
+> 事实来源：`package.json`（v0.2.1 / MIT / `private: true`）、`README.md`、`lib/shell.js`（6 个 `gs_*` 工具）、
+> 实跑 `node --test --test-isolation=none`（144 用例 / 143 pass / 1 skip / 0 fail）。
 > 所有数字都可回查，未编造。
 >
 > 本文只是**文案备料**：About 描述、Topics、长描述、电梯陈述，复制粘贴用。
@@ -106,23 +106,48 @@ Serious formats, absurd contents: turn Honkai: Star Rail's official lore into a 
 
 ## 5. 命令备忘
 
-**本机没有 `gh` CLI**（`gh` 不在 PATH，也没有 winget 可装），所以仓库走「网页建空仓 → `git push`」，
-Release 走网页或 API。若日后装了 `gh`，下面两条可以直接用。
+**本机没有 `gh` CLI**——`gh` 不在 PATH，`winget` 虽装在 `%LOCALAPPDATA%\Microsoft\WindowsApps`
+但同样不可调用（实测 `Get-Command winget` 为空）。所以**发版不再依赖 `gh` 或 `npm`**：
+用仓库自带的 [`scripts/release.mjs`](<../scripts/release.mjs>)，它自己打 tgz、自己走 GitHub REST API。
+
+为什么不是 `gh`：装它要 MSI 写 `Program Files` 并需要管理员授权，而**这套活 Node 本来就能干**——
+实测本机 `fetch('https://api.github.com/...')` 返回 200，直连可达，代理都不需要。
+为什么不是 `npm pack`：`npm` 只有 `npm.ps1`（被执行策略挡住）与 `npm.cmd`，
+后者一写 `%LOCALAPPDATA%\npm-cache` 就 `EPERM`（实测），所以 tgz 由 Node 手工打，
+内容是 `package.json` 的 `files` 白名单。
 
 ```powershell
-# --- 有 gh 时 ---
+# --- 日常发版（本机实际路径）---
+
+# 1) 预演：什么都不写，只把「将要发生的每一步」打出来
+node scripts/release.mjs --dry-run
+
+# 2) 真发：建/推 tag → 建或更新 Release → 传 tgz → 复查 Release 与附件
+node scripts/release.mjs --publish
+
+# 3) 顺带同步仓库 About 描述与 topics（来源就是本文档）
+node scripts/release.mjs --publish --sync-meta
+```
+
+前置条件只有一条：一把 GitHub classic token（scope `repo`），放在
+环境变量 `GH_TOKEN`，或写进仓库根的 `.gh-token`（**已 gitignore**）。脚本从不打印 token 本身。
+
+脚本是**幂等**的：Release 已存在就 `PATCH` 更新，同名附件先删后传，所以重跑不会产生重复资产。
+`--publish` 前会拒绝脏工作区（除非 `--allow-dirty`），并在归档里扫 CR 字节——
+本仓库有「读自己源码做逐字断言」的用例，CRLF 制品是真缺陷而不是风格问题。
+
+> 自己动手写脚本前值得知道的三个坑（都实测过）：
+> 1. `spawnSync(..., {stdio:'pipe'})` 在本机沙箱下 `EPERM`——子进程开不了命名管道。
+>    脚本改用一个**真实文件描述符**接住子进程输出。
+> 2. 别用 `cmd /s /c "... > \"file\""` 替代：`/s` 会剥掉外层引号，git 直接报
+>    「文件名、目录名或卷标语法不正确」，而且**失败得很安静**（HEAD/branch 全变 unknown）。
+> 3. `node --test` 默认每个文件起一个子进程，同样 `EPERM`；本机要加 `--test-isolation=none`。
+
+```powershell
+# --- 万一以后装了 gh，这两条仍然可用（本仓库不需要）---
 gh repo create Kaede0614/dsh-history-fictionologists --public --source=. --push `
   --description "基于《崩坏：星穹铁道》官方世界观的 DSH 二创插件（/gs）：神人制造机出科幻灵感、构史文集写短篇、星际构史播报编新闻；12 个 Wiki 数据源增量抓取并本地缓存，抓不到就自动回退缓存。非营利二创，MIT。"
 
-# --- 没有 gh 时（本机实际路径）---
-# 1) 在 https://github.com/new 建一个空仓库（不要勾 README/.gitignore/LICENSE）
-git remote add origin https://github.com/Kaede0614/dsh-history-fictionologists.git
-git push -u origin main
-git tag -a v0.2.0 -m "v0.2.0" ; git push origin v0.2.0
-# 2) Releases → Draft a new release → 选 v0.2.0 → 正文用 docs/release-notes-v0.2.0.md
-#    → 附上 dsh-history-fictionologists-0.2.0.tgz
-
-# topics：建完仓库后在网页 About 齿轮里加，或装 gh 后用 API
 gh api -X PUT repos/Kaede0614/dsh-history-fictionologists/topics `
   -f names[]=dsh -f names[]=dsh-plugin -f names[]=deepseek-harness `
   -f names[]=honkai-star-rail -f names[]=fanfiction -f names[]=worldbuilding `
@@ -130,3 +155,4 @@ gh api -X PUT repos/Kaede0614/dsh-history-fictionologists/topics `
 ```
 
 > `package.json` 里的 `repository` / `homepage` / `bugs` 已经指向这个地址，与上面一致，无需再改。
+> 仓库首次建仓（网页建空仓 → `git push`）那条老路径仍然有效，只是 `release.mjs` 之后接管了发版。

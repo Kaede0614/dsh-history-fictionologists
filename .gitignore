@@ -11,6 +11,16 @@ npm-debug.log*
 pnpm-debug.log*
 .pnpm-store/
 
+# ---- GitHub 凭据（scripts/release.mjs 会读，绝不入库）----
+# 没有 gh CLI 时用它替代：把 classic token（scope: repo）写进这个文件。
+# 更好的做法是用环境变量 GH_TOKEN，这个文件只是不想配环境变量时的退路。
+.gh-token
+
+# ---- AtomGit 凭据（scripts/release-atomgit.mjs 会读，绝不入库）----
+# 在 https://atomgit.com/setting/token-classic 建 classic token（仓库读写权限），
+# 整行粘进来即可（`ATOMGIT_TOKEN=xxx` 这种写法也认）。环境变量 ATOMGIT_TOKEN 优先级更高。
+.atomgit-token
+
 # ---- 工作区本地数据：游戏原始文本（米哈游版权内容，20+ MB）----
 # 功能 2（构史文集）与功能 3（星际构史播报）靠它避让既有故事冲突。
 # 体积与版权都不适合随仓库分发，请自备（README 有说明）。

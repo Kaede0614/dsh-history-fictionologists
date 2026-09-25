@@ -2,6 +2,148 @@
 
 本插件遵循 [Semantic Versioning](https://semver.org/lang/zh-CN/)。
 
+## 0.2.1 — 2026-09-26
+
+**双平台发版工具链**：不再需要 `gh` CLI，也不再需要可用的 `npm`；并新增 AtomGit 支路。
+
+起因是两次发版都撞上「没装 CLI」。查证结果是本机环境两条路都断：
+`gh` 完全不在 PATH（`Get-Command gh` 为空），`winget` 虽存在但同样不可调用；
+`npm` 只有 `npm.ps1`（被执行策略挡住）与 `npm.cmd`，后者一写 `%LOCALAPPDATA%\npm-cache`
+就 `EPERM`（实测）。**但发布本身没失败**——仓库与 `v0.2.0` Release（含 tgz 附件、12 个 topics、
+MIT 识别）都是好的，缺的只是命令行那条自动化路径。
+
+本版把这条路补齐，并同时补上 AtomGit：本插件从此在 **GitHub 与 AtomGit 双平台**分发。
+按本仓库的语义化版本表「工具链/文档 → patch」，故为 `0.2.1`；**插件运行时行为零变更**
+（`lib/shell.js` 与提示词一字未动，`STYLE_GUIDE` 仍是 1291 字符 / 57 行）。
+
+### 新增
+
+#### GitHub 支路
+
+- **[`lib/release-kit.mjs`](<lib/release-kit.mjs>)**：发版工具链的可测内核。
+  - `parseRepoSlug` 认全 `git+https` / `git@` / `github:` 简写 / 裸 `owner/repo` 五种写法；
+  - `resolveToken`：`GH_TOKEN` → `GITHUB_TOKEN` → 仓库根 `.gh-token`（已 gitignore），**从不打印 token**；
+  - `extractChangelogSection` / `resolveReleaseNotes`：正文优先级
+    `--notes` → `--notes-file` → `docs/release-notes-v<版本>.md` → `CHANGELOG` 对应小节；
+    **全都没有时返回 null 让发版失败**，而不是发一个空正文的 Release；
+  - `buildTarball` / `readTarball`：**手工写的** gzip+tar 读写器（纯 Node，不调 `npm pack`
+    也不调系统 `tar`）。内容严格来自 `package.json` 的 `files` 白名单；
+  - `createGitHubClient`：`fetch` 注入式 REST 客户端，支持二进制附件上传（**不经过
+    `JSON.stringify`**，也不自带 `content-length`）；
+  - `readRepoMeta`：从 [`docs/github-description.md`](<docs/github-description.md>) 按**形状**
+    （围栏里的裸 topic 列表）取 About 描述与 topics，避免文档与仓库设置各说各话；
+  - `describeApiFailure`：把 401 与 403 分开报，因为「没 token」和「token 权限不够」修法不同。
+- **[`scripts/release.mjs`](<scripts/release.mjs>)**：发版命令。
+  - 默认**只预演**（把将要打的每个 API 都打出来）；`--publish` 才真写；
+  - 幂等：Release 已存在走 `PATCH`，同名附件先删后传，重跑不产生重复资产；
+  - `--publish` 前会**拒绝脏工作区**（`--allow-dirty` 可越过），
+    并在归档里扫 CR 字节并告警——本仓库有「读自己源码逐字断言」的用例，CRLF 制品是真缺陷；
+  - 传完附件后**复查** Release 与附件清单，并在 `--json` 下输出结构化结果；
+  - `--sync-meta` 顺带同步 About 描述与 topics；`--draft` / `--prerelease` / `--no-asset` 等常规开关。
+- **[`test/release.test.mjs`](<test/release.test.mjs>)**：22 个全离线用例。HTTP 层用假 `fetch`
+  记录真实请求（方法/URL/头/体），**不触网**；tgz 层把 `buildTarball` 的产物用
+  `readTarball` 逐字节读回来比对，并用仓库真实的 `files` 白名单整体打一遍。
+
+#### AtomGit 支路
+
+AtomGit 不是「换了个域名的 GitHub」。四条实测差异各自能让一次照搬的发布**静默失败**：
+认证头是 GitLab 风格的 `PRIVATE-TOKEN`；Release 响应里**没有数字 `id`**，只能按 `tag_name` 定位；
+**没有** `POST /releases/:id/attach_files`（返回 404），附件走**签名两步法**；
+**同名附件覆盖不生效**——PUT 返回成功，用户下到的还是旧文件。详见
+[`docs/atomgit-description.md`](<docs/atomgit-description.md>)。
+
+- **[`lib/atomgit-kit.mjs`](<lib/atomgit-kit.mjs>)**：AtomGit 的可测内核。
+  - `parseAtomgitSlug` 认全 `git+https` / `git@` / `ssh://` / `atomgit:` 简写 / 裸 `owner/repo`，
+    并**明确拒绝 GitHub 地址**——`--repo` 指错平台会静默发到同名仓库，这条 guard 就是防它的；
+  - `resolveAtomgitToken`：`ATOMGIT_TOKEN` → `ATOMGIT_ACCESS_TOKEN` → 仓库根 `.atomgit-token`（已 gitignore）；
+  - `createAtomgitClient`：认证走 **`PRIVATE-TOKEN` 头**；
+  - `uploadReleaseAsset`：**签名两步法**——先 `GET …/releases/:tag/upload_url?file_name=…`
+    拿 `{url, headers}`，再把 `x-obs-*` 头**原样**带回 `PUT`。少一个头，对象存储要么拒绝、
+    要么写入成功但**回调不触发**（附件在页面上根本不出现）；
+  - `buildAtomgitReleaseBody`：创建与更新发送**同一个完整 body**，因为该平台的
+    `PATCH /releases/:tag` 不接受部分更新；`release_status` 只有 `pre | latest`，**没有 draft**；
+  - `describeAtomgitFailure`：401 / 403 / 404 分开报，并**把必需的 scope 清单写进 403 的正文**——
+    实测「令牌有效但一个 scope 都没勾」是本站最像「令牌坏了」的失败
+    （`no scopes:read_user` 与 `CH.00000403 apig token has not permission to request url`
+    两种报错、同一个根因），光看状态码根本修不对。
+- **[`scripts/release-atomgit.mjs`](<scripts/release-atomgit.mjs>)**：AtomGit 发版命令。
+  - 默认只预演，且预演**按真实执行顺序**打印调用（初版按代码排布打印，顺序与实跑不符，已改）；
+  - `--create-repo`：仓库不存在时走 `POST /orgs/:owner/repos` 建仓（`public` 是整数 0/1）；
+  - 幂等：Release 已存在走 `PATCH`；**同名附件先 `DELETE` 再传**——该平台同名覆盖不生效，
+    这是必须的一步而不是优化；
+  - 传完把附件**下载回来比 sha256**：「API 里有一个同名附件」与「用户下到的字节就是构建的字节」
+    不是一回事；
+  - 令牌不进 argv、不进日志：API 走请求头，`git push` 走一次性 `credential.helper`
+    （先 `-c credential.helper=` 清空继承来的 helper，否则本机 Git Credential Manager
+    不认识 `atomgit.com`，会退回交互式提示）；
+  - 沿用 GitHub 支路的脏工作区拒绝、CR 字节扫描、`--json` 结构化输出与「没有正文就失败」。
+- **[`test/atomgit-release.test.mjs`](<test/atomgit-release.test.mjs>)**：20 个全离线用例。
+  签名两步法用假 `fetch` 逐字节核对（第二步必须带上全部 `x-obs-*` 头、body 是 Buffer 而非 JSON、
+  **令牌不得跟到对象存储**），并有「`upload_url` 没给 headers 时**不许**自作主张 PUT 上去」的反例。
+- **[`docs/atomgit-description.md`](<docs/atomgit-description.md>)**：平台差异备忘 + About 文案 +
+  实测探针原始输出。`lib/atomgit-kit.mjs` 的文件头引用它作为「那四条差异从哪来」的依据。
+
+#### 共同
+
+- **`package.json`** 补 `release:plan` / `release:publish` / `release:atomgit:plan` /
+  `release:atomgit:publish` 四个脚本；**`.gitignore`** 加 `.gh-token` 与 `.atomgit-token`。
+- **README 安装章节**补 AtomGit 直装地址，并写明「**AtomGit 是分发镜像，不是主仓**」——
+  `package.json` 的 `repository` / `homepage` / `bugs` 仍指向 GitHub，不改成其中之一。
+
+### 验证
+
+- `node --test --test-isolation=none`：**148 个用例，147 pass / 0 fail / 1 skip**
+  （本版新增的 22 + 24 = 46 个全过；skip 仍是缺 `_probe/` 夹具那一个）。
+- **制品独立交叉验证**（不只信自己写的读回器）：把 `dsh-history-fictionologists-0.2.1.tgz`
+  交给**系统 `tar -xzf`** 解包，与工作区逐文件比 SHA256 —— **22 个条目 / 22 MATCH / 0 MISMATCH**；
+  `tar -tf` 列出的 22 条与 `files` 白名单一致；解包出的 `lib/shell.js` **CR 字节 0**
+  （`.gitattributes` 生效）。制品的 SHA256/SHA1 与字节数记在 `docs/release-notes-v0.2.1.md`
+  ——**故意不写进本文件**：`CHANGELOG.md` 本身在 tgz 里，把哈希写进来就成了自指，哈希会随之变化。
+- 预演输出实测：正确定位 `main` / HEAD、识别 `v0.2.0` **已在远端**、
+  正文取自 `docs/release-notes-v0.2.0.md`（3774 字符）。
+- **AtomGit 只读探针**（`_evidence/atomgit-probe.mjs`，输出落在 `_evidence/atomgit-probe.txt`）：
+  确认账号存在、确认本工具链用的子资源端点在不存在的仓库上回 **404 `Project not found`**
+  （而裸仓库端点回 401、`git ls-remote` 回 403——同一件事三种码，见 `docs/atomgit-description.md` §5）。
+
+### 独立复核与修复（发布前）
+
+本版在发布前做了一次**独立对抗式复核**：复核者只读、不改任何文件，逐条比对官方 OpenAPI 文档、
+实跑 20 个单测，并用可编程假 `fetch` 专打失败路径。结论「有条件通过」，无 blocker，
+但抓出 19 条问题，其中两条是**把失败当成功**。已全部修掉：
+
+- **附件没传上去 / 下载字节不符，只打 warning 就退出 0 并报 `PUBLISHED`**（high）。
+  这正是第 4 条平台差异唯一能被发现的信号——脚本自己做下载回验就是为了抓它，抓到却不失败。
+  现在三种情况一律 `ERROR` + `result: published_incomplete` + **退出码 1**：
+  附件未列在 Release 上、下载回来的 sha256 不符、回验根本跑不起来。
+- **`--publish --dry-run` 一个字节都没写却报 `PUBLISHED`**（high，**兄弟支路同型**）。
+  两个开关现在互斥，用法错退出 2；`scripts/release.mjs` 一并修。
+- `upload_url` 返回空 headers 或缺一个 `x-obs-*` 时照常 PUT（medium）——现在四个必需头逐一校验，
+  缺任一就**拒绝上传**。那正是「写入成功但回调不触发、附件永不出现」的成因。
+- PUT 判定用 `>= 400` 会把 **302 当成功**（medium）——改为 2xx 谓词 `isSuccessStatus`。
+- 先 `DELETE` 旧附件再 PUT 新附件的**非原子窗口**（medium）——失败时现在明确打印
+  「附件已被删除、该 Release 目前没有制品、重跑命令」，并带上对象存储的原始错误体
+  （OBS 的 `<Code>SignatureDoesNotMatch</Code>` 是唯一有用的诊断）。
+- `/releases/tags/${tag}` **未转义**（medium）——`release/1.0` 这类合法 tag 会走错路由并重复建 Release。
+- 建仓把 **400 当「已存在」**（medium）——官方语义里 400 是「缺必需属性」，只有 409/422 才算已存在。
+- `refs/tags/v0.2.0*` 通配把 **`v0.2.0-rc.1` 当成 `v0.2.0` 存在**（medium，**兄弟支路同源**）——
+  会让脚本跳过推 tag，再由服务端在默认分支 tip 上建 tag，而日志说「already on the remote」。
+  改为精确 ref 匹配，`scripts/release.mjs` 一并修。
+- **远端** tag 指向旧 commit 的告警丢失（medium；`tagState.peeled` 成了死代码）——已补回。
+- 预签名 OBS URL（含 `AccessKeyId`/`Signature`）会被 `JSON.stringify` 写进异常文本（low）——已脱敏。
+- `export ATOMGIT_TOKEN=…` 粘贴不被剥离，整行被当成令牌（low，兄弟支路同型）——已修。
+- `--skip-tag-push` 在 tag 本地与远端都不存在时静默放过（low）——现在报错退出 1。
+- 远端缺失时日志仍打印「git ls-remote failed」，与上一行自相矛盾（low）——已按情况分措辞。
+- 新增 4 个离线用例覆盖上述失败路径（非 2xx PUT、`headers: {}`、缺单个必需头、`export` 粘贴），
+  并加一条**结构性断言**守住脚本层不变量——脚本在加载时就跑 `main()`、无法 `import`，
+  这一点在用例里写明了，没有假装它是行为测试。
+
+复核者另外确认了两件「不是缺陷」的事，避免过度修正：`PRIVATE-TOKEN` 写法、四个 Release 端点
+路径与方法、建仓 body 字段、`release_status: pre|latest`、`assets[]` 字段名，都逐条对得上官方文档。
+
+- **未验证**：GitHub 支路的 `--publish` **真实写入路径**仍未实跑过（本机没有 GitHub 令牌），
+  写分支只有假 `fetch` 的单元测试与逻辑推演。按本仓库的纪律**只记「未验证」，不记「通过」**。
+- **未验证**：`--sync-meta` 未对真实 GitHub 仓库执行过（同样因为无令牌）。
+
 ## 0.2.0 — 2026-09-26
 
 新增**用户设定补充层**（`hsr-worldview-cache/user-canon.json`）：把你的设定裁定与抓来的缓存

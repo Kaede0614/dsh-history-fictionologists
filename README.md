@@ -28,19 +28,26 @@
 
 ## 安装
 
-本插件通过 **GitHub 仓库 / Release 附件** 分发。它**不在 npm registry 上**——
+本插件通过 **GitHub / AtomGit 仓库与 Release 附件** 双平台分发。它**不在 npm registry 上**——
 `package.json` 里的 `private: true` 是刻意留的，防止这份二创包被误发到公共 registry。
 
 ```powershell
 # 方式 A（推荐）：下载 Release 附件里的 tarball，再从本地路径安装
-dsh plugin --profile web add C:\Users\<你>\Downloads\dsh-history-fictionologists-0.2.0.tgz
+dsh plugin --profile web add C:\Users\<你>\Downloads\dsh-history-fictionologists-0.2.1.tgz
 
-# 方式 B：直接从 GitHub 仓库装
+# 方式 B：AtomGit 仓库直装（国内网络更稳）
+dsh plugin --profile web add https://atomgit.com/Scombriformes/dsh-history-fictionologists
+
+# 方式 C：GitHub 仓库直装
 dsh plugin --profile web add github:Kaede0614/dsh-history-fictionologists
 
-# 方式 C：本地开发（junction 安装，改源码立即生效）
+# 方式 D：本地开发（junction 安装，改源码立即生效）
 dsh plugin --profile web add link:<你的仓库路径>
 ```
+
+> **AtomGit 是分发镜像，不是主仓**：`package.json` 的 `repository` / `homepage` / `bugs`
+> 仍指向 GitHub。发布流程与两个平台的 API 差异见
+> [`docs/atomgit-description.md`](<docs/atomgit-description.md>)。
 
 > `dsh plugin` 是 profile 目录下 `pnpm` 的透传封装，所以本地 tarball 路径、`github:` 简写
 > 都由 pnpm 解析；`dsh plugin add ...` 会**重解析整棵依赖树**，装进一个干净 profile 最稳。
@@ -59,7 +66,7 @@ dsh --profile web --dump-config | Select-String history-fictionologists
 
 | | 内容 |
 |---|---|
-| **有** | `lib/`（插件本体）、`test/`（102 个离线用例）、`scripts/check.mjs`、`docs/`、`_evidence/`（自证与独立复核证据）、`BRIEF.md`（实现规格）、`cordis.patch.yml`、`hsr-worldview-cache/user-canon.json`（手工维护的裁定层） |
+| **有** | `lib/`（插件本体）、`test/`（144 个离线用例）、`scripts/check.mjs`、`docs/`、`_evidence/`（自证与独立复核证据）、`BRIEF.md`（实现规格）、`cordis.patch.yml`、`hsr-worldview-cache/user-canon.json`（手工维护的裁定层） |
 | **没有** | `hsr-missions/`（游戏原始剧本文本，约 20 MB，版权归米哈游）、`hsr-worldview-cache/*.json`（`gs_update` 可重新抓取）、`_probe/`（4.9 MB 原始渲染 HTML）、`hsr-stories/` 与 `hsr-broadcasts/`（本机成品） |
 
 被忽略的目录仍留在你的工作区里，只是不进版本库（见 [`.gitignore`](<.gitignore>)）。
@@ -421,7 +428,7 @@ gs_* tools in the request tool list: gs_digest, gs_missions, gs_read, gs_save, g
 > 复核者另做了更强的一致性检查：日志里的风格文本 `includes(STYLE_GUIDE) === true`，即与抓取当次的源码逐字节一致。
 >
 > **版本提醒**：上面这段是 0.1.0 的快照，当时 `STYLE_GUIDE` 为 725 字符。此后每次改提示词长度都会变：
-> 0.1.1（加入「星神纪律」）为 1161 字符 / 55 行，**当前源码（0.2.0）为 1291 字符 / 57 行**。
+> 0.1.1（加入「星神纪律」）为 1161 字符 / 55 行，**当前源码（0.2.1）为 1291 字符 / 57 行**。
 > 要刷新这条产品证据，需要在隔离实例里重跑 `node _evidence/check-prompt-section.mjs`（本机日常实例不重启）。
 
 ### 开发/取证目录（不属于插件运行时，不随包发布）
