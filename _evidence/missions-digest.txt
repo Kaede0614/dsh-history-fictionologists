@@ -1,0 +1,669 @@
+dsh-history-fictionologists · missions + digest self-proof
+command : node _evidence/run-missions.mjs
+cwd     : C:\Users\masha\Desktop\hsr-history-fictionologists
+workspace: C:\Users\masha\Desktop\hsr-history-fictionologists
+node    : v24.21.0
+time    : 2026-09-25T17:48:47.335Z
+exports missions.js: booksByTitle, catalogBooks, catalogTrailblaze, conflictBrief, loadSeries, scanMissions
+exports digest.js  : bookDigest, broadcastDigest, equationNameDigest, missionDigest
+
+==============================================================================
+## 1. scanMissions(cfg) — real workspace
+==============================================================================
+[scanMissions] ok=true  JSON.stringify(result).length=6526 chars  Buffer.byteLength=8802 bytes
+  scalars: {"ok":true,"root":"string(63)","seriesRoot":"string(74)","series":"array(7)","counts":"object(5 keys)","warnings":"array(0)"}
+  first 400 chars of JSON:
+  {"ok":true,"root":"C:\\Users\\masha\\Desktop\\hsr-history-fictionologists\\hsr-missions","seriesRoot":"C:\\Users\\masha\\Desktop\\hsr-history-fictionologists\\hsr-missions\\sr-开拓续闻-完整","series":[{"name":"亏成首富，从不要钱开始","region":"千星城","version":"4.5","missionCount":7,"filesOnDisk":7,"missions":[{"name":"一名陌生网红的挑战","file":"01_一名陌生网红的挑战.json","number":"01","region":"千星城","version":"4.5","exists":true},
+  series: 亏成首富，从不要钱开始(千星城·4.5·7) | 冬梦激醒(雅利洛-Ⅵ·1.4·3) | 庸与神的冠冕(空间站「黑塔」·1.6·2) | 明霄竞武试锋芒•上(仙舟「罗浮」·2.4·9) | 明霄竞武试锋芒•下(仙舟「罗浮」·2.5·14) | 狐斋志异(仙舟「罗浮」·1.5·9) | 蕉恶非道•无忍义之战(匹诺康尼·2.6·8)
+  first series missions: 01/一名陌生网红的挑战/01_一名陌生网红的挑战.json/exists=true | 02/不要钱挑战•第一日/02_不要钱挑战•第一日.json/exists=true | 03/不要钱挑战•第二日/03_不要钱挑战•第二日.json/exists=true
+
+==============================================================================
+## 2. catalogTrailblaze(cfg) — 13.9 MB file, wall-clock timing, size proof
+==============================================================================
+file size: 13945596 bytes
+WALL-CLOCK catalogTrailblaze over 3 runs: 63.2 ms / 59.2 ms / 75.5 ms  (median 63.2 ms, min 59.2 ms)
+module-internal timings of run 1: read 41.45 ms / parse 20.14 ms / total 61.59 ms
+JSON.stringify(result).length = 32022 chars  (limit 204800)  -> PASS < 200 KB
+Buffer.byteLength(JSON.stringify(result)) = 71925 bytes
+[catalogTrailblaze] ok=true  JSON.stringify(result).length=32022 chars  Buffer.byteLength=71925 bytes
+  scalars: {"ok":true,"file":"string(88)","source":"string(65)","generated":"string(19)","stats":"object(3 keys)","excludedActs":"array(2)","counts":"object(7 keys)","filter":"object(1 keys)","bounds":"object(4 keys)","timings":"object(3 keys)","acts":"array(5)","warnings":"array(0)"}
+  first 400 chars of file:
+  C:\Users\masha\Desktop\hsr-history-fictionologists\hsr-missions\trailblaze_missions.json
+  stats: {"acts":5,"series":18,"missions":147}  counts: {"acts":5,"series":18,"missions":147,"returnedMissions":147,"truncatedSeries":1,"omittedMissions":0,"descriptionsTruncated":3}
+  序幕•空间站「黑塔」: 今天是昨天的明天[7/7]
+  第一幕•雅利洛-Ⅵ: 于枯索的冬夜里[13/13] 于曈昽的骄阳下[11/11]
+  第二幕•仙舟「罗浮」: 乘槎驭风仙窟游[11/11] 云树百丈蔽重楼[5/5] 劫波渡尽战云收[1/1]
+  第三幕•匹诺康尼: 喧哗与骚动（系列任务）[11/11] 鸽群中的猫[9/9] 在我们的时代里[12/12] 再见，匹诺康尼[7/7] 在第八日启程[6/6] 记忆是梦的开场白[8/8,truncated]
+  第五幕•二相乐园/千星城: 欢迎来到乐园[10/10] 献给破晓的失控[7/7] 如是，众生欢笑不已[12/12] 沉于生者的忘川[7/7] 鸣笛于归寂之时[5/5] 挥掷千星的筹码[5/5]
+[catalogTrailblaze(limit=2)] ok=true  JSON.stringify(result).length=9883 chars  Buffer.byteLength=19783 bytes
+  scalars: {"ok":true,"file":"string(88)","source":"string(65)","generated":"string(19)","stats":"object(3 keys)","excludedActs":"array(2)","counts":"object(7 keys)","filter":"object(1 keys)","bounds":"object(4 keys)","timings":"object(3 keys)","acts":"array(5)","warnings":"array(0)"}
+  first 400 chars of file:
+  C:\Users\masha\Desktop\hsr-history-fictionologists\hsr-missions\trailblaze_missions.json
+[catalogTrailblaze(act=第三幕, series=鸽群中的猫)] ok=true  JSON.stringify(result).length=2449 chars  Buffer.byteLength=4599 bytes
+  scalars: {"ok":true,"file":"string(88)","source":"string(65)","generated":"string(19)","stats":"object(3 keys)","excludedActs":"array(2)","counts":"object(7 keys)","filter":"object(3 keys)","bounds":"object(4 keys)","timings":"object(3 keys)","acts":"array(1)","warnings":"array(0)"}
+  first 400 chars of file:
+  C:\Users\masha\Desktop\hsr-history-fictionologists\hsr-missions\trailblaze_missions.json
+
+==============================================================================
+## 3. catalogBooks(cfg) — 498 books, metadata only
+==============================================================================
+[catalogBooks] ok=true  JSON.stringify(result).length=50258 chars  Buffer.byteLength=95179 bytes
+  scalars: {"ok":true,"file":"string(92)","bytes":2299473,"count":498,"returned":498,"truncated":false,"bounds":"object(2 keys)","books":"array(498)","warnings":"array(0)"}
+  first 400 chars of file:
+  C:\Users\masha\Desktop\hsr-history-fictionologists\hsr-missions\books_without_amphoreus.json
+  count=498 returned=498 truncated=false
+  book[0]: {"title":"「黑塔」资产定损清单","type":"资料","region":"空间站「黑塔」","description":"由「黑塔•万有应物科」拟定的资产定损清单，记载了数千项货损，其赔偿金额堪称天文数字，由星际和平公司一力承担。","characters":"温世齐"}
+  book keys union: characters, description, region, title, type
+
+==============================================================================
+## 4. booksByTitle(cfg, titles) — bodies from 分卷[].内容, 4000-char cap
+==============================================================================
+[booksByTitle(2 titles)] ok=true  JSON.stringify(result).length=6840 chars  Buffer.byteLength=17786 bytes
+  scalars: {"ok":true,"file":"string(92)","requested":"array(2)","matched":2,"missing":"array(0)","totalChars":5499,"truncated":false,"bounds":"object(2 keys)","books":"array(2)","warnings":"array(0)"}
+  first 400 chars of file:
+  C:\Users\masha\Desktop\hsr-history-fictionologists\hsr-missions\books_without_amphoreus.json
+  matched=2 missing=[] totalChars=5499 truncated=false
+  「黑塔」资产定损清单: volumes=1 chars=855 truncated=false
+    body head: "……\n\n编号#3471：拒绝沉默\n\n资产分类：奇物收藏\n\n物品描述：一组会自动演出的微型管弦乐器，将在分贝为0的情况下响起，奏弄一些尚可入耳的异星小调。若分贝高于0，则会维持沉默。\n\n定损程度：80%\n\n定损描述：功能倒错，性状颠倒，如今环"
+  黑塔的手稿: volumes=4 chars=720,612,1467,1845 truncated=false
+    body head: "作者序\n\n那一日，烛墨学派的克利欧学士问我：大人可想为宇宙写些什么？我说不想。她就正告我说：大人还是写一些罢，这是公司的请求。\n该处口吻模仿鲁迅《纪念刘和珍君》的开头\n\n老实说，此事我之前从未想过；我们天才俱乐部有自己的规则，甚少与外界分享"
+[booksByTitle(bodyChars=80)] ok=true  JSON.stringify(result).length=675 chars  Buffer.byteLength=1051 bytes
+  scalars: {"ok":true,"file":"string(92)","requested":"array(1)","matched":1,"missing":"array(0)","totalChars":80,"truncated":true,"bounds":"object(2 keys)","books":"array(1)","warnings":"array(1)"}
+  warnings: ["正文已按每卷 80 字 / 单次 32000 字上限截断"]
+  first 400 chars of file:
+  C:\Users\masha\Desktop\hsr-history-fictionologists\hsr-missions\books_without_amphoreus.json
+  truncated=true volume[0].truncated=true bodyChars=80
+[booksByTitle(unknown title)] ok=false  JSON.stringify(result).length=294 chars  Buffer.byteLength=340 bytes
+  scalars: {"ok":false,"file":"string(92)","requested":"array(1)","matched":0,"missing":"array(1)","totalChars":0,"truncated":false,"bounds":"object(2 keys)","books":"array(0)","warnings":"array(1)"}
+  warnings: ["未匹配到：这本书不存在"]
+  first 400 chars of file:
+  C:\Users\masha\Desktop\hsr-history-fictionologists\hsr-missions\books_without_amphoreus.json
+
+==============================================================================
+## 5. loadSeries(cfg, seriesName) — no dialogue text, no 剧情wiki原文
+==============================================================================
+[loadSeries(狐斋志异)] ok=true  JSON.stringify(result).length=3791 chars  Buffer.byteLength=8529 bytes
+  scalars: {"ok":true,"root":"string(63)","series":"string(4)","region":"string(6)","version":"string(3)","missionCount":9,"indexed":9,"truncated":true,"bounds":"object(3 keys)","missions":"array(9)","warnings":"array(1)"}
+  warnings: ["1 条任务流程被截断到 300 字"]
+  first 400 chars of JSON:
+  {"ok":true,"root":"C:\\Users\\masha\\Desktop\\hsr-history-fictionologists\\hsr-missions","series":"狐斋志异","region":"仙舟「罗浮」","version":"1.5","missionCount":9,"indexed":9,"truncated":true,"bounds":{"descriptionChars":240,"objectiveChars":300,"chaptersPerMission":30},"missions":[{"name":"游园惊梦","description":"洪炉破碎，岁阳逃逸，罗浮仙舟上十王司判官们行动起来。今夜，被遗弃许久的废园里妖氛弥漫，却有两位陌客不期而入，平白谱写出一段怪谈。","characters":["藿藿","寒鸦","雪衣"
+  series=狐斋志异 region=仙舟「罗浮」 version=1.5 missions=9 jsonChars=3791
+  mission keys union: chapters, characters, description, name, objective
+  mission[0]: {"name":"游园惊梦","description":"洪炉破碎，岁阳逃逸，罗浮仙舟上十王司判官们行动起来。今夜，被遗弃许久的废园里妖氛弥漫，却有两位陌客不期而入，平白谱写出一段怪谈。","characters":["藿藿","寒鸦","雪衣","桂乃芬"],"chapters":["任务接取短信","在金人巷与桂乃芬谈谈","与桂乃芬一起前往绥园","探索绥园！出来吧！小鬼们！","与藿藿交谈，让她为你们引路离开","在谈狐林中寻找走失的桂乃芬","寻找幻障迷境的出口","寻找幻障迷境的出口","自志怪话本中寻找线索","与藿藿汇合","（可选）与浮烟聊聊","（可选）与尾巴聊聊","与藿藿聊聊，安慰一下她的情绪","（可选）自另一册志怪话本中寻找线索","调查古怪的铜镜","听听铜镜中传出的声音，分辨其中的真假","与雪衣谈谈，了解绥园的情况","按浮烟的提议，前往燕乐亭与恚炎交谈
+  contains 剧情内容? false  contains 剧情wiki原文? false  contains 台词 '———'? false
+  largest series 明霄竞武试锋芒•下: missions=14 jsonChars=3509
+[loadSeries(不存在的系列)] ok=false  JSON.stringify(result).length=241 chars  Buffer.byteLength=389 bytes
+  scalars: {"ok":false,"root":"string(63)","series":"string(6)","available":"array(7)","missions":"array(0)","warnings":"array(1)"}
+  warnings: ["没有名为「不存在的系列」的系列"]
+  first 400 chars of JSON:
+  {"ok":false,"root":"C:\\Users\\masha\\Desktop\\hsr-history-fictionologists\\hsr-missions","series":"不存在的系列","available":["亏成首富，从不要钱开始","冬梦激醒","庸与神的冠冕","明霄竞武试锋芒•上","明霄竞武试锋芒•下","狐斋志异","蕉恶非道•无忍义之战"],"missions":[],"warnings":["没有名为「不存在的系列」的系列"]}
+
+==============================================================================
+## 6. conflictBrief(cfg, { series }) — the storywriter avoidance brief
+==============================================================================
+[conflictBrief(series=蕉恶非道•无忍义之战)] ok=true  JSON.stringify(result).length=4080 chars  Buffer.byteLength=9748 bytes
+  scalars: {"ok":true,"root":"string(63)","series":"string(10)","places":"array(1)","characters":"array(9)","characterCount":9,"missionCount":8,"returned":8,"linkedMissions":"array(8)","linksOutsideSeries":"array(0)","truncated":false,"bounds":"object(4 keys)","missions":"array(8)","brief":"string(1520)","warnings":"array(0)"}
+  first 400 chars of brief:
+  ## 既有故事避让清单（新故事不得与以下内容冲突）
+  
+  - 系列：蕉恶非道•无忍义之战
+  - 涉及地区：匹诺康尼
+  - 版本：2.6
+  - 既有任务：8 个
+  - 已出场人物（9）：三月七、丹恒、乱破、波提欧、芮克先生、知更鸟、姬子、瓦尔特、睡蕉社•能人244•三月七
+  
+  ### 既有任务名与事件线（不得复述、改写其结局，也不得让同名角色出现在矛盾的时间线上）
+  - **一只安达鲁猴**（后续：四百蕉）—— 星穹列车收到了盛会之星的又一封邀请函：梦境中的折纸大学期待列车组前来参加校庆。作为至少外表上有受教育资格的年轻人，你与丹恒和三月以「旁听生」的身份踏上了重返梦境的旅途，但在入梦之后，你感受到的不是大学洋溢的青春气息，而是香蕉的气味——在一群猴子簇拥的古怪梦境中，你从名为「乱破」的忍者口中听到了关于匹诺康尼的灾难……
+  - **四百蕉**（前置：一只安达鲁猴｜后续：落水猴）—— 在离开怪梦后，你与伙伴们
+  series=蕉恶非道•无忍义之战 places=["匹诺康尼"] characterCount=9 missionCount=8 briefChars=1520
+  characters: 三月七、丹恒、乱破、波提欧、芮克先生、知更鸟、姬子、瓦尔特、睡蕉社•能人244•三月七
+  linksOutsideSeries: []
+  --- brief verbatim (first 1200 chars) ---
+  ## 既有故事避让清单（新故事不得与以下内容冲突）
+  
+  - 系列：蕉恶非道•无忍义之战
+  - 涉及地区：匹诺康尼
+  - 版本：2.6
+  - 既有任务：8 个
+  - 已出场人物（9）：三月七、丹恒、乱破、波提欧、芮克先生、知更鸟、姬子、瓦尔特、睡蕉社•能人244•三月七
+  
+  ### 既有任务名与事件线（不得复述、改写其结局，也不得让同名角色出现在矛盾的时间线上）
+  - **一只安达鲁猴**（后续：四百蕉）—— 星穹列车收到了盛会之星的又一封邀请函：梦境中的折纸大学期待列车组前来参加校庆。作为至少外表上有受教育资格的年轻人，你与丹恒和三月以「旁听生」的身份踏上了重返梦境的旅途，但在入梦之后，你感受到的不是大学洋溢的青春气息，而是香蕉的气味——在一群猴子簇拥的古怪梦境中，你从名为「乱破」的忍者口中听到了关于匹诺康尼的灾难……
+  - **四百蕉**（前置：一只安达鲁猴｜后续：落水猴）—— 在离开怪梦后，你与伙伴们正式踏入折纸大学的校园。但先前梦中的猴子仍阴魂不散，校内四处都能看到这个名为「睡蕉小猴」的流行迷因，甚至连作为代理校长「普利蒙蕉授」都扮成了猴子的模样。而从梦中追来的还有那位言行古怪的忍者乱破，而她也向列车组的成员揭示了自己的真实身份——逐恶而来的巡海游侠。
+  - **落水猴**（前置：四百蕉｜后续：发条香蕉）—— 在家族无法窥见的原初梦境，另一位游侠波提欧已潜伏许久，他也在此处遇到了一些怪事：自称「睡蕉社」的群体霸占了流梦礁的广场，也开始宣扬睡蕉小猴的古怪思想。这位耐不住性子也不需要耐性子的游侠开始了自己的巡猎计划，他在知更鸟的帮助下找到了混进睡蕉社的法子……
+  - **发条香蕉**（前置：落水猴｜后续：死亡蕉社）—— 你与伙伴们开始体验折纸大学的奇妙课程，然而每堂课的老师都是借职权欺压学生的古怪「蕉师」。你与忍侠乱破不吝出手相助，认清种种异象与天才俱乐部中的邪恶科学家「原始博士」有关。在著名导演兼客座教授芮克先生的指引下，你们找到了身为幕后黑手的普利蒙蕉授，但当乱破正要降伏他时，芮克先生突然打断了这次对峙……
+  - **死亡蕉社**（前置：发条香蕉｜后续：踏猴尾）—— 波提欧遇到了巧合之下加入睡蕉社的三月七，通过盗用三月七「善于放弃思考」的高级会员身份成功获得了直面睡蕉小猴的机会，而在他面前呈现的则是一段控制他人神智的幻境。然而游侠的意志并非猴言猴语所能歪曲，挣脱束缚的波提欧大闹睡蕉社，逃到此处的蕉授只得带着无数小猴钻入了流梦礁的黑洞…
+  - **踏猴尾**（前置：死亡蕉社｜后续：阿斯德纳狂想曲）—— 芮克先生向你们揭示了自己忆者的身份与感染模因病毒窘境，并提出了一个破局方法：乱破含有忍者模因病毒的记忆可以毒攻毒。为了提炼这份解药，你通过钟表把戏了解了乱破的过去——一位在返祖实验中诞生的超级实验品，她口中传授自己忍术的「苦茶大师」实为一位良心发现的研究员，为了亲如骨肉的乱破，不
+  conflictBrief({}) all series: ok=true series="亏成首富，从不要钱开始 / 冬梦激醒 / 庸与神的冠冕 / 明霄竞武试锋芒•上 / 明霄竞武试锋芒•下 / 狐斋志异 / 蕉恶非道•无忍义之战" missionCount=52 returned=40 briefChars=4539 truncated=true
+[conflictBrief(series=不存在)] ok=false  JSON.stringify(result).length=274 chars  Buffer.byteLength=410 bytes
+  scalars: {"ok":false,"root":"string(63)","series":"string(3)","available":"array(7)","brief":"string(0)","missions":"array(0)","places":"array(0)","characters":"array(0)","warnings":"array(1)"}
+  warnings: ["没有名为「不存在」的系列"]
+  first 400 chars of JSON:
+  {"ok":false,"root":"C:\\Users\\masha\\Desktop\\hsr-history-fictionologists\\hsr-missions","series":"不存在","available":["亏成首富，从不要钱开始","冬梦激醒","庸与神的冠冕","明霄竞武试锋芒•上","明霄竞武试锋芒•下","狐斋志异","蕉恶非道•无忍义之战"],"brief":"","missions":[],"places":[],"characters":[],"warnings":["没有名为「不存在」的系列"]}
+
+==============================================================================
+## 7. digests against the REAL workspace (no hsr-worldview-cache yet)
+==============================================================================
+[equationNameDigest] ok=false  JSON.stringify(result).length=308 chars  Buffer.byteLength=418 bytes
+  scalars: {"ok":false,"markdown":"string(137)","truncated":false,"warnings":"array(1)"}
+  warnings: ["方程缓存不可用：文件不存在：C:\\Users\\masha\\Desktop\\hsr-history-fictionologists\\hsr-worldview-cache\\equations.json"]
+  first 400 chars of markdown:
+  （本插件当前没有可用的方程命名素材：文件不存在：C:\Users\masha\Desktop\hsr-history-fictionologists\hsr-worldview-cache\equations.json。请先运行 gs_update 抓取「方程一览」数据集）
+[broadcastDigest] ok=false  JSON.stringify(result).length=439 chars  Buffer.byteLength=735 bytes
+  scalars: {"ok":false,"markdown":"string(139)","formatTemplate":"string(100)","truncated":false,"warnings":"array(1)"}
+  warnings: ["播报缓存不可用：文件不存在：C:\\Users\\masha\\Desktop\\hsr-history-fictionologists\\hsr-worldview-cache\\broadcast.json"]
+  first 400 chars of markdown:
+  （本插件当前没有可用的播报格式素材：文件不存在：C:\Users\masha\Desktop\hsr-history-fictionologists\hsr-worldview-cache\broadcast.json。请先运行 gs_update 抓取「星际和平播报」数据集）
+[bookDigest] ok=true  JSON.stringify(result).length=2696 chars  Buffer.byteLength=6107 bytes
+  scalars: {"ok":true,"file":"string(92)","count":498,"returned":25,"types":"array(11)","markdown":"string(2158)","truncated":false,"warnings":"array(0)"}
+  first 400 chars of markdown:
+  ## 「书架」风格素材（现实素材，勿凭空编造）
+  
+  - 书目：498 本（来源 books_without_amphoreus.json），本条摘要节选 25 本
+  - 类型分布：书籍 223 · 资料 121 · 磁带 69 · 信件 22 · 卡带 20 · 便条 19 · 录像带 8 · 拓印 6 · 信件2 4 · 如意 3 · 石碑 3
+  - 地区分布：二相乐园 152 · 雅利洛-Ⅵ 99 · 仙舟「罗浮」 98 · 匹诺康尼 97 · 空间站「黑塔」 52
+  
+  ### 风格要点（从实测书目归纳）
+  1. 标题是「世界内文档」的抬头：机构公文（〈「黑塔」资产定损清单〉）、通俗读物、私人信件、磁带转录、石碑铭文——先决定「这是什么文书」，再写内容。
+  2. 文体由类型决定：资料/信件/便条用第一人称或公文口吻；磁带、录像带用逐字记录；书籍可以像科普或传记。
+  3. 荒诞来自「极认真的格式 × 
+[missionDigest] ok=true  JSON.stringify(result).length=2814 chars  Buffer.byteLength=7011 bytes
+  scalars: {"ok":true,"seriesCount":7,"missionCount":52,"returned":40,"limit":40,"truncatedByLimit":true,"markdown":"string(2598)","truncated":false,"warnings":"array(1)"}
+  warnings: ["条目上限 40，已省略部分任务"]
+  first 400 chars of markdown:
+  ## 已发生故事（避免与下列内容冲突）
+  
+  - 数据：hsr-missions / sr-开拓续闻-完整（7 个系列，52 个任务）
+  - 用法：新故事可以复用世界观名词与既有角色，但不得复述下列任务的事件、改写其结局，也不得让同名角色出现在矛盾的时间线上。
+  
+  ### 亏成首富，从不要钱开始（千星城 · 4.5，7 个任务）
+  - **一名陌生网红的挑战** —— 一名擅长使用金钱试探人性的网络博主大禽找上了你，希望你能够参加一场「不要钱挑战」——你赚得天价奖金，他赚得泼天流量。
+  - **不要钱挑战•第一日** —— 「不要钱挑战」第一天，你在千星城最繁华的地段，尝试了各种各样的花钱方式，购物买店、赔偿损失、购买车队、投资梦想…或许这是你第一次为花不够钱而精疲力尽。
+  - **不要钱挑战•第二日** —— 「不要钱挑战」第二天，你在星际和平娱乐总部，高薪挖角公司的人才…并遭到了阻止。
+  - **不要
+  cacheDir exists? false
+
+==============================================================================
+## 8. bookDigest / missionDigest against the REAL workspace (happy path)
+==============================================================================
+[bookDigest({limit:25})] ok=true  JSON.stringify(result).length=2696 chars  Buffer.byteLength=6107 bytes
+  scalars: {"ok":true,"file":"string(92)","count":498,"returned":25,"types":"array(11)","markdown":"string(2158)","truncated":false,"warnings":"array(0)"}
+  first 400 chars of markdown:
+  ## 「书架」风格素材（现实素材，勿凭空编造）
+  
+  - 书目：498 本（来源 books_without_amphoreus.json），本条摘要节选 25 本
+  - 类型分布：书籍 223 · 资料 121 · 磁带 69 · 信件 22 · 卡带 20 · 便条 19 · 录像带 8 · 拓印 6 · 信件2 4 · 如意 3 · 石碑 3
+  - 地区分布：二相乐园 152 · 雅利洛-Ⅵ 99 · 仙舟「罗浮」 98 · 匹诺康尼 97 · 空间站「黑塔」 52
+  
+  ### 风格要点（从实测书目归纳）
+  1. 标题是「世界内文档」的抬头：机构公文（〈「黑塔」资产定损清单〉）、通俗读物、私人信件、磁带转录、石碑铭文——先决定「这是什么文书」，再写内容。
+  2. 文体由类型决定：资料/信件/便条用第一人称或公文口吻；磁带、录像带用逐字记录；书籍可以像科普或传记。
+  3. 荒诞来自「极认真的格式 × 
+  markdown charset length=2158 truncated=false count=498 returned=25
+  --- markdown (first 1400 chars) ---
+  ## 「书架」风格素材（现实素材，勿凭空编造）
+  
+  - 书目：498 本（来源 books_without_amphoreus.json），本条摘要节选 25 本
+  - 类型分布：书籍 223 · 资料 121 · 磁带 69 · 信件 22 · 卡带 20 · 便条 19 · 录像带 8 · 拓印 6 · 信件2 4 · 如意 3 · 石碑 3
+  - 地区分布：二相乐园 152 · 雅利洛-Ⅵ 99 · 仙舟「罗浮」 98 · 匹诺康尼 97 · 空间站「黑塔」 52
+  
+  ### 风格要点（从实测书目归纳）
+  1. 标题是「世界内文档」的抬头：机构公文（〈「黑塔」资产定损清单〉）、通俗读物、私人信件、磁带转录、石碑铭文——先决定「这是什么文书」，再写内容。
+  2. 文体由类型决定：资料/信件/便条用第一人称或公文口吻；磁带、录像带用逐字记录；书籍可以像科普或传记。
+  3. 荒诞来自「极认真的格式 × 极不合理的内容」：工整的编号、定损程度、保险金额，配「功能倒错，性状颠倒」这种一本正经的判定。
+  4. 描述（卡片摘要）用一句话交代「谁写的、写了什么、离谱在哪」，不加评论、不玩梗。
+  5. 篇幅可长可短：正文可以是一份完整清单，也可以只有两三行残句。
+  
+  ### 书目样例（标题｜类型｜地区｜相关角色）
+  - **银河公义奖彰**｜书籍｜空间站「黑塔」｜沃森
+    > 由「黑塔•银河法政科」签发的荣誉奖状，旨在表彰「局部正义」的伙伴。
+  - **「黑塔」资产定损清单**｜资料｜空间站「黑塔」｜温世齐
+    > 由「黑塔•万有应物科」拟定的资产定损清单，记载了数千项货损，其赔偿金额堪称天文数字，由星际和平公司一力承担。
+  - **关于列车你所不知道的**｜磁带｜二相乐园｜姬子
+    > 某三流小报以探秘列车与二相乐园的联系为噱头，收集到的半真半假的秘闻
+  - **猎彗人来信**｜信件｜空间站「黑塔」
+    > 猎彗人何塞•拉萨罗的天外来信，上面写满了垃圾话。
+  - **灵物保护法（第5版）**｜卡带｜二相乐园
+    > 重要的法令文书，是二相乐园一切民法的立法基本。
+  - **银河之星的故事**｜便条｜匹诺康尼
+    > 经历「银河之星」莱斯利•迪恩的故事时收集到的线索。
+  - **《忆域迷因受害者名单片段》**｜录像带｜匹诺康尼
+    > 一份忆域迷因受害者名单的手抄片段，是家族机密封存的机密之一。线人对内容的加密已被解明。
+  - **饮月大逆判牍**｜拓印｜仙舟「罗浮」
+    > 对「饮月之乱」主犯的一道判决。这道判决对仙舟的未来产生了巨大的影响。
+  - **钟珊的来信**｜信件2｜仙舟「罗浮」
+    > 「放生帮导师」钟珊留下的信件。
+  - **贝尼尼学士的破碎笔记**｜如意｜仙舟「罗浮」
+    > 一份博识学会学士留下的破碎笔记。
+  - **护珠人通信碑**｜石碑｜仙舟「罗浮」
+    > 持明族护珠人专门负责看护古海中的持明卵，这是他们留下的石碑。
+  - **星域界种指要：呜呜伯**｜书籍｜空间站「黑塔」
+    > 这本指要在表面上与一般的大部头书籍别无二致，但仔细观察，就会发现它的周身环绕着一层淡淡的星环，如同一个隐蔽的咒语。
+  - **猎彗人宝藏**｜资料｜空间站「黑塔」
+    > 猎彗人何塞•拉萨罗的秘藏，一场事先张扬的恶作剧。
+  - **世纪末幻月变脸大危机**｜磁带｜二相乐园
+    > 不知何人写下的有关「幻月
+[missionDigest({limit:40})] ok=true  JSON.stringify(result).length=2814 chars  Buffer.byteLength=7011 bytes
+  scalars: {"ok":true,"seriesCount":7,"missionCount":52,"returned":40,"limit":40,"truncatedByLimit":true,"markdown":"string(2598)","truncated":false,"warnings":"array(1)"}
+  warnings: ["条目上限 40，已省略部分任务"]
+  first 400 chars of markdown:
+  ## 已发生故事（避免与下列内容冲突）
+  
+  - 数据：hsr-missions / sr-开拓续闻-完整（7 个系列，52 个任务）
+  - 用法：新故事可以复用世界观名词与既有角色，但不得复述下列任务的事件、改写其结局，也不得让同名角色出现在矛盾的时间线上。
+  
+  ### 亏成首富，从不要钱开始（千星城 · 4.5，7 个任务）
+  - **一名陌生网红的挑战** —— 一名擅长使用金钱试探人性的网络博主大禽找上了你，希望你能够参加一场「不要钱挑战」——你赚得天价奖金，他赚得泼天流量。
+  - **不要钱挑战•第一日** —— 「不要钱挑战」第一天，你在千星城最繁华的地段，尝试了各种各样的花钱方式，购物买店、赔偿损失、购买车队、投资梦想…或许这是你第一次为花不够钱而精疲力尽。
+  - **不要钱挑战•第二日** —— 「不要钱挑战」第二天，你在星际和平娱乐总部，高薪挖角公司的人才…并遭到了阻止。
+  - **不要
+  seriesCount=7 missionCount=52 returned=40 markdownChars=2598 truncated=false
+  --- markdown (first 1400 chars) ---
+  ## 已发生故事（避免与下列内容冲突）
+  
+  - 数据：hsr-missions / sr-开拓续闻-完整（7 个系列，52 个任务）
+  - 用法：新故事可以复用世界观名词与既有角色，但不得复述下列任务的事件、改写其结局，也不得让同名角色出现在矛盾的时间线上。
+  
+  ### 亏成首富，从不要钱开始（千星城 · 4.5，7 个任务）
+  - **一名陌生网红的挑战** —— 一名擅长使用金钱试探人性的网络博主大禽找上了你，希望你能够参加一场「不要钱挑战」——你赚得天价奖金，他赚得泼天流量。
+  - **不要钱挑战•第一日** —— 「不要钱挑战」第一天，你在千星城最繁华的地段，尝试了各种各样的花钱方式，购物买店、赔偿损失、购买车队、投资梦想…或许这是你第一次为花不够钱而精疲力尽。
+  - **不要钱挑战•第二日** —— 「不要钱挑战」第二天，你在星际和平娱乐总部，高薪挖角公司的人才…并遭到了阻止。
+  - **不要钱挑战•第三日** —— 「不要钱挑战」第三天，你在私人拍卖会上与砂金默契合作，将所有拍品全部拍下，并将「不要钱挑战」剩下的钱全部花光了。
+  - **不要钱挑战•结算日** —— 大禽利用了规则漏洞判定你为挑战失败，你与砂金负债成立，为躲避「征敛舒俱」的能力，你们躲进了隐藏的审片室。
+  - **猜赛车挑战•当日** —— 在赛车日当天，砂金选择「所有人都是冠军，或者所有人都不是冠军」作为竞猜结果。
+  - **挑战结束，然后…** —— 知更鸟探明了「歌斐木遗音」真正的遗产，砂金的秘密行动排除了一个错误答案…而你，为星穹列车买下了天价车险。
+  
+  ### 冬梦激醒（雅利洛-Ⅵ · 1.4，3 个任务）
+  - **未来市场•序** —— 开拓者的开拓日报：离发车还有段时间。
+  - **未来市场•其一** —— 开拓者的开拓日报：刷脸，见布洛妮娅。
+  - **未来市场•其二** —— 开拓者的开拓日报：没见到托帕。
+  
+  ### 庸与神的冠冕（空间站「黑塔」 · 1.6，2 个任务）
+  - **天才群星闪耀时** —— 空间站最近十分热闹。
+  - **庸人自扰** —— 空间站最近十分热闹。
+  
+  ### 明霄竞武试锋芒•上（仙舟「罗浮」 · 2.4，9 个任务）
+  - **故客重游，演武天舟** —— 在尚未踏入下一站旅程前，列车接到了来自罗浮仙舟的通讯，景元向暂无去向的众人发出邀请，参加演武仪典。
+  - **衔令来使，真意难识** —— 在彦卿的陪同下，你们终于见到了景元，得知罗浮仙舟在建木灾异之后重开演武仪典的用意，更得知了来自朱明与曜青两座仙舟的将军前来观礼的消息。
+  - **狴犴吠狂，妙语生香** —— 演武仪典召开之际，罗浮仙舟成了诸多是非与矛盾的交集处，除却各怀心思的客人，还有遭遇步离人袭击被迫停靠的公司舰船。
+  - **锷击刃鸣，止戈罢兵** —— 在丹鼎司新任司鼎的斡旋下，你们顺利打发了来自公司专员的责难，随她一同前往丹鼎司小叙。
+  - **神锋有归，众议难违** —— 神策府中，景元邀请你们与怀炎将军一番恳谈，并剖陈曜青与朱明将军的来意。
+  - **授剑传行，腾然流星** —— 在怀炎半是玩笑、半是试探的邀请下，三月七意外得到了登上演武仪典的机会。
+  - **潜迹狼烽，兽骇鸟惊** —— 时光流逝，转眼演武仪典即将召开在即。
+  - **诘辩无愧，折狱论非** —— 按照飞霄的要求，你们踏入幽囚狱
+[missionDigest({series:狐斋志异, limit:3})] ok=true  JSON.stringify(result).length=477 chars  Buffer.byteLength=972 bytes
+  scalars: {"ok":true,"seriesCount":1,"missionCount":9,"returned":3,"limit":3,"truncatedByLimit":true,"markdown":"string(315)","truncated":false,"warnings":"array(1)"}
+  warnings: ["条目上限 3，已省略部分任务"]
+  first 400 chars of markdown:
+  ## 已发生故事（避免与下列内容冲突）
+  
+  - 数据：hsr-missions / sr-开拓续闻-完整（1 个系列，9 个任务）
+  - 用法：新故事可以复用世界观名词与既有角色，但不得复述下列任务的事件、改写其结局，也不得让同名角色出现在矛盾的时间线上。
+  
+  ### 狐斋志异（仙舟「罗浮」 · 1.5，9 个任务）
+  - **游园惊梦** —— 洪炉破碎，岁阳逃逸，罗浮仙舟上十王司判官们行动起来。
+  - **绥园聚首•其一** —— 自绥园一夜惊魂冒险后，你都不想再提起那地方。
+  - **双生** —— 考虑到你们手中已扣留一名岁阳犯人，你们决定充分利用，争取将它转作污点证人，为你们提供情报。
+  - …（本系列另有 6 个任务未列出）
+  seriesCount=1 missionCount=9 returned=3 truncated=false
+  --- markdown verbatim ---
+  ## 已发生故事（避免与下列内容冲突）
+  
+  - 数据：hsr-missions / sr-开拓续闻-完整（1 个系列，9 个任务）
+  - 用法：新故事可以复用世界观名词与既有角色，但不得复述下列任务的事件、改写其结局，也不得让同名角色出现在矛盾的时间线上。
+  
+  ### 狐斋志异（仙舟「罗浮」 · 1.5，9 个任务）
+  - **游园惊梦** —— 洪炉破碎，岁阳逃逸，罗浮仙舟上十王司判官们行动起来。
+  - **绥园聚首•其一** —— 自绥园一夜惊魂冒险后，你都不想再提起那地方。
+  - **双生** —— 考虑到你们手中已扣留一名岁阳犯人，你们决定充分利用，争取将它转作污点证人，为你们提供情报。
+  - …（本系列另有 6 个任务未列出）
+
+==============================================================================
+## 9. equationNameDigest / broadcastDigest against a SYNTHETIC cache fixture
+==============================================================================
+NOTE: this workspace has no hsr-worldview-cache yet; the fixture mirrors
+      BRIEF §3.3/§4 field names so the happy path is proven end to end.
+[equationNameDigest(fixture)] ok=true  JSON.stringify(result).length=1342 chars  Buffer.byteLength=2741 bytes
+  scalars: {"ok":true,"file":"string(87)","count":5,"examples":5,"paths":"array(3)","markdown":"string(1049)","truncated":false,"warnings":"array(0)"}
+  first 400 chars of markdown:
+  ## 方程命名逻辑（现实素材，勿凭空编造）
+  
+  - 条目：5 条（来源 equations.json，缓存记录 excludedCount=112）
+  - 模式：人间喜剧 3 · 乐园漫记 2
+  - 稀有度：2星 3 · 3星 1 · 4星 1
+  - 主命途：记忆 2 · 虚无 2 · 毁灭 1
+  - 名称长度：3–6 字（3字 2 · 4字 1 · 5字 1 · 6字 1）
+  
+  ### 命名公式（从实测名称归纳）
+  1. 名称 =〈宏大概念〉×〈俗世载体〉的硬嫁接：命途给出哲学概念（虚无 / 欢愉 / 繁育 / 记忆 / 智识…），名称给出极其日常的载体（奶奶 / 船长 / 大剧院 / 车轮 / 出租屋）。
+  2. 名称极短：3–6 字，以 3 字为主；几乎不用「的」（仅 0 条）。
+  3. 高频结尾（职业 / 身份后缀）：侠 2 · 奶 1 · 事 1 · 物 1 —— 先定一个「俗世身份」，再把它塞进
+  count=5 examples=5 markdownChars=1049 truncated=false
+  --- markdown verbatim ---
+  ## 方程命名逻辑（现实素材，勿凭空编造）
+  
+  - 条目：5 条（来源 equations.json，缓存记录 excludedCount=112）
+  - 模式：人间喜剧 3 · 乐园漫记 2
+  - 稀有度：2星 3 · 3星 1 · 4星 1
+  - 主命途：记忆 2 · 虚无 2 · 毁灭 1
+  - 名称长度：3–6 字（3字 2 · 4字 1 · 5字 1 · 6字 1）
+  
+  ### 命名公式（从实测名称归纳）
+  1. 名称 =〈宏大概念〉×〈俗世载体〉的硬嫁接：命途给出哲学概念（虚无 / 欢愉 / 繁育 / 记忆 / 智识…），名称给出极其日常的载体（奶奶 / 船长 / 大剧院 / 车轮 / 出租屋）。
+  2. 名称极短：3–6 字，以 3 字为主；几乎不用「的」（仅 0 条）。
+  3. 高频结尾（职业 / 身份后缀）：侠 2 · 奶 1 · 事 1 · 物 1 —— 先定一个「俗世身份」，再把它塞进宏大机制里。
+  4. 稀有度越高，名称越靠近「概念本身的具象化」（4 星多为机构或概念实体），1 星最俗、最像身边小人物。
+  5. 结构上先写「配方」再写名称：需要祝福用〈命途×数量〉叠加，如「虚无×6 / 欢愉×4」——概念越宏大，占位越多。
+  6. 效果正文 100–200 字，用最严肃的机制语言描述最离谱的意象（见下方范例）。
+  
+  ### 按主命途分组（名称【稀有度·次命途】）
+  - **记忆**（2 条；次命途：智识）：睡前故事【4星】、火与危险事物【2星·智识】
+  - **虚无**（2 条；次命途：欢愉/同谐）：大鼻子奶奶【3星·欢愉】、背锅侠【2星·同谐】
+  - **毁灭**（1 条；次命途：虚无）：巴掌侠【2星·虚无】
+  
+  ### 嫁接范例（5 条：宏大概念 × 俗世载体）
+  1. 4星 · 记忆｜配方 记忆×8 → 「睡前故事」：进入战斗时，我方全体获得【安眠】。
+  2. 3星 · 虚无 / 欢愉｜配方 虚无×6 欢愉×4 → 「大鼻子奶奶」：【发牌员】攻击段数提高4，每次造成伤害时，为我方全体角色提供1层【切牌】。
+  3. 2星 · 毁灭 / 虚无｜配方 毁灭×4 虚无×2 → 「巴掌侠」：施放攻击后，额外造成1次等于自身攻击力50%的附加伤害。
+  4. 2星 · 虚无 / 同谐｜配方 虚无×4 同谐×2 → 「背锅侠」：我方目标受到攻击后，将伤害的30%转移给【替罪羊】。
+  5. 2星 · 记忆 / 智识｜配方 记忆×4 智识×2 → 「火与危险事物」：每次施放战技后，灼烧敌方全体。
+[broadcastDigest(fixture)] ok=true  JSON.stringify(result).length=1212 chars  Buffer.byteLength=2647 bytes
+  scalars: {"ok":true,"file":"string(87)","formatTemplate":"string(100)","entryCount":2,"excerptTruncated":false,"speakers":"object(3 keys)","excerpts":"array(2)","markdown":"string(716)","truncated":false,"warnings":"array(0)"}
+  first 400 chars of markdown:
+  ## 星际和平播报 · 格式与语调（现实素材）
+  
+  - 说话人一律「女声：」「男声：」（全角冒号），一行一句，交替播报；旁白、音乐提示用全角括号「（音乐）」。
+  - 每条新闻一段，不加 Markdown 标题、不加序号前缀；结尾固定为「本次播报到此结束，请在指定时间收听下一周期的星际和平播报。」
+  - 实测统计：2 段文本；女声 6 次 · 男声 4 次 · （音乐）4 次。
+  - 语调：一本正经的官方播报腔，内容可以离谱，措辞必须像新闻稿（机构名、纪年、公告动词）。
+  
+  ### 必须逐字照用的格式模板
+  ```text
+  （音乐）
+  
+  女声：这里是星际和平播报，观众朋友们晚上好。
+  男声：晚上好。
+  
+  女声：第一条消息。……
+  男声：第二条消息。……
+  
+  女声：本次播报到此结束，请在指定时间收听下一周期的星际和平播报。
+  （音乐）
+  ```
+  
+  ### 真实片段（照抄语感，不要照抄内容）
+  **〈完成雅利洛-Ⅵ开拓任务
+  entryCount=2 speakers={"music":4,"female":6,"male":4} formatTemplateChars=100 markdownChars=716
+  formatTemplate === BRIEF §8 功能 3 ? true
+  --- markdown verbatim ---
+  ## 星际和平播报 · 格式与语调（现实素材）
+  
+  - 说话人一律「女声：」「男声：」（全角冒号），一行一句，交替播报；旁白、音乐提示用全角括号「（音乐）」。
+  - 每条新闻一段，不加 Markdown 标题、不加序号前缀；结尾固定为「本次播报到此结束，请在指定时间收听下一周期的星际和平播报。」
+  - 实测统计：2 段文本；女声 6 次 · 男声 4 次 · （音乐）4 次。
+  - 语调：一本正经的官方播报腔，内容可以离谱，措辞必须像新闻稿（机构名、纪年、公告动词）。
+  
+  ### 必须逐字照用的格式模板
+  ```text
+  （音乐）
+  
+  女声：这里是星际和平播报，观众朋友们晚上好。
+  男声：晚上好。
+  
+  女声：第一条消息。……
+  男声：第二条消息。……
+  
+  女声：本次播报到此结束，请在指定时间收听下一周期的星际和平播报。
+  （音乐）
+  ```
+  
+  ### 真实片段（照抄语感，不要照抄内容）
+  **〈完成雅利洛-Ⅵ开拓任务〉**
+  （音乐）
+  女声：这里是星际和平播报，观众朋友们晚上好。
+  男声：晚上好。
+  女声：「存护」克里珀的巨锤徐徐下落，锤声响彻寰宇，震耳欲聋。
+  男声：博识学会星空生态学派宣布：琥珀历2157纪结束，2158纪正式到来。
+  女声：在新的纪元里，星际和平公司将一如既往地致力于银河间的和平共处，贸易繁荣。
+  （音乐）
+  
+  **〈完成仙舟「罗浮」开拓任务〉**
+  （音乐）
+  女声：这里是星际和平播报，观众朋友们晚上好。
+  男声：晚上好。
+  女声：仙舟「罗浮」的建木灾异已经平息，云骑军宣布解除最高戒备。
+  男声：星际和平公司提醒各位旅客，出行前请确认航线是否途经「无明火」区域。
+  女声：本次播报到此结束，请在指定时间收听下一周期的星际和平播报。
+  （音乐）
+
+==============================================================================
+## 9b. digests at FULL SCALE against real wiki content rebuilt from _probe/html
+==============================================================================
+NOTE: no hsr-worldview-cache exists yet, so this runner rebuilds a cache-shaped
+      file from the real rendered HTML captured in _probe/html (the extraction
+      half is crude on purpose — the production parser belongs to lib/wiki).
+rebuilt equations.json: 212 entries (excluded 112 rows whose 模式 contains 千面英雄)
+[equationNameDigest(real 212 entries)] ok=true count=212 examples=12 markdownChars=4235 truncated=false
+  --- markdown verbatim (first 3000 chars) ---
+  ## 方程命名逻辑（现实素材，勿凭空编造）
+  
+  - 条目：212 条（来源 equations.json，缓存记录 excludedCount=112）
+  - 模式：人间喜剧 108 · 乐园漫记 104
+  - 稀有度：1星 87 · 2星 68 · 3星 40 · 4星 17
+  - 主命途：欢愉 26 · 智识 26 · 繁育 25 · 毁灭 25 · 虚无 25 · 巡猎 25 · 记忆 24 · 存护 12 · 丰饶 12 · 同谐 12
+  - 名称长度：2–7 字（4字 83 · 5字 59 · 3字 52 · 6字 13 · 2字 4 · 7字 1）
+  
+  ### 命名公式（从实测名称归纳）
+  1. 名称 =〈宏大概念〉×〈俗世载体〉的硬嫁接：命途给出哲学概念（虚无 / 欢愉 / 繁育 / 记忆 / 智识…），名称给出极其日常的载体（奶奶 / 船长 / 大剧院 / 车轮 / 出租屋）。
+  2. 名称极短：2–7 字，以 4 字为主；几乎不用「的」（仅 3 条）。
+  3. 高频结尾（职业 / 身份后缀）：者 22 · 人 19 · 师 19 · 士 10 · 家 9 · 役 7 · 员 6 · 客 5 —— 先定一个「俗世身份」，再把它塞进宏大机制里。
+  4. 稀有度越高，名称越靠近「概念本身的具象化」（4 星多为机构或概念实体），1 星最俗、最像身边小人物。
+  5. 结构上先写「配方」再写名称：需要祝福用〈命途×数量〉叠加，如「虚无×6 / 欢愉×4」——概念越宏大，占位越多。
+  6. 效果正文 100–200 字，用最严肃的机制语言描述最离谱的意象（见下方范例）。
+  
+  ### 按主命途分组（名称【稀有度·次命途】）
+  - **欢愉**（26 条；次命途：繁育/巡猎/记忆/无/毁灭/智识/同谐/存护）：黄昏金时大剧院【3星·繁育】、威乐曼号【2星·巡猎】、乐死人【1星·记忆】、肥皂车骑士【1星·巡猎】、无限非概率【4星·无】、星星盗贼【3星·巡猎】、拒火者【3星·毁灭】、真实好运棋【2星·毁灭】、以太骇客【2星·智识】、星空寓言家【2星·同谐】、断舍离剑士【1星·巡猎】、打榜双子星【1星·毁灭】、调饮师【1星·繁育】、伤心人【1星·同谐】、迷狂棋手【2星·智识】、造物歌唱家【1星·智识】、假面愚者【4星·无】、幻影怪盗【3星·巡猎】、回想艺术家【2星·记忆】、战场魔术师【1星·存护】、谏语医师【3星·丰饶】、烟花大师【2星·毁灭】、以太幽灵【2星·繁育】、糖果骑士【1星·虚无】、漂流马戏团【1星·丰饶】、气球商【1星·繁育】
+  - **智识**（26 条；次命途：毁灭/欢愉/同谐/无/记忆/虚无/巡猎/繁育）：禁词猎人【3星·毁灭】、智人大冲浪【2星·欢愉】、密室收藏夹【1星·欢愉】、多周目文明【1星·同谐】、参考文献【4星·无】、有用学者【3星·欢愉】、电器德鲁伊【3星·同谐】、遗迹魔法师【2星·记忆】、智商税务官【2星·虚无】、超级体育生【2星·巡猎】、逐影机神【1星·巡猎】、银河烘焙场【1星·毁灭】、俺寻思学士【1星·欢愉】、卡牌新星【1星·繁育】、星空生态护工【2星·存护】、烛墨校验员【1星·记忆】、星空生态学派【4星·无】、聚合者【3星·繁育】、积木师【2星·虚无】、摘星客【1星·毁灭】、无用学者【3星·欢愉】、银心护卫队【2星·巡猎】、反有机杀手【2星·毁灭】、执笔人【1星·巡猎】、修补匠【1星·欢愉】、科尔奇人【1星·繁育】
+  - **繁育**（25 条；次命途：记忆/毁灭/智识/无/虚无/欢愉/同谐/存护）：创想家【3星·记忆】、糟糕师【2星·毁灭】、有机帝皇【1星·智识】、幻造物【4星·无】、蠕行之蛇【3星·虚无】、星系大乐透【3星·欢愉】、吃土绑架犯【2星·记忆】、丧气侠【2星·虚无】、蛰虫帝【2星·智识】、技能抓阄赛【1星·记忆】、行星碰碰车【1星·虚无】、知心小蛋糕【1星·欢愉】、翻转蚁【1星·同谐】、抟星蠕虫【3星·存护】、孕灾残嗣【2星·丰饶】、幻螟残嗣【1星·存护】、孳孽王虫【4星·无】、穷凶蠧役【2星·巡猎】、无争蠧役【1星·虚无】、孕灾之子【3星·虚无】、孕灾蠧役【2星·存护】、惑世蠧役【2星·智识】、幻螟蠧役【1星·记忆】、残照蠧役【1星·虚无】、碎星蠧役【1星·毁灭】
+  - **毁灭**（25 条；次命途：智识/虚无/巡猎/无/记忆/同谐/繁育/存护）：怒火船长【3星·智识】、巴掌侠【2星·虚无】、杀务净【1星·巡猎】、界外天魔主【4星·无】、梦魇主【3星·记忆】、永世谒者【3星·同谐】、冰霜巨人【2星·记忆】、灾异偶像【2星·繁育】、天罚投票装置【2星·同谐】、换心魔【1星·记忆】、车库屠龙者【1星·虚无】、物理魔法少女【1星·智识】、阿哈广播电台【1星·同谐】、自我背叛者【2星·繁育】、溯沙客【1星·巡猎】、反物质军团【4星·无】、灭绝学人【3星·智识】、战前关怀员【2星·存护】、掘墓人【1星·记忆】、远航监护员【3星·存护】、窃忆者【2星·记忆】、废土客【2星·虚无】、焦土行者【1星·虚无】、纵火士【1星·丰饶】、火匠【1星·智识】
+  - **虚无**（25 条；次命途：欢愉/同谐/毁灭/无/智识/巡猎/记忆/丰饶）：大鼻子奶奶【3星·欢愉】、背锅侠【2星·同谐】、累了，毁灭吧【1星·毁灭】、可爱黑洞【4星·无】、概念献祭典仪【3星·毁灭】、还魂医师【3星·智识】、永恒竞走【2星·巡猎】、骰铸人生【2星·毁灭】、痴王【2星·欢愉】、永恒杀伐迷宫【1星·巡猎】、据说之地【1星·毁灭】、反向冒险家【1星·欢愉】、失心博士【1星·智识】、相对描摹者【3星·记忆】、冤仇代行【2星·巡猎】、混沌医师【1星·丰饶】、自灭者【4星·无】、拒死者【2星·丰饶】、救难者【1星·毁灭】、自证学社【3星·智识】、激雷乐队【2星·记忆】、无我丑角【2星·欢愉】、守夜人【1星·存护】、血罪灵【1星·巡猎】、庸众凡夫【1星·智识】
+  - **巡猎**（25 条；次命途：同谐/记忆/智识/无/繁育/毁灭/欢愉/虚无）：狂猎团【3星·同谐】、天体殡葬师【2星·记忆】、冷知识动车【1星·智识】、最后的子弹【4星·无】、街道骑行官【3星·记忆】、除魔士【3星·繁育】、铁臂侠【2星·毁灭】、彗星调教师【2星·欢愉】、流星批发商【2星·繁育】、祖宗战神【1星·记忆】、光头制造者【1星·虚无】、硕鼠猎手【1星·欢愉】、受诅教师【1星·智识】、虚构裁决官【2星·记忆】、离巢浪人【1星·繁育】、巡海游侠【4星·无】、纺生救主【3星·丰饶】、同态法庭【2星·毁灭】、预演家【1星·智识】、熔火骑士【3星·繁育】、天灾遏止机关【2星·存护】、赏金猎人【2星·欢愉】、边星快枪手【1星·存护】、失忆者【1星·记忆】、和平主义者【1星·丰饶】
+  - **记忆**（24 条；次命途：智识/繁育/无/欢愉/同谐/毁灭/虚无/巡猎）：火与危险事物【2星·智识】、人生切片师【1星·繁育】、睡前故事【4星·无】、一首美丽的诗【3星·繁育】、苹果！苹果！【3星·智识】、历史代理人【2星·欢愉】、园艺师【2星·欢愉】、转职轮盘【2星·同谐】 …
+  
+  ### 嫁接范例（12 条：宏大概念 × 俗世载体）
+  1. 3星 · 欢愉 / 繁育｜配方 欢愉×6
+  --- (markdown total 4235 chars, still <= 12000) ---
+rebuilt broadcast.json: 7 segments, 9422 chars of real text
+[broadcastDigest(real page)] ok=true entryCount=7 speakers={"music":7,"female":112,"male":107} excerpts=[{"name":"播报片段 1","chars":1181},{"name":"播报片段 2","chars":1165},{"name":"播报片段 3","chars":1292}] markdownChars=3133
+  --- markdown verbatim (first 2600 chars) ---
+  ## 星际和平播报 · 格式与语调（现实素材）
+  
+  - 说话人一律「女声：」「男声：」（全角冒号），一行一句，交替播报；旁白、音乐提示用全角括号「（音乐）」。
+  - 每条新闻一段，不加 Markdown 标题、不加序号前缀；结尾固定为「本次播报到此结束，请在指定时间收听下一周期的星际和平播报。」
+  - 实测统计：7 段文本；女声 112 次 · 男声 107 次 · （音乐）7 次。
+  - 语调：一本正经的官方播报腔，内容可以离谱，措辞必须像新闻稿（机构名、纪年、公告动词）。
+  
+  ### 必须逐字照用的格式模板
+  ```text
+  （音乐）
+  
+  女声：这里是星际和平播报，观众朋友们晚上好。
+  男声：晚上好。
+  
+  女声：第一条消息。……
+  男声：第二条消息。……
+  
+  女声：本次播报到此结束，请在指定时间收听下一周期的星际和平播报。
+  （音乐）
+  ```
+  
+  ### 真实片段（照抄语感，不要照抄内容）
+  **〈播报片段 1〉**
+  （音乐）
+  女声：这里是星际和平播报，观众朋友们晚上好。
+  男声：晚上好。
+  女声：「存护」克里珀的巨锤徐徐下落，锤声响彻寰宇，震耳欲聋。
+  男声：博识学会星空生态学派宣布：琥珀历2157纪结束，2158纪正式到来。
+  女声：在新的纪元里，星际和平公司将一如既往地致力于银河间的和平共处，贸易繁荣。
+  男声：公司将不忘初心，牢记创业之初的唯一原则：将一切奉献给「琥珀王」。
+  女声：下面让我们回顾在2157琥珀纪发生了哪些重大事件：
+  男声：自2147纪开始出现的神秘现象「星核」造成的污染仍在继续。「星核」阻塞了文明之间的道路，令一度团结在「琥珀王」命途下的诸界分崩离析。
+  女声：漫长的十纪中，星际和平公司从未放弃将诸界重新连通的愿景。
+  男声：在博识学会的鼎力支持下，我们已初步掌握了绕过星核污染的技术，并在一百一十三个星系进行了实验，取得了可喜的成果。
+  男声：银河浩瀚无边，而我们并不孤单。已陨的星神，「开拓」阿基维利曾搭乘的星穹列车如今重新起航。
+  女声：这群年轻的无名客自称继承了阿基维利的意志，将重新开辟星与星之间的航线，再现九百九十纪前的「第一次繁荣」。
+  男声：在此，我们代表星际和平公司向星穹列车的开拓者们送上最真挚的祝福。
+  女声：在寰宇人民深受星核困扰的同时，一伙新兴起的邪恶组织「星核猎手」却在宇宙中四处作乱。
+  男声：此前报导过，「星核猎手」入侵了天才俱乐部的螺丝咕姆星球，与星球的主人螺丝咕姆爆发了冲突。
+  女声：根据最新消息，他们上一次出现的地点是仙舟「罗浮」。
+  男声：「星核猎手」曾犯下多起大案，任何一名成员均有独自覆灭一颗星球的能力，其效忠的星神尚不明确，划定为极度危险份子。
+  女声：如遭遇疑似星核猎手的成员，请立刻联系公司，切勿打草惊蛇。提供有效线索者，将获得重金酬赏。
+  男声：已知多个派系收到了盛会之星「匹诺康尼」的邀请函。据悉，这是匹诺康尼的「家族」首次公开向银河各派系发出正式邀约。
+  女声：星际和平公司也在邀请之列，「战略投资部」部长钻石称将谨慎评估家族此举的意义，并将积极友好作出应对。
+  男声：我们期盼银河各方携手并肩，守护美好家园，抵御邪恶势力的侵犯。
+  女声：「绝灭大君」焚风现身…
+  
+  **〈播报片段 2〉**
+  （音乐）
+  女声：这里是星际和平播报，观众朋友们晚上好。
+  男声：晚上好。
+  女声：欢迎收看今天的星际和平播报节目。首先为您介绍今天节目的主要内容。
+  男声：冰封世界雅利洛-Ⅵ重新传来通讯信号，星球原住民或有生还可能。
+  女声：「厄兆先锋」向西格玛叁号星系发出警告，恶性噬硅细菌存在向该地区传播趋势。
+  男声：博识学会武装考古学派在海尔雷星发现一微缩星系，相关工程正在持续进行中。
+  女声：「荷尔斯泰因大静默」被证实是「焚化工」所为，巡海游侠宣布正在追查失窃记忆下落。
+  男声：以下为您展开详细报道。
+  女声：日前，据星际和平家电雅利洛片区分店某销售员消息称，冰封七百余年的雅利洛-Ⅵ表面再度传来通讯信号。
+  男声：公司对此高度重视，第一时间对该信号进行了深度解析。
+  女声：根据信号内容，雅利洛-Ⅵ原住民在数琥珀纪前的浩劫中幸存至今，并于不久前在一群无名客的帮助下成功结束了大寒潮。
+  男声：目前，公司方面已派出相关人员前往调查雅利洛-Ⅵ现状。让我们祝愿幸存者们尽快回归「存护」的命途！
+  女声：「厄兆先锋」于近日同星际和平公司取得联系，向公司预警了即将来临的灾变。
+  男声：该派系成员委托公司向西格玛叁号星系发出警告，在柔贰号星系大规模蔓延的恶性噬硅细菌存在向该星区传播的趋势。
+  女声：据博识学会有关专家表示，此种恶性细菌可以通过剧烈的生化反应，将绝大部分硅酸盐及硅氧化合物中的硅原子剥离，并供给其自我复制。
+  男声：藉由此种生物过程，该细菌会分泌一种具有强腐蚀性的生物膜，若处理不当，将对人身财产安全造成严重威胁。
+  女声：星际和平公司在此呼吁：该星系的机械生命领导人应尽早尽快制定应对政策，防止人身财产安全蒙受损失，并遏制疾病的进一步蔓延。
+  男声：博识学会武装考古学派话事人在近期的新闻发布会上表示，海尔雷星分队在星球南回归线某洞窟中发现了一微缩星系。
+  女声：据称，该分队在当地山脉开展爆破工程时，在剖开的山体中意外发现一容器样建筑。调查过后，该分队确信其中存在一虚数亚空间场，并确认了其功能。
+  男声：海尔雷分队队长向公司介绍，该亚空间场实际上是一微缩星系，且该人造星系中很可能仍存有居民。
+  女声：目前，海尔雷分队正在进一…
+  
+  **〈播报片段 3〉**
+  （音乐）
+  女声：这里是星际和平播报，观众朋友们晚上好。
+  男声：晚上好。
+  女声：欢迎收听今天的星际和平播报节目。首先为您介绍今天节目的主要内容。
+  男声：星际和平公司与仙舟联盟再次重新签署互惠贸易协定，利好双边经济。
+  女声：博识学会武装考古学派首席学士艾伦•琼斯主持发掘潜在灾害评级为Ω的古代遗迹「械皇遗冢」。
+  男声：著名歌者知更鸟受邀莅临匹诺康尼谐乐大典献唱颂歌。
+  女声：流光忆庭完成对已逝世界「月卫之盾」的忆质碎片回收工作，世界回忆有望重现。
+  男声：以下为您展开详细报道。
+  男声：星际和平公司与仙舟联盟：罗浮再度签署全新的互惠贸易协定。
+  女声：该协定将进一步推动开放双方各自市场，在农业、工业、医药、文化等多个领域深入合作，为缔造自由、开放、繁荣和共赢的商业市场奠定坚实基础。
+  男声：协议签订现场，星际和平公司市场开拓部发言人与罗浮天
+  --- (markdown total 3133 chars, still <= 12000) ---
+
+==============================================================================
+## 10. degradation against an EMPTY workspace
+==============================================================================
+[scanMissions] ok=false jsonChars=408 warnings=["未读取到「开拓续闻」总索引：文件不存在：C:\\Users\\masha\\AppData\\Local\\Temp\\hff-empty-xXTHKX\\hsr-missions\\sr-开拓续闻-完整\\index.json"]
+  payload: {"ok":false,"root":"C:\\Users\\masha\\AppData\\Local\\Temp\\hff-empty-xXTHKX\\hsr-missions","seriesRoot":"C:\\Users\\masha\\AppData\\Local\\Temp\\hff-empty-xXTHKX\\hsr-missions\\sr-开拓续闻-完整","series":[
+[catalogTrailblaze] ok=false jsonChars=460 warnings=["未读取到 trailblaze_missions.json：文件不存在：C:\\Users\\masha\\AppData\\Local\\Temp\\hff-empty-xXTHKX\\hsr-missions\\trailblaze_missions.json"]
+  payload: {"ok":false,"file":"C:\\Users\\masha\\AppData\\Local\\Temp\\hff-empty-xXTHKX\\hsr-missions\\trailblaze_missions.json","acts":[],"counts":{"acts":0,"series":0,"missions":0,"returnedMissions":0,"truncat
+[catalogBooks] ok=false jsonChars=312 warnings=["未读取到 books_without_amphoreus.json：文件不存在：C:\\Users\\masha\\AppData\\Local\\Temp\\hff-empty-xXTHKX\\hsr-missions\\books_without_amphoreus.json"]
+  payload: {"ok":false,"file":"C:\\Users\\masha\\AppData\\Local\\Temp\\hff-empty-xXTHKX\\hsr-missions\\books_without_amphoreus.json","count":0,"returned":0,"books":[],"warnings":["未读取到 books_without_amphoreus.js
+[booksByTitle] ok=false jsonChars=319 warnings=["未读取到 books_without_amphoreus.json：文件不存在：C:\\Users\\masha\\AppData\\Local\\Temp\\hff-empty-xXTHKX\\hsr-missions\\books_without_amphoreus.json"]
+  payload: {"ok":false,"file":"C:\\Users\\masha\\AppData\\Local\\Temp\\hff-empty-xXTHKX\\hsr-missions\\books_without_amphoreus.json","requested":["x"],"matched":0,"books":[],"warnings":["未读取到 books_without_ampho
+[loadSeries] ok=false jsonChars=249 warnings=["未读取到「开拓续闻」总索引：文件不存在：C:\\Users\\masha\\AppData\\Local\\Temp\\hff-empty-xXTHKX\\hsr-missions\\sr-开拓续闻-完整\\index.json"]
+  payload: {"ok":false,"root":"C:\\Users\\masha\\AppData\\Local\\Temp\\hff-empty-xXTHKX\\hsr-missions","series":"x","missions":[],"warnings":["未读取到「开拓续闻」总索引：文件不存在：C:\\Users\\masha\\AppData\\Local\\Temp\\hff-empt
+[conflictBrief] ok=false jsonChars=302 warnings=["未读取到「开拓续闻」总索引：文件不存在：C:\\Users\\masha\\AppData\\Local\\Temp\\hff-empty-xXTHKX\\hsr-missions\\sr-开拓续闻-完整\\index.json","没有可用的既有故事数据"]
+  payload: {"ok":false,"root":"C:\\Users\\masha\\AppData\\Local\\Temp\\hff-empty-xXTHKX\\hsr-missions","series":"x","brief":"","missions":[],"places":[],"characters":[],"warnings":["未读取到「开拓续闻」总索引：文件不存在：C:\\Users
+[equationNameDigest] ok=false jsonChars=312 warnings=["方程缓存不可用：文件不存在：C:\\Users\\masha\\AppData\\Local\\Temp\\hff-empty-xXTHKX\\hsr-worldview-cache\\equations.json"]
+  payload: {"ok":false,"markdown":"（本插件当前没有可用的方程命名素材：文件不存在：C:\\Users\\masha\\AppData\\Local\\Temp\\hff-empty-xXTHKX\\hsr-worldview-cache\\equations.json。请先运行 gs_update 抓取「方程一览」数据集）","truncated":false,"warnings":
+[missionDigest] ok=false jsonChars=379 warnings=["未读取到「开拓续闻」总索引：文件不存在：C:\\Users\\masha\\AppData\\Local\\Temp\\hff-empty-xXTHKX\\hsr-missions\\sr-开拓续闻-完整\\index.json"]
+  payload: {"ok":false,"markdown":"（本插件当前没有可用的既有故事（hsr-missions）素材：未读取到「开拓续闻」总索引：文件不存在：C:\\Users\\masha\\AppData\\Local\\Temp\\hff-empty-xXTHKX\\hsr-missions\\sr-开拓续闻-完整\\index.json。请检查工作区里的 hsr-missions 目录）","s
+[bookDigest] ok=false jsonChars=390 warnings=["未读取到 books_without_amphoreus.json：文件不存在：C:\\Users\\masha\\AppData\\Local\\Temp\\hff-empty-xXTHKX\\hsr-missions\\books_without_amphoreus.json"]
+  payload: {"ok":false,"markdown":"（本插件当前没有可用的书架素材：未读取到 books_without_amphoreus.json：文件不存在：C:\\Users\\masha\\AppData\\Local\\Temp\\hff-empty-xXTHKX\\hsr-missions\\books_without_amphoreus.json。请检查 books_without_a
+[broadcastDigest] ok=false jsonChars=443 warnings=["播报缓存不可用：文件不存在：C:\\Users\\masha\\AppData\\Local\\Temp\\hff-empty-xXTHKX\\hsr-worldview-cache\\broadcast.json"]
+  payload: {"ok":false,"markdown":"（本插件当前没有可用的播报格式素材：文件不存在：C:\\Users\\masha\\AppData\\Local\\Temp\\hff-empty-xXTHKX\\hsr-worldview-cache\\broadcast.json。请先运行 gs_update 抓取「星际和平播报」数据集）","formatTemplate":"（音乐）\n\n女
+  (every call returned a value instead of throwing)
+
+==============================================================================
+## 11. digest size budget check (must stay <= ~12000 chars)
+==============================================================================
+  equationNameDigest(real 212 entries): markdown=4235 chars truncated=false -> PASS
+  equationNameDigest(fixture): markdown=1049 chars truncated=false -> PASS
+  equationNameDigest(real, missing cache): markdown=137 chars truncated=false -> PASS
+  missionDigest(real, limit=40): markdown=2598 chars truncated=false -> PASS
+  missionDigest(real, limit=400): markdown=3272 chars truncated=false -> PASS
+  bookDigest(real, limit=25): markdown=2158 chars truncated=false -> PASS
+  bookDigest(real, limit=498): markdown=12000 chars truncated=true -> PASS
+  broadcastDigest(real page): markdown=3133 chars truncated=false -> PASS
+  broadcastDigest(fixture): markdown=716 chars truncated=false -> PASS
+
+==============================================================================
+## 12. JSON round-trip (no undefined anywhere)
+==============================================================================
+  scanMissions: JSON.parse(JSON.stringify(x)) === x -> PASS
+  catalogTrailblaze: JSON.parse(JSON.stringify(x)) === x -> PASS
+  catalogTrailblaze(limit=2): JSON.parse(JSON.stringify(x)) === x -> PASS
+  catalogBooks: JSON.parse(JSON.stringify(x)) === x -> PASS
+  booksByTitle: JSON.parse(JSON.stringify(x)) === x -> PASS
+  booksByTitle(bodyChars=80): JSON.parse(JSON.stringify(x)) === x -> PASS
+  loadSeries: JSON.parse(JSON.stringify(x)) === x -> PASS
+  loadSeries(明霄•下): JSON.parse(JSON.stringify(x)) === x -> PASS
+  conflictBrief: JSON.parse(JSON.stringify(x)) === x -> PASS
+  conflictBrief({}): JSON.parse(JSON.stringify(x)) === x -> PASS
+  equationNameDigest(fixture): JSON.parse(JSON.stringify(x)) === x -> PASS
+  equationNameDigest(real 212 entries): JSON.parse(JSON.stringify(x)) === x -> PASS
+  missionDigest(real): JSON.parse(JSON.stringify(x)) === x -> PASS
+  bookDigest(real): JSON.parse(JSON.stringify(x)) === x -> PASS
+  broadcastDigest(real page): JSON.parse(JSON.stringify(x)) === x -> PASS
+  broadcastDigest(fixture): JSON.parse(JSON.stringify(x)) === x -> PASS
+
+==============================================================================
+## 13. call-contract check against the real call sites in lib/index.js
+==============================================================================
+lib/index.js gs_setup        : mods.missions.scanMissions({ ...cfg, workspace: ws })
+                                 -> scan.ok, (scan.series ?? []).length, scan.counts?.missions
+  seriesCount=7 missionCount=52 ok=true
+lib/index.js gs_missions     : mods.digest.missionDigest({ ...cfg, workspace: ws }, { series, query, limit })
+                                 -> dig.ok, dig.seriesCount, dig.missionCount, dig.markdown, dig.warnings
+  series="" -> ok=true seriesCount=7 missionCount=52 markdown.chars=2598 warnings=["条目上限 40，已省略部分任务"]
+  series="狐斋志异" -> ok=true seriesCount=1 missionCount=9 markdown.chars=547 warnings=[]
+lib/index.js gs_digest      : mods.digest.<kind>({ ...cfg, workspace: ws }, { limit })
+  kind=equation -> ok=false markdown.chars=137 warnings=["方程缓存不可用：文件不存在：C:\\Users\\masha\\Desktop\\hsr-history-fictionologists\\hsr-worldview-cache\\equations.json"]
+  kind=mission-digest -> ok=true markdown.chars=2598 warnings=["条目上限 40，已省略部分任务"]
+  kind=book-digest -> ok=true markdown.chars=2158 warnings=[]
+  kind=broadcast-template -> ok=false markdown.chars=139 warnings=["播报缓存不可用：文件不存在：C:\\Users\\masha\\Desktop\\hsr-history-fictionologists\\hsr-worldview-cache\\broadcast.json"]
+
+==============================================================================
+## 14. per-function wall clock (median of 3 runs, real workspace)
+==============================================================================
+  scanMissions                         median     3.9 ms  (min 3.0 / max 4.1)  ok=true  output=6526 chars
+  catalogTrailblaze                    median    64.5 ms  (min 62.4 / max 65.7)  ok=true  output=32022 chars
+  catalogTrailblaze(limit=2)           median    62.0 ms  (min 60.6 / max 68.6)  ok=true  output=9884 chars
+  catalogBooks                         median    13.3 ms  (min 12.4 / max 14.3)  ok=true  output=50258 chars
+  booksByTitle(2)                      median    11.8 ms  (min 11.8 / max 12.2)  ok=true  output=6840 chars
+  loadSeries(明霄•下)                     median     4.4 ms  (min 4.2 / max 4.9)  ok=true  output=3509 chars
+  conflictBrief(1 series)              median     8.1 ms  (min 7.8 / max 8.2)  ok=true  output=4080 chars
+  conflictBrief(all)                   median    28.6 ms  (min 26.6 / max 31.0)  ok=true  output=13677 chars
+  equationNameDigest(missing cache)    median     0.0 ms  (min 0.0 / max 0.2)  ok=false  output=308 chars
+  missionDigest(limit=40)              median    28.3 ms  (min 27.0 / max 28.6)  ok=true  output=2814 chars
+  bookDigest(limit=25)                 median    12.3 ms  (min 11.4 / max 12.5)  ok=true  output=2696 chars
+  broadcastDigest(missing cache)       median     0.0 ms  (min 0.0 / max 0.2)  ok=false  output=439 chars
+
+==============================================================================
+## SUMMARY
+==============================================================================
+scanMissions:            ok=true series=7 missions=52 files=52 missingFiles=0
+catalogTrailblaze:      ok=true acts=5 series=18 missions=147 wall=63.2ms json=32022 chars
+catalogBooks:           ok=true count=498 returned=498
+booksByTitle:           ok=true matched=2 totalChars=5499
+loadSeries:             ok=true missions=9
+conflictBrief:          ok=true missions=8 briefChars=1520
+equationNameDigest:     realOk=false fixtureOk=true fixtureChars=1049 realEntriesOk=true realEntries=212 realChars=4235
+missionDigest:          ok=true seriesCount=7 missionCount=52 chars=2598
+bookDigest:             ok=true count=498 returned=25 chars=2158
+broadcastDigest:        realOk=false fixtureOk=true fixtureChars=716 realPageOk=true realSpeakers={"music":7,"female":112,"male":107} realChars=3133
+
+Evidence file written by: node _evidence/run-missions.mjs

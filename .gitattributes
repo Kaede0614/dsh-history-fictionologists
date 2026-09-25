@@ -1,0 +1,16 @@
+# 统一换行：仓库内与工作区都用 LF，任何平台、任何 core.autocrlf 设置下都一样。
+#
+# 为什么必须钉死：本仓库的部分测试会读取自己的源码并做逐字（byte-for-byte）断言
+# （例如「系统提示里的风格总则必须与 STYLE_GUIDE 逐字节一致」）。Windows 上
+# core.autocrlf=true 的克隆会把源码转成 CRLF，这类断言会莫名其妙地失败。
+* text=auto eol=lf
+
+# 二进制制品：不参与换行转换
+*.tgz   binary
+*.png   binary
+*.jpg   binary
+*.jpeg  binary
+*.gif   binary
+*.webp  binary
+*.ico   binary
+*.zip   binary

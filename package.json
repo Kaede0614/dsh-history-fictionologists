@@ -1,0 +1,55 @@
+{
+  "name": "dsh-history-fictionologists",
+  "version": "0.2.0",
+  "description": "DSH 虚构史学家：基于《崩坏：星穹铁道》官方世界观的二创插件（/gs）——神人制造机生成科幻灵感、构史文集写短篇、星际构史播报虚构新闻；12 个 biligame Wiki 数据源增量抓取并缓存本地。",
+  "keywords": [
+    "dsh",
+    "dsh-plugin",
+    "deepseek-harness",
+    "honkai-star-rail",
+    "fiction",
+    "worldview"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kaede0614/dsh-history-fictionologists.git"
+  },
+  "homepage": "https://github.com/Kaede0614/dsh-history-fictionologists#readme",
+  "bugs": {
+    "url": "https://github.com/Kaede0614/dsh-history-fictionologists/issues"
+  },
+  "type": "module",
+  "main": "lib/shell.js",
+  "exports": {
+    ".": {
+      "default": "./lib/shell.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib",
+    "scripts",
+    "cordis.patch.yml",
+    "README.md",
+    "CHANGELOG.md",
+    "NOTICE"
+  ],
+  "engines": {
+    "node": "^22.19.0 || >=24"
+  },
+  "packageManager": "pnpm@11.7.0",
+  "scripts": {
+    "test": "node --test",
+    "check": "node scripts/check.mjs",
+    "live": "node _evidence/run-extract.mjs --live",
+    "cache-roundtrip": "node _evidence/cache-roundtrip.mjs",
+    "e2e": "node _evidence/e2e-wiring.mjs"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  },
+  "license": "MIT",
+  "private": true
+}

@@ -1,0 +1,214 @@
+### equations dataRows=324
+attrs=<tr class="divsort" data-param1="3星" data-param2="虚无" data-param3="欢愉" data-param4="4.5" data-param5="乐园漫记">
+cellCount=6
+  [0] rawLen=9652 cleaned="大鼻子奶奶"
+  [1] rawLen=112 cleaned="大鼻子奶奶"
+  [2] rawLen=15 cleaned="乐园漫记"
+  [3] rawLen=1211 cleaned="虚无×6 欢愉×4"
+  [4] rawLen=258 cleaned="【发牌员】攻击段数提高4，每次造成伤害时，为我方全体角色提供1层【切牌】：我方目标施放攻击后，消耗所有【切牌】，每层消耗的【切牌】使自身行动提前5%，并使攻击目标的【呢喃】产生5次等同于原伤害6%*消耗层数的伤害。"
+  [5] rawLen=37 cleaned="4.5"
+--- cell[4] RAW (first 2500) ---
+<td>【发牌员】攻击段数提高<span style="color:#e47d00">4</span>，每次造成伤害时，为我方全体角色提供1层【切牌】：我方目标施放攻击后，消耗所有【切牌】，每层消耗的【切牌】使自身行动提前<span style="color:#e47d00">5%</span>，并使攻击目标的【呢喃】产生<span style="color:#e47d00">5</span>次等同于原伤害<span style="color:#e47d00">6%</span>*消耗层数的伤害。
+</td>
+
+--- cell[1] RAW ---
+<td class="hidden-xs"><a href="/sr/%E5%A4%A7%E9%BC%BB%E5%AD%90%E5%A5%B6%E5%A5%B6" title="大鼻子奶奶">大鼻子奶奶</a>
+</td>
+
+
+### 遗器图鉴 divsortChunks=62
+chunk0 head: <div class="divsort" data-param0="0" data-param1="隧洞遗器" data-param2="侵蚀隧洞" data-param3="4.6">
+<div class="relicset-box">
+<div class="ping0 ping1"><img alt="遗器一览-底版.png" src="https://patchwiki.biligame.com/images/sr/thumb/6/68/8beaxz78xu76rbe9nxfx0y1rsvh6es3.pn
+balanced[0] len=1774
+nameBlock: class="relicset-name"><a href="/sr/%E6%88%8F%E6%A2%A6%E7%82%B9%E6%98%9F%E7%9A%84%E4%BC%B6%E4%BA%BA" title="戏梦点星的伶人">戏梦点星的伶人</a></div>
+</div>
+</div>
+nameBlock all: <div class="relicset-name"><a href="/sr/%E6%88%8F%E6%A2%A6%E7%82%B9%E6%98%9F%E7%9A%84%E4%BC%B6%E4%BA%BA" title="戏梦点星的伶人">戏梦点星的伶人</a></div>
+attr tags: <div class="divsort" data-param0="0" data-param1="隧洞遗器" data-param2="侵蚀隧洞" data-param3="4.6">
+
+### 光锥图鉴 divsortChunks=169
+chunk0 head: <div class="divsort" data-param0="0" data-param1="5星" data-param2="欢愉" data-param3="限定跃迁" data-param4="4.5">
+<div class="weapon-box">
+<div class="ping0 ping1"><img alt="角色一览-底版.png" src="https://patchwiki.biligame.com/images/sr/a/a7/2ouh10uu2cfj052jdgz0nsm20q4
+balanced[0] len=2697
+nameBlock: class="weapon-name"><a href="/sr/%E5%90%91%E6%B5%AA%E8%8A%B1%E6%8E%B7%E4%B8%8B%E7%9B%9B%E5%A4%8F" title="向浪花掷下盛夏">向浪花掷下盛夏</a></div>
+</div>
+</div>
+nameBlock all: <div class="weapon-name"><a href="/sr/%E5%90%91%E6%B5%AA%E8%8A%B1%E6%8E%B7%E4%B8%8B%E7%9B%9B%E5%A4%8F" title="向浪花掷下盛夏">向浪花掷下盛夏</a></div>
+attr tags: <div class="divsort" data-param0="0" data-param1="5星" data-param2="欢愉" data-param3="限定跃迁" data-param4="4.5">
+
+### 星神 headings=21
+  h2 id=undefined title="目录" idx=4332
+  h2 id=.E6.98.9F.E7.A5.9E.E6.80.BB.E8.A7.88 title="星神总览" idx=7250
+  h2 id=.E3.80.8C.E5.BC.80.E6.8B.93.E3.80.8D.EF.BC.8C.E9.98.BF.E5.9F.BA.E7.BB.B4.E5.88.A9 title="「开拓」，阿基维利" idx=7835
+  h2 id=.E3.80.8C.E6.AF.81.E7.81.AD.E3.80.8D.EF.BC.8C.E7.BA.B3.E5.8A.AA.E5.85.8B title="「毁灭」，纳努克" idx=9594
+--- section 「开拓」 len=1041 ---
+
+<table class="wikitable" width="100%">
+<tbody><tr>
+<td style="text-align:center">执掌「开拓」命途的星神，从孤绝世界裴伽纳出发，不断开拓未知的边界。<br />祂的命运因意外而终结。
+</td></tr>
+<tr>
+<td><span style="color:#dac291"><i>「无数流星划过今夜的天空…如果选中了正确的那一颗，它将把你的愿望带向千百个世界。」</i></span><br />
+<div style="color:#dac291;text-align: right"><i>——阿德里安•斯宾塞-史密斯，《有关星空的寓言集》</i></div><br />
+<p><br />
+命运的罗盘上标着三个方向：未知、已知和不可知。可以忍受「未知」，却绝不能屈服于「不可知」。<br />
+阿基维利离开孤绝世界裴伽纳，不断开拓着宇宙未知的边界，试图找寻存在之树的端点。但祂的命运因意外而终结。
+</p>
+</td></tr>
+<tr>
+<td><b>关联条目</b><br /><a href="/sr/%E6%B4%BE%E7%B3%BB#星穹列车" title="派系">派系#星穹列车</a>、<a href="/sr/%E6%B4%BE%E7%B3%BB#无名客" title="派系">派系#无名客</a>、<a href="/sr/%E4%B8%93%E6%9C%89%E5%90%8D%E8%AF%8D#星际旅行" title="专有名词">专有名词#星际旅行</a>
+</td></tr></tbody></table>
+<p><b><big>来源出身</big></b><br />
+</p><p><br /><b><big>行为特征</big></b><br />
+</p><p><br /><b><big>相关派系</big></b><br />
+</p>
+<ul><li><a href="/sr/%E6%B4%BE%E7%B3%BB#无名客" title="派系">无名客</a></li>
+<li><a href="/sr/%E6%B4%BE%E7%B3%BB#星穹列车" title="派系">星穹列车</a></li></ul>
+<p><br /><b><big>形象与标志考据</big></b><br />
+</p><p><br />
+</p>
+
+
+### 派系 headings=54 h2=19 h3=32 h4=3
+--- 无名客 section len=2483 ---
+
+<p><big><b>简介</b></big><br />
+与「开拓」的星神共同探索宇宙的人们。<br />
+一群勇敢而好奇的星际探险者。<br />
+无名客不图名利，阿基维利陨落后，有些无名客仍在坚持开拓之路。<br />
+<big><b>智库</b></big><br />
+</p>
+<table class="wikitable">
+<tbody><tr>
+<td><br />
+<p><span style="color:#dbc291"><i>「神秘的陌生人踏入诸界，复又离去。」</i></span><br />
+</p>
+<div style="color:#dbc291;text-align: right"><i>——阿德里安•斯宾塞-史密斯，《有关星空的寓言集》</i></div><br />
+<p>千年前，名为阿基维利的星神走过诸界，在星海间铺下银轨，让一个又一个世界彼此相连，留下关于宇宙和探索的传奇——勇敢而好奇的人们被精彩的冒险故事吸引，纷纷追随「开拓」之神的足迹，加入探索银河的旅途。<br />
+<br />
+旅行者们自称「无名客」，他们搭载着阿基维利建造的列车，奔行于被银轨联结的星球之间，展开一段段扣人心弦的冒险旅程。传说，「开拓」的阿基维利酷爱与凡人共行，祂与「无名客」们共饮来自不同世界的佳酿，合唱不同种族编谱的歌谣。他们时常将列车行驶的轨迹伪装成流星的慧尾，在窥见人们仰头惊异的神情后放声大笑；他们也时常因莽撞大意而陷入危机，借助星神的力量才得以逃出生天。阿基维利与追随者们建立了深厚的羁绊，他们的探险也不断吸引着异世的旅者加入「无名客」的行列。<br />
+<br />
+阿基维利陨落后，一群忠实的「无名客」继承了祂的遗志，继续探索未知的世界，坚信有朝一日，「开拓」的意志将联结整个宇宙。那列曾搭载祂与追随者们的银河列车，至今仍然行驶在星海之间。传说，它以逝去星神的心脏作为源动力，艰难地修复着被未知之癌污染的轨道。<br />
+<br />
+</p>
+</td></tr></tbody></table>
+<center><div style="border-radius: 6px;padding: 10px;background:#e0edff;border: 1px solid #d0d0d0;border-left: 5px solid rgb(77 120 216 / 78%);margin-bottom:5px;width:100%;max-width:100%;text-align:left"><font style="color:rgb(77 120 216 / 78%)"><b>关联条目</b></font><br /><a href="/sr/%E6%98%9F%E7%A5%9E#「开拓」，阿基维利" title="星神">星神#「开拓」，阿基维利</a>、<a href="#星穹列车">#星穹列车</a></div></center>
+<center><div style="border-radius: 6px;padding: 10px;background:#e0edff;border: 1px solid #d0d0d0;border-left: 5px solid rgb(77 120 216 / 78%);margin-bottom:5px;width:100%;max-width:100%;text-align:left"><b>星穹列车</b>及<b>无名客</b>相关更多信息请跳转<a href="/sr/%E6%98%9F%E7%A9%B9%E5%88%97%E8%BD%A6" title="星穹列车">星穹列车</a></div></center>
+<p><big><b>成员</b></big><br />
+白珩（前），身为无名客却与星穹列车无缘的狐人旅行家。<br />
+<big><b>相关信息</b></big><br />
+<span class="img-tx2"><a href="/sr/%E8%B7%83%E8%BF%81%E5%A4%8D%E7%9C%BC" title="跃迁复眼"><img alt="跃迁复眼" src="https://patchwiki.biligame.com/images/sr/thumb/0/03/jvlqyka5e47199n8qdm51ergn4jpamw.png/30px-%E8%B7%83%E8%BF%81%E5%A4%8D%E7%9C%BC.png" decoding="async" loading="lazy" width="30" height="30" srcset="https://patchwiki.b
+--- 开拓(h2) section len=1 ---
+
+
+
+### 专有名词 headings=48 h2=9 h3=39
+--- 虚数之树 len=854 ---
+
+<table class="wikitable" width="100%">
+<tbody><tr>
+<td>「虚数之树」是现今学术界普遍接受的一种宇宙理论。<br />
+<p><br />
+该学说将不同时空的不同世界比作树状结构：每一株枝干，都是一种世界存在的形式；每一片花叶，都是它们在时间维度中留下的现在与曾经。树冠因汲取时空维管中无主的虚数能量，而始终存在动态的结构——新芽生长，枯叶脱离，无垠宇宙中上演着无数的诞生与终结…将宇宙结构比喻为「树」，或许是一种将「虚数之树」视为生命的态度。<br />
+<br />
+宇宙在「虚数之树」学说被提出之前，曾因其无法被观测的性质，被称为「虚空恒盲之物」；而学说诞生之后，人们便能借助想象勾勒其作用原理：无主的虚数能量，经过时空维管不停地奔流，在末梢形成了我们所认知的「星系」——即不可胜数的世界。而在世界与世界之间，就像树叶与树叶之间存在空间上的阻隔一般，是难以跨越的未知虚数空域。<br />
+<br />
+博识学会一度认为天才俱乐部#2哈那德•庞奇率先提出了「虚数之树」的起源学说；反复审度虚构史学家的影响后，现在学界普遍认为#1赞达尔•壹•桑原才是首位提出者。
+</p>
+</td></tr></tbody></table>
+<center><div style="border-radius: 6px;padding: 10px;background:#e0edff;border: 1px solid #d0d0d0;border-left: 5px solid rgb(77 120 216 / 78%);margin-bottom:5px;width:100%;max-width:100%;text-align:left"><font style="color:rgb(77 120 216 / 78%)"><b>关联条目</b></font><br /><a href="#星际旅行">#星际旅行</a></div></center>
+
+--- 名词(h2) len=125 ---
+
+<p>于原初混沌的裂隙中萌生了嫩芽，在以亿万年为单位的时间浇灌下，嫩芽长成了无朋巨树。<br />
+巨树的枝杈上结出了缤纷的嫩叶，每一枚都承载着宇宙意志的碎片。那意志永恒地言说着含混不清的话语，但却将绝景、瑰宝、史诗和生命赠予每个世界。
+</p>
+
+
+### 播报 headings=h2:目录 | h4:完成雅利洛-Ⅵ开拓任务 | h4:完成仙舟「罗浮」开拓任务 | h4:匹诺康尼开拓任务起始 | h4:完成匹诺康尼开拓任务异乡异客后 | h4:翁法罗斯开拓任务起始 | h4:完成翁法罗斯开拓任务「成为昨日的明天」后 | h4:完成二相乐园开拓任务「鸣笛于归寂之时」后
+h4 count=7
+--- h4[0] section raw len=1485 ---
+
+<dl><dd>（音乐）</dd></dl>
+<ul><li>女声：这里是星际和平播报，观众朋友们晚上好。</li>
+<li>男声：晚上好。</li>
+<li>女声：「存护」克里珀的巨锤徐徐下落，锤声响彻寰宇，震耳欲聋。</li>
+<li>男声：博识学会星空生态学派宣布：琥珀历2157纪结束，2158纪正式到来。</li>
+<li>女声：在新的纪元里，星际和平公司将一如既往地致力于银河间的和平共处，贸易繁荣。</li>
+<li>男声：公司将不忘初心，牢记创业之初的唯一原则：将一切奉献给「琥珀王」。</li>
+<li>女声：下面让我们回顾在2157琥珀纪发生了哪些重大事件：</li>
+<li>男声：自2147纪开始出现的神秘现象「星核」造成的污染仍在继续。「星核」阻塞了文明之间的道路，令一度团结在「琥珀王」命途下的诸界分崩离析。</li>
+<li>女声：漫长的十纪中，星际和平公司从未放弃将诸界重新连通的愿景。</li>
+<li>男声：在博识学会的鼎力支持下，我们已初步掌握了绕过星核污染的技术，并在一百一十三个星系进行了实验，取得了可喜的成果。</li>
+<li>男声：银河浩瀚无边，而我们并不孤单。已陨的星神，「开拓」阿基维利曾搭乘的星穹列车如今重新起航。</li>
+<li>女声：这群年轻的无名客自称继承了阿基维利的意志，将重新开辟星与星之间的航线，再现九百九十纪前的「第一次繁荣」。</li>
+<li>男声：在此，我们代表星际和平公司向星穹列车的开拓者们送上最真挚的祝福。</li>
+<li>女声：在寰宇人民深受星核困扰的同时，一伙新兴起的邪恶组织「星核猎手」却在宇宙中四处作乱。</li>
+<li>男声：此前报导过，「星核猎手」入侵了天才俱乐部的螺丝咕姆星球，与星球的主人螺丝咕姆爆发了冲突。</li>
+<li>女声：根据最新消息，他们上一次出现的地点是仙舟「罗浮」。</li>
+<li>男声：「星核猎手」曾犯下多起大案，任何一名成员均有独自覆灭一颗星球的能力，其效忠的星神尚不明确，划定为极度危险份子。</li>
+<li>女声：如遭遇疑似星核猎手的成员，请立刻联系公司，切勿打草惊蛇。提供有效线索者，将获得重金酬赏。</li>
+<li>男声：已知多个派系收到了盛会之星「匹诺康尼」的邀请函。据悉，这是匹诺康尼的「家族」首次公开向银河各派系发出正式邀约。</li>
+<li>女声：星际和平公司也在邀请之列，「战略投资部」部长钻石称将谨慎评估家族此举的意义，并将积极友好作出应对。</li>
+<li>男声：我们期盼银河各方携手并肩，守护美好家园，抵御邪恶势力的侵犯。</li>
+<li>女声：「绝灭大君」焚风现身于提亚奴阿星系。据悲悼伶人的消息，该星系已遭毁灭。</li>
+<li>男声：反物质军团正在全银河范围内肆虐，引发的灾变与破坏难以数计。公司提请广大群众重视「存护」的意义。</li>
+<li>女声：任何接入心灵通感信标的星球，都可以向公司免费索取由筑城者提供的《星际和平指南》。</li>
+<li>女声：在琥珀2158纪的开端，星际和平公司骄傲地宣布：天才俱乐部著名学者黑塔女士已正式承诺与公司达成长期友好合作同盟关系。</li>
+<li>男声：这将是第22号会员利尔他、第56号会员以利亚萨拉斯之后，第三位智识的天才与公司携手，共同存护琥珀王的宇宙。</li>
+<li>女声：本次播报到此结束，请在指定时间收听下一周期的星际和平播报。再见。</li>
+<li>男声：再见。</li></ul>
+<dl><dd>（音乐）</dd></dl>
+<h4><span id=".E5.AE.8C.E6.88.90.E4.BB.99.E8.88.9F.E3.80.8C.E7.BD.97.E6.B5.AE.E3.80.8D.E5.BC.80.E6.8B.93.E4.BB.BB.E5.8A.A1"></span><span class="mw-headline" id="完成仙舟「罗浮」开拓任务">完成仙舟「罗浮」开拓任务</span></h4>
+<dl><dd>（音乐）</dd></dl>
+<ul><li>女声：这里是星际和平播报，观众朋友们晚上好。</li>
+<li>男声：晚上好。</li>
+<li>女声：欢迎收看今天的星际和平播报节目。首先为您介绍今天节目的主要内容。
+--- tail of last h4 section (300) ---
+星体正是热销书籍《如我所书》描绘的世界。</li>
+<li>女声：目前，星体表面已经诞生了多细胞无脊椎动物生态群落。在致密忆质的包裹下，生命演替的速度堪比快进的影像。</li>
+<li>女声：博识学会近期与黑塔女士进行了多轮磋商，虽然黑塔女士婉拒了出镜邀请，但她明确首肯「翁法罗斯重现必然性」的科学判断。</li>
+<li>男声：翁法罗斯的状态，均符合黑塔女士从权杖碎片中提取的记录。基于演化模型，她预测该世界文明将趋向权杖记录中的「最终循环」。</li>
+<li>女声：值得欣喜的是，黑塔女士口中的「最终循环」将呈现一幅高度和谐、壮丽的图景。</li>
+<li>男声：星际和平公司将怀抱真诚的期盼，持续关注翁法罗斯，第一时间为听众带来追踪报道。</li>
+<li>女声：本次播报到此结束，请在指定时间收听下一周期的星际和平播报。再见。</li>
+<li>男声：再见。</li></ul></div>
+
+### 模拟宇宙 headings=h2:目录 | h2:简介 | h2:玩法说明 | h3:玩法规则 | h3:玩法奖励 | h3:扩展装置 | h2:世界信息 | h2:模拟宇宙图鉴 | h3:命途与祝福 | h3:奇物 | h3:事件 | h3:星神 | h2:技能树 | h2:每周奖励 | h2:黑塔的商店 | h2:阵容参考
+section len=10634 respTabCount=14 hr=12 kaifa=26
+kaifa total on page=26
+--- 星神 subsection head ---
+id="星神">星神</span></h3>
+<center><div style="border-radius: 6px;padding: 10px;background:#e0edff;border: 1px solid #d0d0d0;border-left: 5px solid rgb(77 120 216 / 78%);margin-bottom:5px;width:100%;max-width:100%;text-align:left">该部分内容为游戏内模拟宇宙图鉴文案</div></center>
+<p><i>星神行于各自「命途」，祂们的存在扑朔迷离。</i>
+</p>
+<div class="main-line-wrap" style="width:100%"><div class="resp-tabs" style="border-spacing: 0px;"><ul class="resp-tabs-list clearfix" style="margin-left:0;margin-top:0px">
+<li class="active bili-list-style"><span class="tab-panel">存护<br />克里珀</span></li>
+<li class="bili-list-style"><span class="tab-panel">记忆<br />浮黎</span></li>
+<li class="bili-list-style"><span class="tab-panel">欢愉<br />阿哈</span></li>
+<li class="bili-list-style"><span class="tab-panel">巡猎<br />岚</span></li>
+<li class="bili-list-style"><span class="tab-panel">毁灭<br />纳努克</span></li>
+<li class="bili-list-style"><span class="tab-panel">虚无<br />Ⅸ</span></li>
+<li class="bili-list-style"><span class="tab-panel">丰饶<br />药师</span></li>
+<li class="bili-list-style"><span class="tab-panel">繁育<br />塔伊兹育罗斯</span></li>
+<li class="bili-list-style"><span class="tab-panel">智识<br />博识尊</span></li>
+<li class="bili-list-style"><span class="tab-panel">同谐<br />希佩</span></li>
+<li class="bili-list-style"><span class="tab-panel">秩序<br />太一</span></li>
+<li class="bili-list-style"><span class="tab-panel">贪饕<br />奥博洛斯</span></li>
+<li class="bili-list-style"><span class="tab-panel">均衡<br />互</span></li>
+<li class="bili-list-style"><span class="tab-panel">神秘<br />迷思</span></li>
+</ul><div class="resp-tabs-container border" style="border:2px"><div class="resp-tab-content" style="display:block; overflow:auto">
+<p>开发日志1<br /><b>关联条目-「存护」</b><br />……「存护」克里珀，与「贪饕」奥博洛斯同为宇宙中已知最古老的星神。我曾经对祂很有兴趣，毕竟琥珀历最早的近两百纪历史几乎是一片空白。这个大石头/琥珀是什么生物？祂从哪来，如何成为星神，又干嘛孜孜不倦地筑墙？问题很多，但无处求解。公司把克里珀的信息封锁得太好了，对他们来说，琥珀王简直是真正而唯一的神，容不得半点轻慢。从公司那里，我什么有用的情报都没拿到。相比之下，博识学会对「存护」就没什么敬畏……
+</p>
+<hr />
+<p>开发日志2<br /><b>关联条目-「存护」</b><br />……瞧不起博识学会，我却挺喜欢他们。同样是「智识」的追随者，这群学士没有俱乐部的桀骜脾气，大多很朴实，问什么答什么。按照编辑克利欧的说法，0-180琥珀纪并不像公司宣称的那样空白。多项考古发现证明在「存护」登神的初期古兽依然活跃，这和公司的说法：「『黄昏战争』因琥珀王的诞生而终结」相违背。甚至还有一种假说，认为在克里珀之前已经存在其祂的星神……用小拇指想想也知道，公司肯定不会支持这种研究，他们用经费投资胁迫星空生态学派放弃了这类考古。这也是我不再对克里珀感兴趣的原因：公司实在是太烦了……
+</p>
+<hr />
+开发日志3<br /><b>关联条目-「存护」</b><br />……我很好奇，筑城者是如何获得星神的启示，提前修筑抵御外敌的高墙？毕竟克里珀不怎么关心凡人，俯瞰众生更像「秩序」太一的行为——这两位星神若有交情倒也正常，毕竟「存护」和「秩序」存在交汇的领域。说真的，我蛮欣赏太一，祂浑身散发着古老帝国的光辉，像是庄严的大理石，这也与克里珀有几分相似——祂们身上都有守护神的影子，只是形式并不相同。总之，塔伊兹育罗斯的陨落似与「存护」直接相关，我想唯有那神力缠绕的巨锤，才可能洞穿另一位神的躯体。只是历史的全貌远不止于此，我实在难以确定星神的交手方式……</div>
+<div class="resp-tab-content">
+<p>开发日志1<br /><b>关联条目-「记忆」</b><br />……宇宙中神秘的星神多了去了，这个浮黎更是高深莫测。整个俱乐部加上公司加上博识学会，居然没人知道祂是什么时候诞生的。「记忆」的星神悄悄地出现在宇宙史里，自然而然顺理成章，就好像祂修改了所有人的记忆一样。浮黎在凡人面前现身的次数屈指可数，根据影像资料记载，祂的形象就如同水晶雕琢的人像，面容模糊不清，头戴一顶珠帘垂落的冠冕。如果「记忆」浮黎现身，一定会发生什么令人终生难忘的大事。但我觉得因果关系应当颠倒一下：或许浮黎是为了将那一瞬铭刻在宇宙的记忆之中，才来到那里呢？……
+</p>
+<hr />
+<p>开发日志2<br /><b>关联条目-「记忆」</b><br />……很幸运，浮黎有据可查的一次现身，恰好是星际和平公司创始人兼终身名誉董事路易斯•弗莱明的最后一次对外露面。因此，在公司的档案里，保存了星神出现到离开的完整录像。那时，老弗莱明正在致辞，宣布将永久隐居，不再出席一切正式或非正式活动。考虑到他那时的岁数，大概是活腻了吧。就在他话音还未落的时候，彩光突如霞照，令在场的人大

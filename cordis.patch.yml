@@ -1,0 +1,22 @@
+# ============================================================================
+# dsh-history-fictionologists —— DSH bundle patch
+# ============================================================================
+# 这是插件的「挂载声明」：DSH 启动时按 bundle 层栈叠加各插件的 patch，
+# 本文件把虚构史学家插件插入 profile 的配置树。
+#
+# 安装方式（推荐，进入 profile 的 bundles 栈，进程级重启后生效）：
+#   dsh plugin --profile web add github:Kaede0614/dsh-history-fictionologists
+# 或本地开发（junction 已存在时只需把包名加进 bundles）：
+#   dsh plugin --profile web add link:<你的仓库路径>
+#
+# 配置示例（在 profile 的 cordis.patch.yml 里按 id 覆盖整行 config）：
+#   - id: dsh-history-fictionologists
+#     config:
+#       requestIntervalMs: 2000
+#       staleAfterDays: 7
+#       defaultStoryWords: 2000
+# ============================================================================
+
+- insert:
+    - id: dsh-history-fictionologists
+      name: dsh-history-fictionologists

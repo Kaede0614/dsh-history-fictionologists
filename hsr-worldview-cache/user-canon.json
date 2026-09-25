@@ -1,0 +1,18 @@
+{
+  "schema": "dsh-history-fictionologists/user-canon@1",
+  "howTo": "手工维护的「用户设定补充」。dataset 用缓存的数据集 id（aeons/factions/terms/relics/lightcones/equations/events/curios/consumables/decorations/simuniverse/broadcast），写 '*' 表示对全部数据集生效。match 是触发关键词（命中 gs_read 的 query，或与该数据集返回条目同屏出现）。note 必填，缺 note 的条目会被忽略。抓取（gs_update）永远不会改写这个文件。",
+  "updatedAt": "2026-09-26T03:30:00.000Z",
+  "updatedBy": "用户评审（/gs 神人制造机设定修正）",
+  "entries": [
+    {
+      "id": "aeons-oroboros-sealed",
+      "dataset": "aeons",
+      "match": ["贪饕", "奥博洛斯"],
+      "name": "「贪饕」，奥博洛斯",
+      "status": "已镇压（不得写成在世／失踪待返／即将归来）",
+      "note": "按用户设定：奥博洛斯早已四分五裂、被镇压，不是失踪待返的存在。缓存里的「已失踪无影」与遗器文本里「『贪饕』从银河尽头归来的预兆」都只是旧传闻，不得当作现状陈述。任何功能都不得让祂现身、说话、被惊动或归位；只能以遗物、残留影响、过期教条、他人转述的传说出现。",
+      "source": "用户评审（2026-09-26）",
+      "affects": ["神人制造机", "构史文集", "星际构史播报"]
+    }
+  ]
+}

@@ -1,0 +1,157 @@
+# cache-roundtrip
+# argv=["D:\\APP\\nodejs\\node.exe","C:\\Users\\masha\\Desktop\\hsr-history-fictionologists\\_evidence\\cache-roundtrip.mjs"]
+# cwd=C:\Users\masha\Desktop\hsr-history-fictionologists
+# node=v24.21.0  time=2026-09-25T17:51:06.297Z
+# cfg={"workspace":"C:/Users/masha/Desktop/hsr-history-fictionologists","requestIntervalMs":2000,"requestTimeoutMs":30000,"maxRetries":3}
+
+## status() BEFORE any update (cache dir may not exist)
+{
+  "ok": true,
+  "cacheDir": "C:\\Users\\masha\\Desktop\\hsr-history-fictionologists\\hsr-worldview-cache",
+  "hasCache": false,
+  "lastUpdated": null,
+  "stale": true,
+  "recommendation": "update",
+  "advice": "还没有缓存，先执行一次更新。"
+}
+
+## update() #1 — full incremental fetch
+   [progress] start relics
+   [progress] fetched relics
+   [progress] wikitext relics
+   [progress] wikitext relics
+   [progress] updated relics count=62 excluded=0
+   [progress] start lightcones
+   [progress] fetched lightcones
+   [progress] wikitext lightcones
+   [progress] wikitext lightcones
+   [progress] wikitext lightcones
+   [progress] wikitext lightcones
+   [progress] updated lightcones count=169 excluded=0
+   [progress] start consumables
+   [progress] fetched consumables
+   [progress] updated consumables count=192 excluded=24
+   [progress] start decorations
+   [progress] fetched decorations
+   [progress] updated decorations count=250 excluded=0
+   [progress] start aeons
+   [progress] fetched aeons
+   [progress] updated aeons count=18 excluded=3
+   [progress] start factions
+   [progress] fetched factions
+   [progress] updated factions count=48 excluded=3
+   [progress] start terms
+   [progress] fetched terms
+   [progress] updated terms count=47 excluded=1
+   [progress] start simuniverse
+   [progress] fetched simuniverse
+   [progress] updated simuniverse count=26 excluded=0
+   [progress] start curios
+   [progress] fetched curios
+   [progress] updated curios count=251 excluded=0
+   [progress] start events
+   [progress] fetched events
+   [progress] updated events count=54 excluded=118
+   [progress] start equations
+   [progress] fetched equations
+   [progress] updated equations count=212 excluded=112
+   [progress] start broadcast
+   [progress] fetched broadcast
+   [progress] updated broadcast count=8 excluded=0
+
+result: {
+  "ok": true,
+  "updated": [
+    "relics",
+    "lightcones",
+    "consumables",
+    "decorations",
+    "aeons",
+    "factions",
+    "terms",
+    "simuniverse",
+    "curios",
+    "events",
+    "equations",
+    "broadcast"
+  ],
+  "skipped": [],
+  "failed": [],
+  "durationMs": 61189,
+  "cacheDir": "C:\\Users\\masha\\Desktop\\hsr-history-fictionologists\\hsr-worldview-cache",
+  "lastUpdated": "2026-09-25T17:52:07.477Z",
+  "warnings": []
+}
+wall clock: 61190ms
+
+## status() AFTER update #1
+ok=true hasCache=true lastUpdated=2026-09-25T17:52:07.477Z stale=false staleAfterDays=7 recommendation=use-cache
+id           count  excluded  revisionId  pageSha           lastUpdated               ok
+relics          62         0       99028  25d875344e23447b  2026-09-25T17:51:12.514Z  true
+lightcones     169         0      101280  fb68fcb92a71f2f1  2026-09-25T17:51:24.531Z  true
+consumables    192        24      101844  52bb27b3c021474a  2026-09-25T17:51:30.170Z  true
+decorations    250         0       98087  e394a18b0d369236  2026-09-25T17:51:33.859Z  true
+aeons           18         3      102423  76373196867fdce0  2026-09-25T17:51:36.910Z  true
+factions        48         3      102125  15b7850bfd830ac0  2026-09-25T17:51:41.420Z  true
+terms           47         1      101519  9e9be65ee129fc6b  2026-09-25T17:51:44.699Z  true
+simuniverse     26         0       79318  3b0852e988b275f2  2026-09-25T17:51:51.643Z  true
+curios         251         0      100852  d91b0a28a5b2b1aa  2026-09-25T17:51:55.747Z  true
+events          54       118       92645  7d7a512a33e7f359  2026-09-25T17:51:58.822Z  true
+equations      212       112      100747  0219a92faacd1e4d  2026-09-25T17:52:05.255Z  true
+broadcast        8         0       99042  6ab81be99409cf95  2026-09-25T17:52:07.477Z  true
+failed[]: []
+
+## read() / sampleAll() over the fresh cache
+read equations: ok=true count=212 matched=212 entries=2 first="大鼻子奶奶"
+read terms query=虚数之树: matched=3 names=["赞达尔•壹•桑原","虚数之树","星际旅行"]
+sample relics       count=   62 first="戏梦点星的伶人" preview=""
+sample lightcones   count=  169 first="向浪花掷下盛夏" preview="海水涌上板顶，浪尖撕开一道翻涌的豁口，阳光粉碎成千万片金箔。他踏上冲浪板，令浪峰将他抛向高处。
+「惊涛骇浪意味着风险重重"
+sample consumables  count=  192 first="蕉错就错" preview="使用后在下次战斗中，进入战斗时立即为我方全体角色回复等同于各自已损失生命值50%的生命值。"
+sample decorations  count=  250 first="放声大笑吧" preview="当你觉得不好笑时，就笑一笑吧。笑是这个世界上最温柔的发明，而且不需要理由。"
+sample aeons        count=   18 first="「开拓」，阿基维利" preview="执掌「开拓」命途的星神，从孤绝世界裴伽纳出发，不断开拓未知的边界。
+祂的命运因意外而终结。
+「无数流星划过今夜的天空…如"
+sample factions     count=   48 first="开拓" preview=""
+sample terms        count=   47 first="名词" preview="于原初混沌的裂隙中萌生了嫩芽，在以亿万年为单位的时间浇灌下，嫩芽长成了无朋巨树。
+巨树的枝杈上结出了缤纷的嫩叶，每一枚都"
+sample simuniverse  count=   26 first="开发日志 · 存护" preview="开发日志1
+关联条目-「存护」
+……「存护」克里珀，与「贪饕」奥博洛斯同为宇宙中已知最古老的星神。我曾经对祂很有兴趣，毕"
+sample curios       count=  251 first="人类的天敌" preview="将任意区域升至满级时，可以选择 1 个区域获得其复制。每有 1 个满级区域，全队造成的暴击伤害提高 20%"
+sample events       count=   54 first="宿敌（其一）" preview="是时候付出代价了，智械！
+进入战斗，胜利后获得50宇宙碎片和1个等级为5的【异常】区域
+不是此地，不是此机。
+获得100"
+sample equations    count=  212 first="大鼻子奶奶" preview="【发牌员】攻击段数提高4，每次造成伤害时，为我方全体角色提供1层【切牌】：我方目标施放攻击后，消耗所有【切牌】，每层消耗"
+sample broadcast    count=    8 first="全文" preview="完成雅利洛-Ⅵ开拓任务
+（音乐）
+女声：这里是星际和平播报，观众朋友们晚上好。
+男声：晚上好。
+女声：「存护」克里珀的巨"
+
+## update() #2 — must skip every dataset via the revision id short-circuit
+result: {
+  "ok": true,
+  "updated": [],
+  "skipped": [
+    "relics",
+    "lightcones",
+    "consumables",
+    "decorations",
+    "aeons",
+    "factions",
+    "terms",
+    "simuniverse",
+    "curios",
+    "events",
+    "equations",
+    "broadcast"
+  ],
+  "failed": [],
+  "durationMs": 22217,
+  "lastUpdated": "2026-09-25T17:52:07.477Z"
+}
+
+VERDICT skipped-all-12=true lastUpdated-preserved=true
+final lastUpdated=2026-09-25T17:52:07.477Z
