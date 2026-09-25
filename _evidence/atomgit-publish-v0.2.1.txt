@@ -1,0 +1,95 @@
+# AtomGit 发版实跑记录（v0.2.1）
+
+这份文件是 v0.2.1 发布前对**真实写入路径**的实跑记录。
+上一版（0.2.0）在 CHANGELOG 里明写了一条技术债：「--publish 的真实写入路径没有实跑过」。
+这里把它销掉。
+
+- 平台：atomgit.com / api.atomgit.com/api/v5
+- 仓库：Scombriformes/dsh-history-fictionologists
+- 日期：2026-09-26
+- 令牌权限（页面上的勾选）：用户「访问你的个人信息、最新动态等」=只读；
+  项目「查看、创建、更新你的项目」=读写；项目「Repository: bash客户端的上下载」=读写；其余全部禁止。
+- 命令里**没有** --allow-dirty：两次都是在干净工作区上跑的。
+
+---
+
+## [1/2] 首次发布 v0.2.1-rc.1 —— 建仓 + 推 main + 推 tag + 建 Release + 签名两步法传附件 + 下载回验
+
+```
+$ node scripts/release-atomgit.mjs --repo Scombriformes/dsh-history-fictionologists --tag v0.2.1-rc.1 --prerelease --create-repo --publish
+package      dsh-history-fictionologists@0.2.1
+repository   Scombriformes/dsh-history-fictionologists  (https://atomgit.com/Scombriformes/dsh-history-fictionologists)
+git remote   atomgit  (MISSING — --publish would add https://atomgit.com/Scombriformes/dsh-history-fictionologists.git)
+tag          v0.2.1-rc.1  (remote state UNKNOWN — the remote does not exist yet)
+branch       main  HEAD a3f33bde
+notes        docs/release-notes-v0.2.1.md (5057 chars)
+mode         PUBLISH (writes to AtomGit)
+tarball      dsh-history-fictionologists-0.2.1.tgz — 22 files, 122.2 kB, sha256 4f8ec752dca7f8bc… (read-back verified byte-for-byte against disk)
+token        found via .atomgit-token
+       added git remote atomgit -> https://atomgit.com/Scombriformes/dsh-history-fictionologists.git
+       GET    /repos/Scombriformes/dsh-history-fictionologists/branches -> 404
+       POST   /orgs/Scombriformes/repos -> 200
+       created repository Scombriformes/dsh-history-fictionologists
+       pushed branch main
+       pushed tag v0.2.1-rc.1
+       GET    /repos/Scombriformes/dsh-history-fictionologists/releases/tags/v0.2.1-rc.1 -> 404
+       POST   /repos/Scombriformes/dsh-history-fictionologists/releases -> 200
+       uploaded dsh-history-fictionologists-0.2.1.tgz (122.2 kB)
+
+verified     https://atomgit.com/Scombriformes/dsh-history-fictionologists/releases/tag/v0.2.1-rc.1
+             dsh-history-fictionologists-0.2.1.tgz  id=218037
+download     https://atomgit.com/Scombriformes/dsh-history-fictionologists/releases/download/v0.2.1-rc.1/dsh-history-fictionologists-0.2.1.tgz
+             125132 bytes, sha256 4f8ec752dca7f8bc… MATCHES the built tarball
+
+RESULT: PUBLISHED (artifact verified end-to-end)  [7 API steps]
+tarball: C:\Users\masha\Desktop\hsr-history-fictionologists\dsh-history-fictionologists-0.2.1.tgz  (kept)
+repo created: true
+```
+EXIT=0
+
+这一步同时销掉了独立复核列为「未验证 #1」的疑点：
+**POST /orgs/:owner/repos 对个人命名空间可用**（-> 200，仓库真的建出来了）。
+
+## [2/2] 同一命令重跑 —— 幂等路径：PATCH 更新 + 删旧附件再重传
+
+```
+$ node scripts/release-atomgit.mjs --repo Scombriformes/dsh-history-fictionologists --tag v0.2.1-rc.1 --prerelease --publish
+package      dsh-history-fictionologists@0.2.1
+repository   Scombriformes/dsh-history-fictionologists  (https://atomgit.com/Scombriformes/dsh-history-fictionologists)
+tag          v0.2.1-rc.1  (already on the remote)
+branch       main  HEAD a3f33bde
+local tag    v0.2.1-rc.1 -> a3f33bde
+notes        docs/release-notes-v0.2.1.md (5057 chars)
+mode         PUBLISH (writes to AtomGit)
+tarball      dsh-history-fictionologists-0.2.1.tgz — 22 files, 122.2 kB, sha256 4f8ec752dca7f8bc… (read-back verified byte-for-byte against disk)
+token        found via .atomgit-token
+       pushed branch main
+       GET    /repos/Scombriformes/dsh-history-fictionologists/releases/tags/v0.2.1-rc.1 -> 200
+       PATCH  /repos/Scombriformes/dsh-history-fictionologists/releases/v0.2.1-rc.1 -> 200
+       DELETE /repos/Scombriformes/dsh-history-fictionologists/releases/v0.2.1-rc.1/attach_files/218037 -> 204
+       uploaded dsh-history-fictionologists-0.2.1.tgz (122.2 kB)
+
+verified     https://atomgit.com/Scombriformes/dsh-history-fictionologists/releases/tag/v0.2.1-rc.1
+             dsh-history-fictionologists-0.2.1.tgz  id=218039
+download     https://atomgit.com/Scombriformes/dsh-history-fictionologists/releases/download/v0.2.1-rc.1/dsh-history-fictionologists-0.2.1.tgz
+             125132 bytes, sha256 4f8ec752dca7f8bc… MATCHES the built tarball
+
+RESULT: PUBLISHED (artifact verified end-to-end)  [6 API steps]
+tarball: C:\Users\masha\Desktop\hsr-history-fictionologists\dsh-history-fictionologists-0.2.1.tgz  (kept)
+replaced attachment id: 218037
+```
+EXIT=0
+
+## 这两次实跑证明了什么
+
+| 平台事实 | 本次实跑证据 |
+|---|---|
+| POST /orgs/:owner/repos 对个人空间可用 | -> 200，created repository Scombriformes/dsh-history-fictionologists |
+| Release 已存在要 PATCH，且必须全量 body | PATCH .../releases/v0.2.1-rc.1 -> 200 |
+| 附件走签名两步法（upload_url → PUT 带回 x-obs-*） | uploaded dsh-history-fictionologists-0.2.1.tgz，附件 id 218039 出现在 Release 上 |
+| **同名附件覆盖不生效，必须先删再传** | DELETE .../attach_files/218037 -> 204 → 新附件 id=218039 |
+| 「API 里有附件」≠「用户下到的就是构建的字节」 | download ... 125132 bytes, sha256 4f8ec752dca7f8bc… MATCHES the built tarball（两次都 MATCH） |
+| 附件下载直链格式 /<owner>/<repo>/releases/download/<tag>/<file> | 两次回验用的都是这个 URL，均 200 |
+
+**仍未验证**：GitHub 支路（scripts/release.mjs）的真实写入路径——本机没有 GitHub 令牌，
+其写分支仍只有假 etch 的离线用例与逻辑推演。这条债**本版不还**，如实记着。

@@ -116,10 +116,15 @@ SHA1    7D01405EA206CBEB053202F17AB9E4221260D1D3
 - **离线用例**：`node --test --test-isolation=none` → **144 个用例，143 pass / 0 fail / 1 skip**
   （skip 是缺 `_probe/` 夹具那一个，与制品无关）。
 - **运行时零变更**：`git diff` 无输出（见文首）。
-- **AtomGit 写入路径**：预演覆盖全部只读分支；真实写入（建仓 / 推分支 / 推 tag / 建 Release /
-  签名两步法传附件 / 下载回验）的结果逐条记在
-  [`_evidence/atomgit-publish-v0.2.1.txt`](<_evidence/atomgit-publish-v0.2.1.txt>)。
-- **GitHub 写入路径未在本版重跑**（本机无 GitHub 令牌），只有假 `fetch` 的离线用例与逻辑推演。
+- **AtomGit 写入路径：已实跑**（原始输出存
+  [`_evidence/atomgit-publish-v0.2.1.txt`](<../_evidence/atomgit-publish-v0.2.1.txt>)）。
+  发布前先在真实平台上预演了一次 `v0.2.1-rc.1`：建仓 `POST /orgs/:owner/repos -> 200`、
+  推 `main` 与 tag、建 Release、**签名两步法**上传附件（id `218037`）、
+  下载回验 `sha256 4f8ec752… MATCHES`。再把同一命令**重跑一遍**打幂等路径：
+  `PATCH -> 200`、`DELETE .../attach_files/218037 -> 204` 后重传得 `id=218039`、
+  下载回验再次 `MATCHES`。两次均 `EXIT=0`，命令里没有 `--allow-dirty`。
+- **GitHub 写入路径本版未重跑**：本机没有 GitHub 令牌，其写分支仍只有假 `fetch` 的离线用例与逻辑推演。
+  这条债本版**不还**，如实留着。
 
 ---
 
