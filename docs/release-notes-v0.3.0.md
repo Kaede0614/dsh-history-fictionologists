@@ -133,6 +133,30 @@ POST_BINARY /repos/…/releases/397598669/assets?name=… -> 403   # 附件传�
 
 > `v0.3.0` 的 tag 一开始打在了修复前的提交上。当时**一个附件都没成功上传**（`assets: []`），
 > 不存在已下载的制品，因此把 tag 移到修复后的提交再传附件——让 tag 与制品描述同一棵树。
+> 排障期间制品字节换过三次（148981 → 150927 → 152089），**前两个哈希从未被任何人下载过**
+> （Release 上的 `download_count` 为 0，且对应 Release 仍是 draft）。
+
+修完再跑的最终结果：
+
+```
+       pushed tag v0.3.0
+       POST   /repos/…/releases -> 201
+       POST_BINARY /repos/…/releases/397599985/assets?name=… -> 201
+       uploaded dsh-history-fictionologists-0.3.0.tgz (148.5 kB)
+verified     https://github.com/Kaede0614/dsh-history-fictionologists/releases/tag/v0.3.0
+             dsh-history-fictionologists-0.3.0.tgz  152089 bytes
+RESULT: PUBLISHED  [3 API steps]
+```
+
+排障两次失败各留下一个 **draft** Release（GitHub 在 tag 被删时会把对应 Release 转成 draft，
+不会删除它），已一并清掉（`DELETE /releases/397598669 -> 204`、
+`DELETE /releases/397599391 -> 204`）；现在 tag 页上只有一个 Release。
+
+> **为什么这段「发布之后」的补记只写在 `docs/` 与 `_evidence/`，不追加进 `CHANGELOG.md`**：
+> `CHANGELOG.md` 本身在 tgz 里面，改它就会改制品字节，tag 的树与已发布制品就不再是同一份。
+> 因此 `v0.3.0` 的 tag 停在那棵**能逐字节复现该附件**的提交上，发布结果记在这里——
+> 这正是 0.2.1 先例的做法（补记落在 `docs/release-notes-v0.2.1.md` 与
+> `_evidence/atomgit-publish-v0.2.1.txt`，两个都不进制品）。
 
 ---
 
@@ -151,12 +175,23 @@ SHA1    DBCAD4F06F5AC3D2714108F2F42378F251078FFF
 制品由发版脚本自己的读回器逐字节比对过（**gzip + tar 带 mtime=0，字节确定**，
 同一份源码重复构建哈希不变）。
 
+**独立复核（不只信自己写的读回器）**，原始输出
+[`_evidence/verify-release-v0.3.0-download.txt`](<../_evidence/verify-release-v0.3.0-download.txt>)：
+
+- 从**公开下载地址**（`https://github.com/Kaede0614/dsh-history-fictionologists/releases/download/v0.3.0/…`，
+  不带 token）取回附件：**152089 字节、SHA256 与本地构建逐字节一致** → `BYTE-FOR-BYTE MATCH`。
+- 系统 `tar -tvf` 独立列出：**23 个条目**，与 `files` 白名单逐条一致（无多余、无缺失）。
+- 解包后再扫 CR 字节：**0**（`lib/shell.js` 与工作区同 SHA256）。
+  注意 `.tgz` 原文件里能扫到 540 个 `0x0D`——那是 gzip 压缩流的二进制噪声，不是文本 CRLF；
+  脚本自身的 CR 扫描只看解压后的文本条目，这个口径是对的。
+
 - **离线用例**：`node --test` → **175 个用例，174 pass / 0 fail / 1 skip**
   （skip 是缺 `_probe/` 夹具那一个，与制品无关）。其中星球 22 条，发版工具链 26 条。
 - **仓库自检**：`node scripts/check.mjs` → `RESULT: PASS`（语法 0 失败，测试退出码 0）。
 - **`/gs` 真机加载**：`node _evidence/verify-gs-e2e.mjs` → `RESULT: PASS`
   （隔离实例，回执里的命令描述是 0.3.0 的新文案，证明加载的是改后代码），
   原始输出 [`_evidence/verify-gs-e2e-0.3.0.txt`](<../_evidence/verify-gs-e2e-0.3.0.txt>)。
+- **GitHub 写入路径：本版首次真跑并通过**（`RESULT: PUBLISHED`，tag + Release + 附件 201）。
 - **CR 字节**：全部改动文件 `CR=0`（`.gitattributes` 钉死 LF；本仓库有逐字读自己源码的用例，
   CRLF 制品是真缺陷）。
 
