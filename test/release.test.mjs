@@ -325,6 +325,7 @@ test('createGitHubClient uploads binary assets untouched (the release-asset path
   await client.request('POST', '/repos/o/r/releases/1/assets?name=a.tgz', undefined, {
     rawBody: gzipBytes,
     headers: { 'content-type': 'application/octet-stream' },
+    upload: true,
   })
 
   assert.equal(calls[0].headers['content-type'], 'application/octet-stream')
@@ -332,6 +333,51 @@ test('createGitHubClient uploads binary assets untouched (the release-asset path
   assert.ok(calls[0].body.equals(gzipBytes))
   // No caller-supplied content-length: fetch must compute it.
   assert.equal(calls[0].headers['content-length'], undefined)
+})
+
+// Regression for a defect found on the v0.3.0 publish run (2026-09-27), not by reasoning:
+// with a `repo`-scoped token that had just PATCHed the release successfully, posting the
+// tarball to the API root answered `403` with an HTML block page ("Access to this site has
+// been restricted.") — indistinguishable from a scope problem — while the same bytes to
+// uploads.github.com answered `201`. The API root must therefore never receive asset bytes.
+test('release assets go to uploads.github.com, never to the API root', async () => {
+  const { impl, calls } = fakeFetch([{ status: 201, body: { id: 7 } }])
+  const client = createGitHubClient({ token: 't', fetchImpl: impl })
+  await client.request('POST', '/repos/o/r/releases/1/assets?name=a.tgz', undefined, {
+    rawBody: Buffer.from('x'),
+    upload: true,
+  })
+
+  assert.equal(calls[0].url, 'https://uploads.github.com/repos/o/r/releases/1/assets?name=a.tgz')
+  assert.ok(!calls[0].url.startsWith('https://api.github.com/'), 'the uploads host is not optional')
+})
+
+test('the upload host is overridable (GitHub Enterprise) and absolute paths win', async () => {
+  const { impl, calls } = fakeFetch([{ status: 201, body: {} }, { status: 201, body: {} }])
+  const client = createGitHubClient({
+    token: 't',
+    api: 'https://ghe.example.com/api/v3',
+    uploadApi: 'https://ghe.example.com/uploads',
+    fetchImpl: impl,
+  })
+  await client.request('POST', '/repos/o/r/releases/1/assets?name=a.tgz', undefined, {
+    rawBody: Buffer.from('x'),
+    upload: true,
+  })
+  await client.request('POST', 'https://elsewhere.example.com/repos/o/r/releases/1/assets', undefined, {
+    rawBody: Buffer.from('x'),
+    upload: true,
+  })
+
+  assert.equal(calls[0].url, 'https://ghe.example.com/uploads/repos/o/r/releases/1/assets?name=a.tgz')
+  assert.equal(calls[1].url, 'https://elsewhere.example.com/repos/o/r/releases/1/assets')
+})
+
+test('non-upload calls still go to the API root even when the uploads host is configured', async () => {
+  const { impl, calls } = fakeFetch([{ status: 200, body: {} }])
+  const client = createGitHubClient({ token: 't', fetchImpl: impl })
+  await client.request('GET', '/repos/o/r/releases/tags/v1')
+  assert.equal(calls[0].url, 'https://api.github.com/repos/o/r/releases/tags/v1')
 })
 
 test('createGitHubClient survives a non-JSON error page without throwing a parse error', async () => {

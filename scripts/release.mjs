@@ -38,6 +38,7 @@ import {
   buildTarball,
   collectPackEntries,
   createGitHubClient,
+  DEFAULT_UPLOAD_API,
   describeApiFailure,
   parseRepoSlug,
   readPackageFacts,
@@ -404,7 +405,9 @@ async function main() {
     log(`would  GET    /repos/${repo}/releases/tags/${tag}   (update if it exists)`)
     log(`would  POST   /repos/${repo}/releases   ${JSON.stringify({ ...releaseBody, body: `${notes.body.slice(0, 40)}…` })}`)
     if (wantAsset) {
-      log(`would  POST_BINARY /repos/${repo}/releases/<new id>/assets?name=${facts.tarballName}  (${(tarball.length / 1024).toFixed(1)} kB)`)
+      // The uploads host is part of the plan, not an implementation detail: posting the same
+      // bytes to the API root is what produced the 403 on v0.3.0 (see DEFAULT_UPLOAD_API).
+      log(`would  POST_BINARY ${DEFAULT_UPLOAD_API}/repos/${repo}/releases/<new id>/assets?name=${facts.tarballName}  (${(tarball.length / 1024).toFixed(1)} kB)`)
     }
     releaseId = 0
   } else {
@@ -436,6 +439,7 @@ async function main() {
     const upload = await api('POST_BINARY', uploadPath, undefined, {
       rawBody: tarball,
       headers: { 'content-type': 'application/octet-stream' },
+      upload: true,
     })
     if (upload.status >= 400) throw describeApiFailure('uploading the tarball', upload)
     log(`       uploaded ${facts.tarballName} (${(tarball.length / 1024).toFixed(1)} kB)`)
