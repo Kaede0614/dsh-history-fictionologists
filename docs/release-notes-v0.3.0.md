@@ -18,15 +18,23 @@
 # 方式 A（推荐）：下载本 Release 的 .tgz 附件，再从本地路径安装
 dsh plugin --profile web add C:\Users\<你>\Downloads\dsh-history-fictionologists-0.3.0.tgz
 
-# 方式 B：GitHub 仓库直装
+# 方式 B：AtomGit 仓库直装（国内网络更稳）
+dsh plugin --profile web add https://atomgit.com/Scombriformes/dsh-history-fictionologists
+
+# 方式 C：GitHub 仓库直装
 dsh plugin --profile web add github:Kaede0614/dsh-history-fictionologists
 
-# 方式 C：本地开发（junction 安装，改源码立即生效）
+# 方式 D：本地开发（junction 安装，改源码立即生效）
 dsh plugin --profile web add link:<你的仓库路径>
 ```
 
-> **AtomGit 镜像本版未同步**：镜像站最新仍是 `v0.2.1`。`package.json` 的
-> `repository` / `homepage` / `bugs` 始终指向 GitHub。
+> **本版双平台均已发布**：GitHub
+> <https://github.com/Kaede0614/dsh-history-fictionologists/releases/tag/v0.3.0>
+> 与 AtomGit
+> <https://atomgit.com/Scombriformes/dsh-history-fictionologists/releases/tag/v0.3.0>，
+> 两边的附件是**同一份字节**（同一哈希，见文末「制品与验证」）。
+> **AtomGit 是分发镜像，不是主仓**：`package.json` 的 `repository` / `homepage` / `bugs`
+> 始终指向 GitHub；两平台 API 的差异见 [`docs/atomgit-description.md`](<../docs/atomgit-description.md>)。
 
 安装后 **必须进程级重启 DSH**——新增的 bundles 行只在启动时组合，`Ctrl+Shift+R` 热重载不生效。
 
@@ -192,6 +200,7 @@ SHA1    DBCAD4F06F5AC3D2714108F2F42378F251078FFF
   （隔离实例，回执里的命令描述是 0.3.0 的新文案，证明加载的是改后代码），
   原始输出 [`_evidence/verify-gs-e2e-0.3.0.txt`](<../_evidence/verify-gs-e2e-0.3.0.txt>)。
 - **GitHub 写入路径：本版首次真跑并通过**（`RESULT: PUBLISHED`，tag + Release + 附件 201）。
+- **AtomGit 写入路径：本版已同步通过**（见下一节；两平台附件哈希相同）。
 - **CR 字节**：全部改动文件 `CR=0`（`.gitattributes` 钉死 LF；本仓库有逐字读自己源码的用例，
   CRLF 制品是真缺陷）。
 
@@ -206,7 +215,7 @@ SHA1    DBCAD4F06F5AC3D2714108F2F42378F251078FFF
 - **功能 2 / 3 依赖工作区的 `hsr-missions/`**（约 20 MB 游戏原始剧本文本，版权归米哈游，
   **不进版本库**）。缺失时插件照样装载，`gs_missions` 如实降级报告「目录缺失」。
 - **`gs_update` 一轮全量约需数分钟**（站点限流决定），串行抓取以规避风控。
-- **AtomGit 镜像滞后**：本版只发 GitHub，镜像站最新仍是 `v0.2.1`。
+- **上一版的镜像滞后已补齐**：AtomGit 从 `v0.2.1` 追到本版，两平台现在同级。
 
 ---
 
