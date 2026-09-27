@@ -1,0 +1,28 @@
+== 1. isolated home + web profile ==
+   package under test: link:C:/Users/masha/Desktop/hsr-history-fictionologists
+== 2. boot isolated web instance on port 3081 ==
+node : (node:41220) [DEP0190] DeprecationWarning: Passing args to a child process with shell option true can lead to se
+curity vulnerabilities, as the arguments are not escaped, only concatenated.
+At line:1 char:136
++ ... g]::new($false); $out = node _evidence/verify-gs-e2e.mjs 2>&1; $code= ...
++                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: ((node:41220) [D...y concatenated.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+(Use `node --trace-deprecation ...` to show where the warning was created)
+   token acquired
+== 3. authenticate (token -> signed cookie) ==
+   cookie acquired
+== 4. commands/list — is /gs registered and discoverable? ==
+   session: session-2dabf3ec-c024-4ec0-8ea5-335b7985c75e
+   commands: compact, export, feedback, goal, gs, permission, plan
+   /gs definition: {"definitionId":"dsh-history-fictionologists","name":"gs","description":"虚构史学家：生成星穹铁道世界观灵感 / 短篇 / 星际构史播报 / 新星球","input":{"hint":"[可选的灵感主题、命途或播报主题]"}}
+== 5. commands/execute '/gs' ==
+   result: {"kind":"success","text":"虚构史学家 /gs 已启动。\n本地缓存为空\n交互协议已交给模型，正在准备第 1 步的功能选择。"}
+== 6. model-in-the-loop skipped (pass --model to enable; needs a usable model route) ==
+
+RESULT: PASS — /gs is registered, discoverable by the Web client, and executes in the real host.
+== teardown ==
+   killing test-port owner pid 48108
+
+exit code: 0

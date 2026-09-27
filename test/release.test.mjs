@@ -128,10 +128,13 @@ test('resolveToken tolerates a pasted `GH_TOKEN=` line and comments, and reports
 
 test('readPackageFacts derives the tag and npm-style tarball name', () => {
   const facts = readPackageFacts(ROOT)
+  const pkg = JSON.parse(readFileSync(join(ROOT, 'package.json'), 'utf8'))
   assert.equal(facts.name, 'dsh-history-fictionologists')
-  assert.equal(facts.version, '0.2.1')
-  assert.equal(facts.tag, 'v0.2.1')
-  assert.equal(facts.tarballName, 'dsh-history-fictionologists-0.2.1.tgz')
+  // 与 package.json 同步断言版本，而不是钉死一个字面量：后者每次定版都会红一次
+  // （0.3.0 定版时就真的红了），而它的价值本来只是「tag/tarball 名派生正确」。
+  assert.equal(facts.version, pkg.version)
+  assert.equal(facts.tag, `v${pkg.version}`)
+  assert.equal(facts.tarballName, `dsh-history-fictionologists-${pkg.version}.tgz`)
   assert.equal(facts.repository, 'Kaede0614/dsh-history-fictionologists')
   assert.ok(facts.files.includes('lib'), 'whitelist must include lib/')
 })

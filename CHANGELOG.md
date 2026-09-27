@@ -2,6 +2,85 @@
 
 本插件遵循 [Semantic Versioning](https://semver.org/lang/zh-CN/)。
 
+## 0.3.0 — 2026-09-27
+
+**新功能：星球制造机**（`/gs` 第 1 步的第 4 项）——参照「星球列表」生成全新星球，
+并在生成结束后固定询问「是否并入列表」与「是否重置回原始」。
+
+按本仓库的语义化版本表「新增用户可见能力 → minor」，故为 `0.3.0`。
+
+### 新增
+
+- **原始星球列表（27 颗）**编译在 [`lib/planets.mjs`](<lib/planets.mjs>) 的
+  `PLANET_BASELINE_SOURCE`：用户给出的列表逐字保留为纯文本底本，解析成常量条目并加
+  「出处」标注（`visited` 已探访 / `mentioned` 文本提及 / `ruined` 已毁或失去开拓意义 /
+  `unknown` / `other`）。**标注只用于分组参考，不改用户原文一个字**；底本与常量的一致性由
+  「逐条回查原文」的用例锁死（改一边忘另一边就红）。
+  - 为什么不放在工作区文件里：`gs_update` 每次抓取都会原子重建 `<dataset>.json`，
+    而「重置回原始」必须是**永远拿得回**的操作；常量是唯一不会丢的副本。
+    这与 `user-canon.json` 的取舍同源。
+- **增量列表** `<工作区>/hsr-worldview-cache/planet-list.json`：只装「生成出来并被用户确认保留」
+  的星球（`added[]`），另存一份 `baseline` 快照供人工核对。抓取流程永不触碰该文件。
+- **三个模型工具**：
+  - `gs_planets` —— 返回原始 + 增量列表（可按 `source` / `query` 过滤）与流程说明；
+  - `gs_planet_save` —— 并入新星球。**原始列表优先**：与 27 颗重名的候选一律进 `rejected` 并说明
+    原因（绝不覆写用户设定）；与已有增量重名的**更新**其描述，便于修正上一轮不满意的结果；
+  - `gs_planet_reset` —— 重置回原始 27 颗。**不加 `confirm: true` 时只回报状态、绝不改文件**，
+    破坏性动作必须由用户明确确认后才发生。
+- **`/gs` 协议与系统提示**：第 1 步从三个选项变四个；功能 4 的格式（【星域名（English Name）】/
+  一句话简介 / 详细设定 / 可能的故事方向）与「生成后必须依次问两件事」写进系统提示段落与
+  `/gs` 注入文本；`gs_setup` 与 `/gs` 回执都会报告星球列表状态。
+- **新配置项 `planetCount`**（默认 3，范围 1–10）：功能 4 默认生成几颗。
+- **[`test/planets.test.mjs`](<test/planets.test.mjs>)**：22 条全离线用例，覆盖原文一致性、
+  读取降级（坏 JSON / 顶层非对象 / `added` 非数组 / 重名与非法条目）、名字容错规则
+  （去空格算同名、前缀不算、**星球名与英文名的大小写变体也算同名**）、超限候选进 `overflow`
+  而非静默丢弃、超长名字截断留告警、原子写、重置、`MAX_ADDED` 上限、
+  三个工具的 schema/渲染/无损 JSON、子模块缺失降级、`/gs` 协议与系统提示的逐字断言。
+
+### 变更
+
+- `gs_setup` 的返回新增 `planets` 字段（原始/增量条数、文件路径、是否存在、更新时间）；
+  渲染多一行「星球列表：原始 27 颗，已并入 N 颗」。
+- `test/plugin.test.mjs` / `test/host-validator.test.mjs` 的注册物计数随能力增长更新
+  （9 个工具 / 11 个生效注册），并新增「args 层拒绝错类型入参」的用例：
+  实测 `gs_planets({source: 42})`、`gs_planet_save({planets: "…"})`、
+  `gs_planet_reset({confirm: "yes"})` 由**宿主**在 `execute` 之前抛 `ToolArgsError` 拒掉。
+- 测试总数 **171 用例 / 170 pass / 0 fail / 1 skip**（作者工作区实测，2026-09-27）。
+- `STYLE_GUIDE` 由 1291 字符 / 57 行 → **1748 字符 / 72 行**。
+  `_evidence/prompt-section-injection.txt` 仍是 0.1.0 的抓取，**对 0.3.0 已过期**（README 已注明）。
+
+### 独立复核发现的问题与修复
+
+本轮功能由独立复核者（未参与编写）按「攻击证据与口径」的方式复验，报告在
+[`_evidence/review-0.3.0-planets.md`](<_evidence/review-0.3.0-planets.md>)。
+核心断言（三个工具真注册、真落盘、真重置；27 颗原始星球与用户原话逐字一致；
+22 条重名/覆写攻击路径下**无一能覆写原始描述**；不带 `confirm` 时文件 bytes/mtime/sha256 三者全等）
+独立复现成立。复核抓出 6 条 finding，已在本版内全部处理：
+
+| id | 级别 | 问题 | 处理 |
+|---|---|---|---|
+| R-1 | medium | 单次超过 `MAX_BATCH=20` 的候选被**静默丢弃**（不进任何返回字段、不落盘），而 `ok` 仍为 true → 模型会告诉用户「25 颗都加进去了」 | 返回值新增结构化 `overflow: {count, names}`，并在 `warnings` 与 render 里点名警告；新增回归用例 |
+| R-2 | medium | `isBaselineName` 只比中文名，`ARIVANTA` / `arivanta` 可当新星球写入 | 重名判定同时覆盖**星球名与英文名**（大小写与空格不敏感）；`rejected.reason` 说明撞的是哪一颗；新增回归用例 |
+| R-3 | low | 候选的 `en` 字段仍可绕过去重：`{name:'洛珂萨', en:'Arivanta'}` 会写入，列表里出现两条 `Arivanta` | `baselineCollision(name, en)` 同时校验 `en`；新增断言 |
+| R-4 | low | 超长名字静默截断到 60 字（`ok=true`、`warnings=[]`） | `normalizeAdded` 标记 `nameTruncated`，`addPlanets` 写入 `warnings`；新增回归用例 |
+| R-5 | low | `test/host-validator.test.mjs` 调用了 `__internals.resetPlanets`——该键**根本不存在**，TypeError 被空 catch 吞掉，注释声称的清理从未发生 | 真的导出 `resetPlanets`，并让该用例**断言**重置成功（不再吞错） |
+| R-6 | low | 英文名匹配略宽（`EDOSTAR`、`Edo Star` 都判成「江户星 / 江户城」） | 不改行为（方向是多拒不可少拒、不会覆写），改为在代码注释与 README 写明口径 |
+
+复核者另指出：作者脚本 `planet-baseline-vs-user-text.mjs` 用「第一颗/最后一颗星球名」当锚点，
+用户若改写星球名会得到「找不到原文」而不是「不一致」——属**假阴性风险**，已在该脚本注释里注明；
+它未发现假阳性。
+
+### 说明（诚实边界）
+
+- 本轮**没有**在隔离实例里重跑 `_evidence/check-prompt-section.mjs`
+  （它要求另起一个 DSH 实例；本机日常实例不重启），所以「模型真的收到了 0.3.0 的提示词」
+  这条链路由离线断言兜底：系统提示总则里必须出现星球格式与两问，`/gs` 协议文本里必须出现
+  四个功能与两问。真机端到端（模型是否照做两问）**未验证**。
+- **`/gs` 在隔离实例里真跑过一次**（`node _evidence/verify-gs-e2e.mjs` → `RESULT: PASS`，
+  回执里出现的命令描述是 0.3.0 的新文案，证明加载的是改后代码）；但隔离实例没有模型路由，
+  `--model` 那一步无法完成，因此**模型行为本身仍未验证**。
+
+
 ## 0.2.1 — 2026-09-26
 
 **双平台发版工具链**：不再需要 `gh` CLI，也不再需要可用的 `npm`；并新增 AtomGit 支路。

@@ -18,11 +18,16 @@
 | `gs_read` 读取世界观条目 | 模型调用 | 至少成功抓取过一次（缓存存在） |
 | `gs_missions` 既有故事目录（避让冲突） | 模型调用 | 工作区存在 `hsr-missions/` |
 | `gs_digest` 命名逻辑 / 书架风格 / 播报格式素材 | 模型调用 | `equation`、`broadcast-template` 需缓存；`mission-digest`、`book-digest` 需 `hsr-missions/` |
+| `gs_planets` 「星球列表」（原始 27 颗 + 已并入） | 模型调用（功能 4 第 1 步） | 无（原始列表编译在插件里，不需要网络） |
+| `gs_planet_save` 把新星球并入列表 | 模型调用（用户答「加入」后） | 工作区可写 |
+| `gs_planet_reset` 重置回原始 27 颗 | 模型调用（用户确认后带 `confirm: true`） | 工作区可写；**不带 `confirm` 只报告状态** |
 | `gs_save` 成品落盘 | 模型调用 | 工作区可写 |
 | 系统提示「语言风格总则 + 星神纪律」 | 自动注入 | 无 |
 
 **降级行为（已实测）**：缓存目录不存在时 `gs_setup` / `gs_read` 仍返回合法结果（`hasCache:false`、
-`recommendation:"update"`），不会抛错；`/gs` 在缺少子模块时仍能启动并如实报告状态。
+`recommendation:"update"`），不会抛错；`/gs` 在缺少子模块时仍能启动并如实报告状态；
+`planet-list.json` 缺失、损坏或字段非法时，星球列表一律退回插件内置的 27 颗原始列表并在
+`warnings` 里说明（`test/planets.test.mjs` 覆盖）。
 
 ---
 
@@ -33,7 +38,7 @@
 
 ```powershell
 # 方式 A（推荐）：下载 Release 附件里的 tarball，再从本地路径安装
-dsh plugin --profile web add C:\Users\<你>\Downloads\dsh-history-fictionologists-0.2.1.tgz
+dsh plugin --profile web add C:\Users\<你>\Downloads\dsh-history-fictionologists-0.3.0.tgz
 
 # 方式 B：AtomGit 仓库直装（国内网络更稳）
 dsh plugin --profile web add https://atomgit.com/Scombriformes/dsh-history-fictionologists
@@ -66,7 +71,7 @@ dsh --profile web --dump-config | Select-String history-fictionologists
 
 | | 内容 |
 |---|---|
-| **有** | `lib/`（插件本体）、`test/`（144 个离线用例）、`scripts/check.mjs`、`docs/`、`_evidence/`（自证与独立复核证据）、`BRIEF.md`（实现规格）、`cordis.patch.yml`、`hsr-worldview-cache/user-canon.json`（手工维护的裁定层） |
+| **有** | `lib/`（插件本体）、`test/`（171 个离线用例）、`scripts/check.mjs`、`docs/`、`_evidence/`（自证与独立复核证据）、`BRIEF.md`（实现规格）、`cordis.patch.yml`、`hsr-worldview-cache/user-canon.json`（手工维护的裁定层） |
 | **没有** | `hsr-missions/`（游戏原始剧本文本，约 20 MB，版权归米哈游）、`hsr-worldview-cache/*.json`（`gs_update` 可重新抓取）、`_probe/`（4.9 MB 原始渲染 HTML）、`hsr-stories/` 与 `hsr-broadcasts/`（本机成品） |
 
 被忽略的目录仍留在你的工作区里，只是不进版本库（见 [`.gitignore`](<.gitignore>)）。
@@ -92,9 +97,9 @@ sr-开拓续闻-完整/                  7 个系列 / 52 个开拓续闻任务
    - 把「三步交互协议」作为一条 plugin 来源的用户消息交给当前 agent；
    - 返回一行简短回执。
 3. 模型据此依次弹出：
-   - **第 1 步 · 功能选择**：1 神人制造机 / 2 构史文集 / 3 星际构史播报（单选弹窗）；
+   - **第 1 步 · 功能选择**：1 神人制造机 / 2 构史文集 / 3 星际构史播报 / 4 星球制造机（单选弹窗）；
    - **第 2 步 · 世界观数据更新策略**：`Y` 访问网页重新抓取 / `N` 使用本地缓存；
-   - **第 3 步 · 执行所选功能**。
+   - **第 3 步 · 执行所选功能**。功能 4 执行完还会再问两件事（见下）。
 
 ### 第 2 步的引导规则
 
@@ -107,7 +112,7 @@ sr-开拓续闻-完整/                  7 个系列 / 52 个开拓续闻任务
 
 ---
 
-## 三种功能
+## 四种功能
 
 ### 功能 1 · 神人制造机
 
@@ -149,6 +154,45 @@ sr-开拓续闻-完整/                  7 个系列 / 52 个开拓续闻任务
 
 虚构文本必须足够科幻、足够太空、充满想象力——**不是对已有故事的重组**。
 
+### 功能 4 · 星球制造机（0.3.0）
+
+参照「星球列表」造**新的**星球：列表里的星球只提供世界观坐标与语感，新星球不得与其重名，
+也不得把既有星球改个说法再交一遍。默认 **3 颗**（`config.planetCount` 可调，范围 1–10）。输出格式：
+
+```
+【星域名（English Name）】
+一句话简介：……（不超过 40 字，写成「地点词条」而不是广告词）
+详细设定：……（约 60–160 字：靠什么活着、谁在管事、当地人最大的麻烦是什么）
+可能的故事方向：……（一到两句话）
+```
+
+**生成结束后固定问两件事**（模型不会替你决定）：
+
+| 询问 | 答「要」时发生什么 | 答「不要」时发生什么 |
+|---|---|---|
+| ① 是否把这批新星球**加入「星球列表」**，供下次参考？ | `gs_planet_save` 把这批星球并入列表，下次生成会看到它们 | 不写盘，本次结果不影响以后的生成 |
+| ② 是否把「星球列表」**重置回原始 27 颗**（清除已并入的新星球）？ | `gs_planet_reset(confirm=true)` 清空增量，满意与不满意的批次一起清掉 | 什么也不做 |
+
+「重置」是**破坏性操作**：`gs_planet_reset` 不带 `confirm: true` 时只回报当前状态、绝不改文件，
+所以模型必须先经你确认才能真的清空。清除的粒度为「全部新增」——只想清掉一部分，请手工编辑
+`planet-list.json` 的 `added` 数组（见下一节）。
+
+#### 「星球列表」是什么
+
+- **原始列表（27 颗）**编译在插件里（[`lib/planets.mjs`](<lib/planets.mjs>) 的
+  `PLANET_BASELINE_SOURCE`），所以「重置回原始」永远拿得回底本——即使工作区文件被删掉或写坏。
+- **已并入的新星球**写在 `<工作区>/hsr-worldview-cache/planet-list.json` 的 `added[]`，
+  与 `user-canon.json` 同理：`gs_update` 只重写 `<数据集>.json`，**永不碰这个文件**。
+- 判定重名按「**星球名或英文名**去空格后同名、且英文名不区分大小写」，且**原始列表优先**：
+  与原始列表同名的候选会被拒绝并在 `rejected` 里说明撞的是哪一颗（例如 `ARIVANTA` 撞「阿丽万塔」，
+  或候选的 `en` 字段撞上原始英文名）；不会覆写你的原始设定。与已有增量同名的条目会被**更新**，
+  便于修正上一轮不满意的描述。
+- **一次最多并入 20 颗**（`MAX_BATCH`）。超出的候选**不会**写入，但会出现在返回值的
+  `overflow: {count, names}` 与 `warnings` 里——模型必须如实转告你，而不是说「都加进去了」。
+  增量列表总上限 200 颗，到顶后拒绝写入并提示先重置。
+- 「出处」标注（`visited` 已探访 / `mentioned` 文本提及 / `ruined` 已毁或失去开拓意义 /
+  `unknown` / `other`）是**本插件加的**，只用于给模型分组参考，不改变用户原文一个字。
+
 ---
 
 ## 世界观数据
@@ -164,7 +208,7 @@ sr-开拓续闻-完整/                  7 个系列 / 52 个开拓续闻任务
 | `adventure_other_tasks_full.json` | 7 章 / 33 个冒险任务 |
 | `books_without_amphoreus.json` | 498 本书（「书架」风格参考） |
 
-功能 2 / 3 生成前必须读它，避免与既有事件冲突。
+功能 2 / 3 生成前必须读它，避免与既有事件冲突（功能 1 与功能 4 不需要）。
 
 ### 背景设定（12 个 Wiki 数据源，需联网抓取）
 
@@ -207,7 +251,24 @@ hsr-worldview-cache/
 ├── events.json
 ├── simuniverse.json
 ├── broadcast.json
-└── user-canon.json     # 用户设定补充（手工维护，抓取永不改写）
+├── user-canon.json     # 用户设定补充（手工维护，抓取永不改写）
+└── planet-list.json    # 「星球列表」增量（功能 4 写入；重置=清空 added[]）
+```
+
+`planet-list.json` 结构（`baseline` 是原始 27 颗的快照，仅供人工核对；程序只读 `added[]`）：
+
+```json
+{
+  "schema": "dsh-history-fictionologists/planet-list@1",
+  "updatedAt": "2026-09-27T10:00:00.000Z",
+  "baselineCount": 27,
+  "addedCount": 1,
+  "baseline": [ { "name": "阿丽万塔", "en": "Arivanta", "description": "…", "source": "visited" } ],
+  "added": [
+    { "id": "added-1", "name": "洛珂萨", "en": "Loxa", "description": "…", "source": "mentioned",
+      "addedAt": "2026-09-27T10:00:00.000Z" }
+  ]
+}
 ```
 
 单个缓存文件结构：
@@ -298,6 +359,7 @@ hsr-worldview-cache/
     defaultStoryWords: 2000
     defaultBroadcastWords: 1000
     inspirationCount: 4      # 3–5
+    planetCount: 3           # 星球制造机默认颗数（1–10）
     saveOutputs: true
     userAgent: 'Mozilla/5.0 …'
 ```
@@ -311,11 +373,13 @@ dsh-history-fictionologists/
 ├── package.json            # dsh.bundle.patch 指向 cordis.patch.yml；main = lib/shell.js
 ├── cordis.patch.yml        # bundle 挂载声明
 ├── lib/
-│   ├── shell.js            # 插件外壳：/gs 命令、6 个工具、风格提示词、Config（包入口）
+│   ├── shell.js            # 插件外壳：/gs 命令、9 个工具、风格提示词、Config（包入口）
 │   ├── resolve.js          # @deepseek-ai/* 可选依赖的多 base 解析链
 │   ├── paths.js            # 工作区 / 缓存 / 成品目录解析
 │   ├── missions.js         # hsr-missions 读取与索引
 │   ├── digest.js           # 命名逻辑 / 书架风格 / 播报格式素材
+│   ├── usercanon.mjs       # 用户设定补充（优先于抓取缓存）
+│   ├── planets.mjs         # 原始 27 颗星球底本 + 增量列表读写/重置
 │   └── wiki/               # 12 个数据源的抓取与解析
 │       ├── datasets.mjs    # 数据源登记表（含单复数 id 别名）
 │       ├── client.mjs      # 限流 / 重试 / WAF 识别
@@ -347,14 +411,17 @@ dsh-history-fictionologists/
 | 抓取全部失败 | 网络不通，或请求过于频繁被 WAF（HTTP 567）拦截。调大 `requestIntervalMs` 后重试 |
 | 模型说「未读取到数据」 | 先跑一次 `gs_update`；或检查 `config.workspace` 是否指向了正确的工作区 |
 | 想看抓取细节 | 缓存目录的 `index.json` 里有每个数据集的 `ok` / `error` / `count` / `revisionId` |
+| 功能 4 生成的星球没进列表 | 看 `gs_planet_save` 返回里的 `rejected`：与原始 27 颗重名的候选会被拒绝（故意不覆写原始设定） |
+| 「星球列表」被清空或写坏 | 原始 27 颗编译在插件里，不会丢：调用 `gs_planet_reset(confirm=true)` 即可重建文件 |
+| 模型没问「是否并入 / 是否重置」 | 这两问同时写在系统提示与 `/gs` 协议文本里；直接提醒它「按功能 4 的收尾问两件事」 |
 
 ## 自检命令
 
 ```powershell
 cd <你的仓库路径>
-node scripts/check.mjs    # 首选：语法检查全部 13 个模块 + 跑全套测试（约 1.5 秒）
+node scripts/check.mjs    # 首选：语法检查全部模块 + 跑全套测试（约 1.5 秒）
 node --test               # 只跑测试（Node 自动发现 test/ 下所有 *.test.mjs）
-node _evidence/e2e-wiring.mjs     # 真实 Wiki 上跑通 6 个工具的接线（会联网，约 15 秒）
+node _evidence/e2e-wiring.mjs     # 真实 Wiki 上跑通工具接线（会联网，约 15 秒）
 node _evidence/run-extract.mjs --live   # 12 个数据源真机抓取取证（会联网，约 60 秒）
 node _evidence/verify-gs-e2e.mjs  # 隔离实例里端到端验证 /gs（约 15 秒）
 ```
@@ -369,10 +436,11 @@ node _evidence/verify-gs-e2e.mjs  # 隔离实例里端到端验证 /gs（约 15 
 
 | 层 | 文件 | 能证明什么 | 证明不了什么 |
 |---|---|---|---|
-| 契约 | `test/plugin.test.mjs` | 注册物齐全（6 工具 / 1 命令 / 1 section）、`/gs` handler 在异常与降级输入下不抛、规范 JSON | 返回值是否符合 `output.schema`（mock 不校验） |
-| 宿主校验 | `test/host-validator.test.mjs` | 用**宿主自己的** `validateJsonSchemaValue` 校验 6 个工具的全部降级路径；含元测试证明该断言会失败；含卸载/重载与 stub 接缝的隔离断言 | 真实进程内的注册成功 |
+| 契约 | `test/plugin.test.mjs` | 注册物齐全（9 工具 / 1 命令 / 1 section）、`/gs` handler 在异常与降级输入下不抛、规范 JSON | 返回值是否符合 `output.schema`（mock 不校验） |
+| 宿主校验 | `test/host-validator.test.mjs` | 用**宿主自己的** `validateJsonSchemaValue` 校验 9 个工具的全部降级路径；含元测试证明该断言会失败；含 args 层拒绝、卸载/重载与 stub 接缝的隔离断言 | 真实进程内的注册成功 |
 | 解析 | `test/wiki.test.mjs` | 12 个抽取器对真实 HTML 的选择器正确性（离线重放）+ revid 短路 + WAF 重试 + 注入时钟的确定性限流断言 | 真机网络行为 |
 | 连续性 | `test/missions.test.mjs` | `hsr-missions` 三种 JSON 的读取、截断上界、缺失降级 | — |
+| 星球列表（0.3.0） | `test/planets.test.mjs` | 原始 27 颗与用户原文**逐条一致**、读取降级、重名规则（原始优先 + 星球名/英文名 + 大小写不敏感）、超限候选不静默丢弃、截断有告警、原子写、重置、上限、三个星球工具的 schema/渲染/无损 JSON、`/gs` 协议的两问 | 真机上模型是否照做（那取决于模型） |
 
 > 全部离线（每个 `new WikiClient` 都注入了假 `fetch`，套件里 `globalThis.fetch` 一次都不会被调用）。
 > 需要联网的验证在 `_evidence/`（`run-extract.mjs --live`、`cache-roundtrip.mjs`、`e2e-wiring.mjs`）。
@@ -384,10 +452,10 @@ node _evidence/verify-gs-e2e.mjs  # 隔离实例里端到端验证 /gs（约 15 
 
 | 检出 | 命令 | 结果 |
 |---|---|---|
-| 作者工作区（`_probe/` 与 `hsr-missions/` 都在） | `node --test` | **102 用例 / 101 pass / 0 fail / 1 skip**（约 1.5 秒） |
-| **全新克隆**（两者都不在） | `node --test` | **102 用例 / 70 pass / 0 fail / 32 skip**（约 0.3 秒） |
+| 作者工作区（`_probe/` 与 `hsr-missions/` 都在） | `node --test` | **171 用例 / 170 pass / 0 fail / 1 skip**（2026-09-27 实测；唯一 skip 是「缓存已存在时不再跑降级断言」） |
+| 全新克隆（两者都不在） | `node --test` | 用例总数相同，其中「重放 `_probe/` 夹具 / 依赖 `hsr-missions/`」的那些**显式 skip**（每一条都带原因） |
 
-**32 条 skip 的每一条都带原因**，直接印在输出里，例如：
+**夹具/语料缺失导致的每一条 skip 都带原因**，直接印在输出里，例如：
 
 ```
 ﹣ update: unknown ids and a broken client degrade into failed[] # _probe/html/遗器图鉴.html,
@@ -397,7 +465,8 @@ node _evidence/verify-gs-e2e.mjs  # 隔离实例里端到端验证 /gs（约 15 
 
 设计口径：**夹具缺失 → 显式 skip；从不静默通过，也从不弱化断言**。
 所有与磁盘无关的用例（`client:` 限流与 WAF 重试、HTML/wikitext 解析、合成缓存降级、
-`gs_*` 工具输出的规范 JSON 与宿主校验器一致性……共 70 条）在任何检出里都照跑。
+`gs_*` 工具输出的规范 JSON 与宿主校验器一致性、`test/planets.test.mjs` 的全部 22 条……）
+在任何检出里都照跑。
 
 唯一的例外是 `test/host-validator.test.mjs`：这一层要解析**宿主的**
 `validateJsonSchemaValue`，所以**前置条件是本机装过 dsh**（解析基座见
@@ -405,8 +474,8 @@ node _evidence/verify-gs-e2e.mjs  # 隔离实例里端到端验证 /gs（约 15 
 实测 `10 fail / 2 pass / 0 skip`。这是刻意的：这一层存在的意义正是证明其余断言**不是恒真**的，
 让它静默跳过就等于把「已验证」变成一句空话。装上 dsh 后这 10 条照跑。
 
-> 想要完整 102 条：把 `_probe/`（`docs/DESIGN.md` 里有每个页面的抓取依据）与 `hsr-missions/`
-> 准备好，或直接在作者工作区里跑。
+> 想要全量（含夹具与语料层）：把 `_probe/`（`docs/DESIGN.md` 里有每个页面的抓取依据）与
+> `hsr-missions/` 准备好，或直接在作者工作区里跑。
 
 **最关键的一条产品证据**（可复现）：`node _evidence/check-prompt-section.mjs`
 
@@ -420,7 +489,7 @@ gs_* tools in the request tool list: gs_digest, gs_missions, gs_read, gs_save, g
   YES  功能 3（女声·男声·（音乐）·结束语·800–1200 字）/「不得凭空编造与既有设定冲突的事实」
 ```
 
-即：**风格总则（本体 725 字，0.1.0 版）与三个功能的逐字格式进入了那条 3500 字的组装后系统提示，
+即：**风格总则（本体 725 字，0.1.0 版）与当时三个功能的逐字格式进入了那条 3500 字的组装后系统提示，
 6 个 `gs_*` 工具同时出现在请求的工具列表里。**
 输出在 `_evidence/prompt-section-injection.txt`。
 
@@ -428,8 +497,12 @@ gs_* tools in the request tool list: gs_digest, gs_missions, gs_read, gs_save, g
 > 复核者另做了更强的一致性检查：日志里的风格文本 `includes(STYLE_GUIDE) === true`，即与抓取当次的源码逐字节一致。
 >
 > **版本提醒**：上面这段是 0.1.0 的快照，当时 `STYLE_GUIDE` 为 725 字符。此后每次改提示词长度都会变：
-> 0.1.1（加入「星神纪律」）为 1161 字符 / 55 行，**当前源码（0.2.1）为 1291 字符 / 57 行**。
-> 要刷新这条产品证据，需要在隔离实例里重跑 `node _evidence/check-prompt-section.mjs`（本机日常实例不重启）。
+> 0.1.1（加入「星神纪律」）为 1161 字符 / 55 行，0.2.1 为 1291 字符 / 57 行，
+> **当前源码（0.3.0，加入「星球制造机」格式与两问纪律）为 1748 字符 / 72 行**。
+> `_evidence/prompt-section-injection.txt` 仍是 0.1.0 那次抓取，**对 0.3.0 已过期**；
+> 要刷新它需要在隔离实例里重跑 `node _evidence/check-prompt-section.mjs`（本机日常实例不重启）。
+> 0.3.0 这条链路由 `test/planets.test.mjs` 的两条离线断言兜底：系统提示总则里必须出现星球格式与两问，
+> `/gs` 协议文本里必须出现四个功能与两问。
 
 ### 开发/取证目录（不属于插件运行时，不随包发布）
 

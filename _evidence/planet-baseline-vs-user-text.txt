@@ -1,0 +1,11 @@
+会话根目录：C:\Users\masha\.dsh\sessions
+候选会话文件：58 个（按修改时间倒序）
+
+找到用户原文：C:\Users\masha\.dsh\sessions\--C-Users-masha-Desktop-hsr-history-fictionologists--\session-27186f34-d19b-4aa8-bfe8-f68d7eb1f525\session.v4.jsonl.zstd
+原文行数：27
+PLANET_BASELINE_SOURCE 行数：27
+
+不一致行数：0
+常量条数：27
+
+BASELINE MATCHES THE USER MESSAGE VERBATIM (27/27 lines)

@@ -93,7 +93,7 @@ test('plugin module exposes the required contract', async () => {
   }
 })
 
-test('apply registers /gs, six tools and one prompt section', async () => {
+test('apply registers /gs, nine tools and one prompt section', async () => {
   const mod = await loadPlugin()
   const { ctx, record } = makeCtx()
   await mod.apply(ctx, { workspace: mkdtempSync(join(tmpdir(), 'hsf-ws-')) })
@@ -107,7 +107,10 @@ test('apply registers /gs, six tools and one prompt section', async () => {
   assert.ok(cmd.input === undefined || typeof cmd.input.hint === 'string')
 
   const names = record.tools.map((t) => t.name).sort()
-  assert.deepEqual(names, ['gs_digest', 'gs_missions', 'gs_read', 'gs_save', 'gs_setup', 'gs_update'])
+  assert.deepEqual(names, [
+    'gs_digest', 'gs_missions', 'gs_planet_reset', 'gs_planet_save', 'gs_planets',
+    'gs_read', 'gs_save', 'gs_setup', 'gs_update',
+  ])
 
   assert.equal(record.sections.length, 1)
   const section = record.sections[0]

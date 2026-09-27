@@ -1,8 +1,11 @@
 # GitHub 仓库描述文案（dsh-history-fictionologists）
 
-> 事实来源：`package.json`（v0.2.1 / MIT / `private: true`）、`README.md`、`lib/shell.js`（6 个 `gs_*` 工具）、
-> 实跑 `node --test --test-isolation=none`（144 用例 / 143 pass / 1 skip / 0 fail）。
+> 事实来源：`package.json`（v0.3.0 / MIT / `private: true`）、`README.md`、`lib/shell.js`（9 个 `gs_*` 工具）、
+> 实跑 `node --test`（171 用例 / 170 pass / 1 skip / 0 fail，2026-09-27）。
 > 所有数字都可回查，未编造。
+>
+> ⚠️ 下一节「About 短描述」的两条中文文案是 **0.2.1 版**的（只讲三种产出），
+> 若要随 0.3.0 一起同步仓库 About，请先把「星球制造机」写进去再 `--sync-meta`。
 >
 > 本文只是**文案备料**：About 描述、Topics、长描述、电梯陈述，复制粘贴用。
 

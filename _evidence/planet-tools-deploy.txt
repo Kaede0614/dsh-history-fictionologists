@@ -1,0 +1,34 @@
+部署位置：C:\Users\masha\.dsh\profiles\web\node_modules\dsh-history-fictionologists\lib\shell.js
+临时工作区：C:\Users\masha\AppData\Local\Temp\hsf-deploy-ordY86
+注册的工具：gs_setup, gs_update, gs_read, gs_missions, gs_digest, gs_planets, gs_planet_save, gs_planet_reset, gs_save
+注册的命令：gs
+系统提示段落：1（order=3050）
+
+[1] gs_setup.planets = {"baselineCount":27,"addedCount":0,"total":27,"path":"C:\\Users\\masha\\AppData\\Local\\Temp\\hsf-deploy-ordY86\\hsr-worldview-cache\\planet-list.json","exists":false}
+
+[2] gs_planets: ok=true 原始=27 已并入=0 返回=27
+    前三条：阿丽万塔(visited) / 阿图因(unknown) / 螺丝星(visited)
+    已毁的：阿德利文、新伯利恒、哈特雷维尼亚、巴兰萨熔炉、日耀-XIII
+    render 前 160 字：星球列表：C:\Users\masha\AppData\Local\Temp\hsf-deploy-ordY86\hsr-worldview-cache\planet-list.json ⏎ 原始 27 颗 · 已并入 0 颗 · 共 27 颗（本次返回 27 条） ⏎  ⏎ 阿丽万塔 (Arivanta)	受三颗卫星影响，引力时
+
+[3] gs_planet_save: ok=true 新并入=["洛珂萨","图恩加"]
+    拒绝=[{"name":"螺丝星","reason":"与原始星球列表中的「螺丝星」星球名相同（大小写与空格不敏感），拒绝覆写"}]
+    现有：原始 27 + 新增 2 = 29（写盘 6549 字节）
+
+[4] 落盘：C:\Users\masha\AppData\Local\Temp\hsf-deploy-ordY86\hsr-worldview-cache\planet-list.json
+    schema=dsh-history-fictionologists/planet-list@1 baseline=27 added=2
+    gs_planets(source=mentioned)：返回 16 条，含新增 洛珂萨、图恩加
+
+[5] gs_planet_reset(无 confirm): reset=false 已并入仍为 2
+    gs_planet_reset(confirm=true): reset=true 清除=2 现有=27
+    重置后：原始=27 已并入=0
+
+[6] /gs 协议文本关键行：
+    YES 4) 星球制造机
+    YES · 功能 4：先 gs_planets
+    YES ① 生成结束后用 ask_user_question 问
+    YES ② 紧接着再问一次
+    YES gs_planet_reset(confirm=true)
+    协议文本长度：2189 字符；系统提示 STYLE_GUIDE：1748 字符
+
+ALL PLANET DEPLOY CHECKS PASSED

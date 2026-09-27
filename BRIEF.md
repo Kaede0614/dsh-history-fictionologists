@@ -1,5 +1,12 @@
 # dsh-history-fictionologists · 实现规格（BRIEF）
 
+> **后续勘误（2026-09-27，0.3.0 追加）** —— 本文件停在 0.2.x 的三功能规格上。
+> **0.3.0 新增了第 4 个功能「星球制造机」**（`lib/planets.mjs` +
+> `gs_planets` / `gs_planet_save` / `gs_planet_reset` 三个工具 + `planetCount` 配置 +
+> `/gs` 第 1 步的第 4 项与生成后的两问），因此下文凡写「三个功能」的地方都已过时；
+> 行星功能的权威说明见 [`README.md`](<README.md>) 的「功能 4」一节与
+> [`CHANGELOG.md`](<CHANGELOG.md>) 的 0.3.0 条目。**保留原文不改，理由同下。**
+
 > **勘误（2026-09-26，实现完成后回填）** —— 本文件是写作期的规划规格，有若干处与实际
 > 落地不一致。**以代码与 `docs/DESIGN.md` 为准**：
 >

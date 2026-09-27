@@ -104,3 +104,27 @@ wikitext 清洗约定：`<br>` → 换行；`<i>` 引文按普通文本保留；
   与缓存里的 `revisionId` 相同即跳过（不改写文件）。
 - 写盘：先写 `<file>.tmp` 再 `rename`，避免半成品；
 - 失败：保留旧文件，把 `ok:false` + `error` 写进 `index.json`，并列入 `failed[]`。
+
+## 9. 星球列表（0.3.0，不是抓取数据源）
+
+「星球制造机」的参考底本**不是** wiki 数据源，因此不走上面那套 revid/原子重建流程：
+
+- **原始 27 颗**编译在 `lib/planets.mjs` 的 `PLANET_BASELINE_SOURCE`（用户原文，逐字），
+  解析成常量并加「出处」标注。选择常量的理由与 `user-canon.json` 同源：
+  `update()` 会原子重建 `<dataset>.json`，而「重置回原始」必须是永远拿得回的操作。
+- **增量**写在 `<workspace>/hsr-worldview-cache/planet-list.json`（`schema` /
+  `baselineCount` / `baseline` 快照 / `added[]`），用 `writeJsonAtomic` 落盘；
+  抓取流程永不触碰该文件。
+- **读取顺序与优先级**：原始列表恒在增量之前；重名判定为「规整空白后同名」，
+  且**原始列表优先**——与 27 颗同名的候选进 `rejected`，绝不覆写用户设定；
+  与增量内既有条目同名则**更新**描述（允许模型自我修正）。
+- **重置**不是删文件，而是把原始快照重新原子写一遍（`added: []`），让文件本身成为
+  「已回到原始」的证据；`gs_planet_reset` 不带 `confirm: true` 时是**只读**的。
+- **取证**：
+  - `_evidence/planet-baseline-vs-user-text.mjs` —— 从本机会话记录里挖出用户原文，
+    与 `PLANET_BASELINE_SOURCE` 逐行比对（27/27 行一致）。踩过两个坑已写进脚本注释：
+    会话文件是**多帧 zstd**（`zstdDecompressSync` 只解第一帧），
+    且用户消息事件的形状是 `{type:"user/message", data:{content:[{type:"text",text}]}}`（**没有** `role` 字段）。
+  - `_evidence/planet-tools-deploy.mjs` —— 从**部署位置**
+    （`~/.dsh/profiles/web/node_modules/dsh-history-fictionologists`）驱动三个工具，
+    在临时工作区里走完「生成 → 并入 → 无 confirm 拒绝 → confirm 重置」。

@@ -155,6 +155,19 @@ test('every tool result passes the host validator (degraded paths included)', as
     ['gs_save', { kind: 'story', title: 'host-validator', content: 'body' }],
     ['gs_save', { kind: 'inspiration', title: '..\\..\\evil', content: 'x' }],
     ['gs_save', { kind: 'bogus', title: '', content: '' }],
+    // 星球制造机（0.3.0）：正常路径 / 过滤 / 非法入参 / 重名拒绝 / 未经确认的重置。
+    // 这些调用会真的写 `<workspace>/hsr-worldview-cache/planet-list.json`——`workspace`
+    // 是本用例自己的临时目录，finally 里再重置一次，保证用例之间不互相带状态。
+    ['gs_planets', {}],
+    ['gs_planets', { source: 'ruined' }],
+    ['gs_planets', { query: '不存在的星球' }],
+    // 非字符串入参由**宿主**在 execute 之前就拒掉（实测 ToolArgsError: "source" must be a string），
+    // 所以这类边界不进这个循环——见下方「args 层拒绝」用例。
+    ['gs_planets', { source: 'visited', query: '星' }],
+    ['gs_planet_save', { planets: [{ name: '校验星', en: 'Checkstar', description: '宿主校验用的临时星球', source: 'other' }] }],
+    ['gs_planet_save', { planets: [{ name: '螺丝星', description: '撞名原始列表' }] }],
+    ['gs_planet_save', { planets: [] }],
+    ['gs_planet_reset', {}],
     // OFFLINE: the wiki submodule is stubbed out, so this exercises the shell's
     // wiki-unavailable degraded branch (all 7 required keys present) with no I/O.
     ['gs_update', { datasets: ['aeons'] }],
@@ -175,12 +188,49 @@ test('every tool result passes the host validator (degraded paths included)', as
     }
   } finally {
     restore()
+    // 星球工具在上面真的落了盘；重置回纯原始列表，避免这条用例的临时状态被后续断言看到。
+    //
+    // 复核 R-5：这里原先调用 `mod.__internals.resetPlanets`，但那个键**当时并不存在**——
+    // TypeError 被空 catch 吞掉，注释声称的清理其实从未发生（用例自带 mkdtemp，所以没爆雷）。
+    // 现在 `resetPlanets` 真的导出了，并且不再吞错：重置失败就是这条用例的失败。
+    assert.equal(typeof mod.__internals.resetPlanets, 'function', 'resetPlanets 必须导出（R-5 回归）')
+    const cleanup = mod.__internals.resetPlanets(workspace)
+    assert.equal(cleanup.ok, true, `重置失败：${cleanup.error ?? '未知'}`)
+    assert.equal(cleanup.total, 27)
+    assert.equal(cleanup.removed > 0, true, '这条用例并入过星球，重置应当报告清除数 > 0')
   }
   rmSync(workspace, { recursive: true, force: true })
 })
 
-test('non-finite config values cannot drop a required key (F2 regression)', async () => {
-  const workspace = mkdtempSync(join(tmpdir(), 'hsf-hv-nan-'))
+test('planet tools reject wrong-typed args at the host args layer (before execute)', async () => {
+  const workspace = mkdtempSync(join(tmpdir(), 'hsf-hv-args-'))
+  const { record } = await harness({ workspace })
+  const planets = record.tools.find((t) => t.name === 'gs_planets')
+  const save = record.tools.find((t) => t.name === 'gs_planet_save')
+  const reset = record.tools.find((t) => t.name === 'gs_planet_reset')
+
+  // gs_planets：source/query 必须是字符串。
+  await assert.rejects(
+    () => planets.execute({ source: 42 }, {}),
+    (error) => error?.code === 'INVALID_ARGS',
+    'gs_planets({source:42}) 应被宿主 args 校验拒绝',
+  )
+  // gs_planet_save：planets 必须是数组。
+  await assert.rejects(
+    () => save.execute({ planets: '洛珂萨' }, {}),
+    (error) => error?.code === 'INVALID_ARGS',
+    'gs_planet_save({planets:"…"}) 应被宿主 args 校验拒绝',
+  )
+  // gs_planet_reset：confirm 必须是布尔。
+  await assert.rejects(
+    () => reset.execute({ confirm: 'yes' }, {}),
+    (error) => error?.code === 'INVALID_ARGS',
+    'gs_planet_reset({confirm:"yes"}) 应被宿主 args 校验拒绝',
+  )
+  rmSync(workspace, { recursive: true, force: true })
+})
+
+test('non-finite config values cannot drop a required key (F2 regression)', async () => {  const workspace = mkdtempSync(join(tmpdir(), 'hsf-hv-nan-'))
   for (const bad of [Number.NaN, Number.POSITIVE_INFINITY, Number.NEGATIVE_INFINITY]) {
     const { record, validate } = await harness({ workspace, staleAfterDays: bad, recentGuardDays: bad })
     const tool = record.tools.find((t) => t.name === 'gs_setup')
@@ -342,10 +392,10 @@ test('unload disposes every registration; a reload leaves the registry consisten
   const mod = await import(pathToFileURL(SHELL_PATH).href)
   const { ctx, record } = makeCtx()
   mod.apply(ctx, { workspace })
-  assert.equal(record.tools.length, 6)
+  assert.equal(record.tools.length, 9)
   assert.equal(record.sections.length, 1)
   assert.equal(record.commands.length, 1)
-  assert.equal(record.live.size, 8, `应有 8 个生效注册，实际 ${JSON.stringify([...record.live])}`)
+  assert.equal(record.live.size, 11, `应有 11 个生效注册，实际 ${JSON.stringify([...record.live])}`)
 
   for (const dispose of record.disposers) dispose?.()
   assert.deepEqual([...record.live], [], '卸载后不应残留任何注册')
@@ -355,7 +405,7 @@ test('unload disposes every registration; a reload leaves the registry consisten
   // reload (the host's recovery path) must return to exactly one registration set
   const second = makeCtx()
   mod.apply(second.ctx, { workspace })
-  assert.equal(second.record.tools.length, 6, '重载不得重复注册')
+  assert.equal(second.record.tools.length, 9, '重载不得重复注册')
   assert.equal(second.record.commands.length, 1)
   assert.equal(second.record.sections.length, 1)
   rmSync(workspace, { recursive: true, force: true })

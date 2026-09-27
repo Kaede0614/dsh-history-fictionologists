@@ -1,0 +1,17 @@
+工作区：C:\Users\masha\Desktop\hsr-history-fictionologists
+星球列表文件：C:\Users\masha\Desktop\hsr-history-fictionologists\hsr-worldview-cache\planet-list.json
+文件是否已存在：false（存在则说明这台机器之前并入过）
+
+[0] 并入前：原始=27 已并入=0
+
+[1] 并入：ok=true 新增=["复核临时星"] 写盘=6313 字节
+    文件大小 6313 字节
+
+[2] 读回：matched=1 origin=added source=other
+    文件内：baseline=27 added=1 schema=dsh-history-fictionologists/planet-list@1
+
+[3] 重置：reset=true 清除=1 现有=27
+
+[4] 结束状态：原始=27 已并入=0 文件内 added=0
+
+REAL WORKSPACE ROUNDTRIP OK（结束状态 = 纯原始 27 颗）
