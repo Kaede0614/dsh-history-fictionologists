@@ -94,14 +94,41 @@ dsh --profile web --dump-config | Select-String history-fictionologists
 
 ---
 
+## 发布当天：首次真跑 GitHub 写入路径，抓出并修掉一个真实缺陷
+
+0.2.1 的笔记里如实留了一条债：「本机没有 GitHub 令牌，GitHub 写入路径未重跑」。
+**本版把这条债还了**——第一次真跑就把它跑出来了：
+
+```
+PATCH  /repos/…/releases/397598669 -> 200            # Release 建起来了
+POST_BINARY /repos/…/releases/397598669/assets?name=… -> 403   # 附件传不上去
+```
+
+403 的正文是 GitHub 的「Access to this site has been restricted.」限制页。
+脚本**没有把「Release 有了、附件没有」当成功**（报 `published_incomplete` 并退出码 1）。
+归因用受控实验：同一个 token、同一个 Release、同一份字节，**只换主机**——
+API 根 **403**，`uploads.github.com` **201 Created**。token 是 `repo` 作用域、
+仓库 `admin`、同一客户端刚 PATCH 成功，所以不是权限问题：
+**附件字节必须发给 `uploads.github.com`**。
+
+已修（`lib/release-kit.mjs` 的 `DEFAULT_UPLOAD_API` + `extra.upload`，
+`scripts/release.mjs` 上传带 `upload: true`），并加了 3 条离线回归用例。
+完整证据与时间线见 [`CHANGELOG.md`](<../CHANGELOG.md>) 的 0.3.0 小节与
+[`_evidence/github-publish-v0.3.0.txt`](<../_evidence/github-publish-v0.3.0.txt>)。
+
+> `v0.3.0` 的 tag 一开始打在了修复前的提交上。当时**一个附件都没成功上传**（`assets: []`），
+> 不存在已下载的制品，因此把 tag 移到修复后的提交再传附件——让 tag 与制品描述同一棵树。
+
+---
+
 ## 制品与验证（全部真跑，非推断）
 
 **附件**：`dsh-history-fictionologists-0.3.0.tgz`
 
 ```
-23 个文件 · 148981 字节（145.5 kB）
-SHA256  D654733B0C914293D66151A9E0B818F94ED07738D348B6449D4471D95C431755
-SHA1    5704DB2181BC02D2E4625811F53F598B619CE9CB
+23 个文件 · 150927 字节（147.4 kB）
+SHA256  971888AF8E5AF8CC595A61EFEB93EF1FBB81A015494CED6B4EAB17B77D564C99
+SHA1    2B8D1BCE3C7C6885DFCD4438679F26C7AC92B107
 ```
 
 `files` 白名单核对：清单里**没有** `test/`、`docs/`、`_evidence/`、`_probe/`、
@@ -109,8 +136,8 @@ SHA1    5704DB2181BC02D2E4625811F53F598B619CE9CB
 制品由发版脚本自己的读回器逐字节比对过（**gzip + tar 带 mtime=0，字节确定**，
 同一份源码重复构建哈希不变）。
 
-- **离线用例**：`node --test` → **171 个用例，170 pass / 0 fail / 1 skip**
-  （skip 是缺 `_probe/` 夹具那一个，与制品无关）。本版新增 22 条星球用例。
+- **离线用例**：`node --test` → **174 个用例，173 pass / 0 fail / 1 skip**
+  （skip 是缺 `_probe/` 夹具那一个，与制品无关）。其中星球 22 条，发版工具链 25 条。
 - **仓库自检**：`node scripts/check.mjs` → `RESULT: PASS`（语法 0 失败，测试退出码 0）。
 - **`/gs` 真机加载**：`node _evidence/verify-gs-e2e.mjs` → `RESULT: PASS`
   （隔离实例，回执里的命令描述是 0.3.0 的新文案，证明加载的是改后代码），
