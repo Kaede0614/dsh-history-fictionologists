@@ -191,10 +191,15 @@ RESULT: PUBLISHED (artifact verified end-to-end)  [5 API steps]
 
 **独立复核**（
 [`_evidence/verify-atomgit-v0.3.0.mjs`](<../_evidence/verify-atomgit-v0.3.0.mjs>)，输出同目录 `.txt`）：
-Release `release_status: latest`、正文 8406 字符；附件列表里除我们上传的 `…-0.3.0.tgz`
+Release `release_status: latest`、**正文与本地发版笔记逐字一致**（平台只去掉结尾换行）；
+附件列表里除我们上传的 `…-0.3.0.tgz`
 （id `219561`）外，还有平台**自动生成**的 4 个源码归档（zip / tar.gz / tar.bz2 / tar）。
 从公开下载地址取回 tgz → **152089 字节、SHA256 与本地构建逐字节一致**，
 因此**两个平台的附件是同一份字节**（`DE155AA1…D5C9`）。
+
+> 下载域名有两条，实测都能用：API 里的 `browser_download_url` 指向 `gitcode.com`，
+> 而 `atomgit.com/.../releases/download/...` 也回同一份字节（都 `HTTP 200`、同哈希）。
+> 详见 [`docs/atomgit-description.md`](<../docs/atomgit-description.md>) §3 的观测记录。
 
 ---
 

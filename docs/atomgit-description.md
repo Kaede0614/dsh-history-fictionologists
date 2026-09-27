@@ -57,8 +57,14 @@ dsh plugin --profile <profile> add github:Kaede0614/dsh-history-fictionologists
 ```
 
 `package.json` 里的 `repository` / `homepage` / `bugs` 仍然指向 GitHub：
-**AtomGit 是分发镜像，不是主仓**。这一点是有意为之——不要为了「双平台对等」
-把字段改成其中之一，那样只会让两边各说各话。
+**AtomGit 是分发镜像，不是主仓**。这一点是有意为之——不要为了「双平台对等」把字段改成其中之一，那样只会让两边各说各话。
+
+> **附件下载域名有两条，实测都能用（2026-09-27，v0.3.0）**：Release API 里附件的
+> `browser_download_url` 指向 **`gitcode.com`**，而
+> `atomgit.com/<owner>/<repo>/releases/download/<tag>/<file>` 同样可取到同一份字节：
+> 两条链接都回 `HTTP 200`、**152089 字节、sha256 `de155aa1…` 一致**。
+> 这条只是下载域名的镜像关系，不属于 §1 那张表讲的 REST API 形状差异，
+> 所以**不并进那四条**（`lib/atomgit-kit.mjs` 的文件头也仍按「四条差异」叙述）。
 
 ---
 
