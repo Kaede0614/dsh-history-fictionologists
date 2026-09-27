@@ -348,14 +348,17 @@ async function main() {
   const client = createGitHubClient({ token: tokenInfo.token ?? '', fetchImpl: globalThis.fetch })
   const plan = []
   const api = async (method, path, body, extra) => {
-    plan.push(`${method} ${path}`)
+    // `POST_BINARY` is a LOG LABEL, never the wire method: sending it verbatim as the HTTP
+    // verb is exactly what produced the 403 on the v0.3.0 run (the client now refuses it).
+    const label = extra?.rawBody !== undefined ? 'POST_BINARY' : method
+    plan.push(`${label} ${path}`)
     if (dryRun) {
-      const label = body === undefined ? '' : `  ${JSON.stringify(body).slice(0, 140)}`
-      log(`would  ${method.padEnd(6)} ${path}${label}`)
+      const bodyLabel = body === undefined ? '' : `  ${JSON.stringify(body).slice(0, 140)}`
+      log(`would  ${label.padEnd(6)} ${path}${bodyLabel}`)
       return { status: 0, data: null }
     }
     const response = await client.request(method, path, body, extra)
-    log(`       ${method.padEnd(6)} ${path} -> ${response.status}`)
+    log(`       ${label.padEnd(6)} ${path} -> ${response.status}`)
     return response
   }
 
@@ -436,7 +439,7 @@ async function main() {
       if (removed.status >= 400) throw describeApiFailure('deleting the previous asset', removed)
     }
     const uploadPath = `/repos/${repo}/releases/${releaseId}/assets?name=${encodeURIComponent(facts.tarballName)}`
-    const upload = await api('POST_BINARY', uploadPath, undefined, {
+    const upload = await api('POST', uploadPath, undefined, {
       rawBody: tarball,
       headers: { 'content-type': 'application/octet-stream' },
       upload: true,

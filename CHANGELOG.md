@@ -45,8 +45,8 @@
   （9 个工具 / 11 个生效注册），并新增「args 层拒绝错类型入参」的用例：
   实测 `gs_planets({source: 42})`、`gs_planet_save({planets: "…"})`、
   `gs_planet_reset({confirm: "yes"})` 由**宿主**在 `execute` 之前抛 `ToolArgsError` 拒掉。
-- 测试总数 **174 用例 / 173 pass / 0 fail / 1 skip**（作者工作区实测，2026-09-27；
-  其中星球 22 条、发版工具链 25 条含新增的 3 条上传主机回归）。
+- 测试总数 **175 用例 / 174 pass / 0 fail / 1 skip**（作者工作区实测，2026-09-27；
+  其中星球 22 条、发版工具链 26 条含新增的 4 条上传路径回归）。
 - `STYLE_GUIDE` 由 1291 字符 / 57 行 → **1748 字符 / 72 行**。
   `_evidence/prompt-section-injection.txt` 仍是 0.1.0 的抓取，**对 0.3.0 已过期**（README 已注明）。
 
@@ -71,7 +71,7 @@
 用户若改写星球名会得到「找不到原文」而不是「不一致」——属**假阴性风险**，已在该脚本注释里注明；
 它未发现假阳性。
 
-### 发布当天：首次真跑 GitHub 写入路径，抓出一个真实缺陷（已修）
+### 发布当天：首次真跑 GitHub 写入路径，抓出两个真实缺陷（已修）
 
 0.2.1 如实记着一条债：「本机没有 GitHub 令牌，GitHub 写入路径未重跑，只有假 `fetch` 的离线用例」。
 **本版把这条债还了**——第一次真跑就把缺陷跑出来了，这也是它值得写在这里的原因。
@@ -89,23 +89,42 @@ Release 建起来了（正文 4861 字符），**附件传不上去**：403 的�
 脚本按 0.2.1 复核修定的口径处理——报 `uploading the tarball failed: 403` 并**退出码 1**，
 不把「Release 有了、附件没有」当成功。
 
-归因用**受控实验**，不是推理：同一个 token、同一个 Release、同一份字节，**只换主机**。
+**第一次归因是错的，靠一次只变一个因子的实验纠正过来的。** 起初只怀疑「主机不对」，
+于是先改主机——**再跑仍然 403**。这才把方法名也放进变量里（探针
+[`_evidence/github-upload-host-probe.mjs`](<_evidence/github-upload-host-probe.mjs>)，原始输出同目录 `.txt`，
+走的是**真客户端**、同一个 token、同一个 Release、同一份字节）：
 
-| 请求 | 结果 |
-|---|---|
-| `POST https://api.github.com/repos/…/releases/397598669/assets?name=…` | **403** + 限制页 |
-| `POST https://uploads.github.com/repos/…/releases/397598669/assets?name=…` | **201 Created**（探针素材随后 `DELETE …/assets/592659156 -> 204`） |
+| # | 方法 | 主机 | 结果 |
+|---|---|---|---|
+| A | `POST` | `uploads.github.com` | 首次 **201 Created**（同名的第二次因已存在而 **422**） |
+| B | `POST` | `uploads.github.com` | 首次 **201**，重跑 **422**（已存在） |
+| C | `POST` | `api.github.com` | **404**——该主机不服务这个端点 |
+| D | `POST_BINARY` | `uploads.github.com` | **403** + 限制页 |
+| E | `POST_BINARY` | `api.github.com` | **403** + 限制页 |
+
+结论是**两个缺陷叠加**，各自都足以让附件传不上去：
+
+1. **主因：伪 HTTP 方法。** `scripts/release.mjs` 把日志标签 `'POST_BINARY'` 直接传给了
+   `client.request()`，而客户端把方法名**原样**发给服务器——线上请求字面就是
+   `POST_BINARY /repos/…/assets HTTP/1.1`。D 与 E 两个主机都给同一个 403 限制页，
+   正是「方法非法」而不是「主机不对」的指纹。
+2. **次因：主机不对。** 即使方法正确，`api.github.com` 也不服务 `/releases/:id/assets`
+   （C 组 404）；附件字节必须发给 `uploads.github.com`（A/B 组）。
 
 排除 scope 嫌疑的证据：该 token `GET /user -> 200`（`x-oauth-scopes: gist, repo, workflow`）、
-仓库 `permissions.admin = true`，而且**同一个客户端刚刚 PATCH 成功**。
-结论：`/releases/:id/assets` 的**附件字节必须发给 `uploads.github.com`**，
-API 根给出的是与「scope 不够」几乎无法区分的 403——光看状态码会修错方向。
+仓库 `permissions.admin = true`、而且**同一个客户端刚刚 PATCH 成功**。
+两个缺陷都长得和「token 权限不够」一样——**光看状态码会修错方向**，这是本条的真正教训。
 
-- **修复**：`lib/release-kit.mjs` 新增 `DEFAULT_UPLOAD_API = 'https://uploads.github.com'`；
+- **修复 1（方法）**：`scripts/release.mjs` 把日志标签与线上方法拆开——`api()` 仍按
+  `extra.rawBody` 打 `POST_BINARY` 标签，但传给客户端的是 `POST`。
+  另外在 `lib/release-kit.mjs` 加了**方法白名单守卫**（`HTTP_METHODS`）：
+  非 HTTP 动词**本地直接抛错**，不再变成一个语义被误读的 403。
+- **修复 2（主机）**：`lib/release-kit.mjs` 新增 `DEFAULT_UPLOAD_API = 'https://uploads.github.com'`；
   `createGitHubClient` 的 `request` 支持 `extra.upload`（走上传主机）与绝对 URL（原样使用）；
   `scripts/release.mjs` 的附件上传改带 `upload: true`，**预演日志也照实打上传主机**
-  （预演与实际不一致的日志本身就是下一个坑）。新增 3 条离线回归用例：
-  附件必须落在 uploads 主机、`uploadApi` 可覆盖（GHE）、非上传调用仍走 API 根。
+  （预演与实际不一致的日志本身就是下一个坑）。
+- **新增 4 条离线回归用例**：附件必须落在 uploads 主机、`uploadApi` 可覆盖（GHE）、
+  非上传调用仍走 API 根、**非 HTTP 方法必须在本地被拒且一个字节都不上网**。
 - **tag 处理**：`v0.3.0` 第一次打在了修复前的提交上，而 `lib/` 与 `scripts/` **都在 `files`
   白名单里**（改工具链就会改制品字节）。当时**一个附件都没成功上传**（`assets: []`），
   不存在任何已下载的制品，因此把 tag 移到修复后的提交再传附件——

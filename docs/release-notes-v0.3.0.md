@@ -94,7 +94,7 @@ dsh --profile web --dump-config | Select-String history-fictionologists
 
 ---
 
-## 发布当天：首次真跑 GitHub 写入路径，抓出并修掉一个真实缺陷
+## 发布当天：首次真跑 GitHub 写入路径，抓出并修掉两个叠加缺陷
 
 0.2.1 的笔记里如实留了一条债：「本机没有 GitHub 令牌，GitHub 写入路径未重跑」。
 **本版把这条债还了**——第一次真跑就把它跑出来了：
@@ -106,15 +106,30 @@ POST_BINARY /repos/…/releases/397598669/assets?name=… -> 403   # 附件传�
 
 403 的正文是 GitHub 的「Access to this site has been restricted.」限制页。
 脚本**没有把「Release 有了、附件没有」当成功**（报 `published_incomplete` 并退出码 1）。
-归因用受控实验：同一个 token、同一个 Release、同一份字节，**只换主机**——
-API 根 **403**，`uploads.github.com` **201 Created**。token 是 `repo` 作用域、
-仓库 `admin`、同一客户端刚 PATCH 成功，所以不是权限问题：
-**附件字节必须发给 `uploads.github.com`**。
 
-已修（`lib/release-kit.mjs` 的 `DEFAULT_UPLOAD_API` + `extra.upload`，
-`scripts/release.mjs` 上传带 `upload: true`），并加了 3 条离线回归用例。
-完整证据与时间线见 [`CHANGELOG.md`](<../CHANGELOG.md>) 的 0.3.0 小节与
-[`_evidence/github-publish-v0.3.0.txt`](<../_evidence/github-publish-v0.3.0.txt>)。
+**第一次归因错了**：起初只怀疑主机，改完主机**再跑仍然 403**。
+做了一次只变一个因子的实验（走真客户端、同一 token、同一 Release、同一份字节）才看清：
+
+| 方法 | 主机 | 结果 |
+|---|---|---|
+| `POST` | `uploads.github.com` | 首次 **201**（重跑因已存在同名 **422**）|
+| `POST` | `api.github.com` | **404**（该主机不服务此端点）|
+| `POST_BINARY` | `uploads.github.com` | **403** + 限制页 |
+| `POST_BINARY` | `api.github.com` | **403** + 限制页 |
+
+两个缺陷叠加，各自都足以让附件传不上去：
+
+1. **主因：伪 HTTP 方法。** 发版脚本把日志标签 `POST_BINARY` 当成了方法名，线上请求字面就是
+   `POST_BINARY /repos/…/assets HTTP/1.1`。两种主机给同一个 403，正是「方法非法」的指纹。
+2. **次因：主机不对。** 方法正确时 `api.github.com` 也不服务该端点（404），
+   附件字节必须发给 `uploads.github.com`。
+
+两者都长得和「token 权限不够」一样——token 实际是 `repo` 作用域、仓库 `admin`、
+同一客户端刚刚 PATCH 成功。已修：方法白名单守卫 + `DEFAULT_UPLOAD_API` + `extra.upload`，
+并补 4 条离线回归用例（含「非 HTTP 方法一个字节都不许上网」）。
+完整证据与时间线见 [`CHANGELOG.md`](<../CHANGELOG.md>) 的 0.3.0 小节、
+[`_evidence/github-publish-v0.3.0.txt`](<../_evidence/github-publish-v0.3.0.txt>) 与
+[`_evidence/github-upload-host-probe.txt`](<../_evidence/github-upload-host-probe.txt>)。
 
 > `v0.3.0` 的 tag 一开始打在了修复前的提交上。当时**一个附件都没成功上传**（`assets: []`），
 > 不存在已下载的制品，因此把 tag 移到修复后的提交再传附件——让 tag 与制品描述同一棵树。
@@ -126,9 +141,9 @@ API 根 **403**，`uploads.github.com` **201 Created**。token 是 `repo` 作用
 **附件**：`dsh-history-fictionologists-0.3.0.tgz`
 
 ```
-23 个文件 · 150927 字节（147.4 kB）
-SHA256  971888AF8E5AF8CC595A61EFEB93EF1FBB81A015494CED6B4EAB17B77D564C99
-SHA1    2B8D1BCE3C7C6885DFCD4438679F26C7AC92B107
+23 个文件 · 152089 字节（148.5 kB）
+SHA256  DE155AA1ABD4981D0267980FA95A57818AA31C44461BC1F6A66EFFDB13C1D5C9
+SHA1    DBCAD4F06F5AC3D2714108F2F42378F251078FFF
 ```
 
 `files` 白名单核对：清单里**没有** `test/`、`docs/`、`_evidence/`、`_probe/`、
@@ -136,8 +151,8 @@ SHA1    2B8D1BCE3C7C6885DFCD4438679F26C7AC92B107
 制品由发版脚本自己的读回器逐字节比对过（**gzip + tar 带 mtime=0，字节确定**，
 同一份源码重复构建哈希不变）。
 
-- **离线用例**：`node --test` → **174 个用例，173 pass / 0 fail / 1 skip**
-  （skip 是缺 `_probe/` 夹具那一个，与制品无关）。其中星球 22 条，发版工具链 25 条。
+- **离线用例**：`node --test` → **175 个用例，174 pass / 0 fail / 1 skip**
+  （skip 是缺 `_probe/` 夹具那一个，与制品无关）。其中星球 22 条，发版工具链 26 条。
 - **仓库自检**：`node scripts/check.mjs` → `RESULT: PASS`（语法 0 失败，测试退出码 0）。
 - **`/gs` 真机加载**：`node _evidence/verify-gs-e2e.mjs` → `RESULT: PASS`
   （隔离实例，回执里的命令描述是 0.3.0 的新文案，证明加载的是改后代码），

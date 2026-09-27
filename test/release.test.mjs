@@ -380,6 +380,21 @@ test('non-upload calls still go to the API root even when the uploads host is co
   assert.equal(calls[0].url, 'https://api.github.com/repos/o/r/releases/tags/v1')
 })
 
+// Regression for the OTHER half of the same v0.3.0 defect (measured): the log label
+// `POST_BINARY` had leaked into the call as the HTTP method, so the wire request was
+// `POST_BINARY /repos/…/assets HTTP/1.1` and GitHub answered `403` with a block page —
+// on both hosts, which is why the 403 looked like a token problem. The verb check makes
+// that mistake a local error instead of a mis-attributed server response.
+test('a non-HTTP method is refused locally instead of being sent (the POST_BINARY trap)', async () => {
+  const { impl, calls } = fakeFetch([{ status: 201, body: {} }])
+  const client = createGitHubClient({ token: 't', fetchImpl: impl })
+  await assert.rejects(
+    () => client.request('POST_BINARY', '/repos/o/r/releases/1/assets?name=a.tgz', undefined, { rawBody: Buffer.from('x') }),
+    /not an HTTP method/,
+  )
+  assert.equal(calls.length, 0, 'nothing may reach the network with a bogus verb')
+})
+
 test('createGitHubClient survives a non-JSON error page without throwing a parse error', async () => {
   const { impl } = fakeFetch([{ status: 502, text: '<html>bad gateway</html>' }])
   const client = createGitHubClient({ token: 't', fetchImpl: impl })
