@@ -168,6 +168,36 @@ RESULT: PUBLISHED  [3 API steps]
 
 ---
 
+## AtomGit 同步（同日，GitHub 之后）
+
+AtomGit 是**分发镜像**。四个平台差异（`PRIVATE-TOKEN` 认证、Release **没有数字 id**、
+附件走**签名两步法**、同名附件**不能覆盖**）见
+[`docs/atomgit-description.md`](<../docs/atomgit-description.md>)。
+本版把镜像从 `v0.2.1` 追到 `v0.3.0`，两个平台的 tag 都指向 `549b009`：
+
+```
+       pushed branch main
+       pushed tag v0.3.0
+       GET    /repos/…/releases/tags/v0.3.0 -> 404
+       POST   /repos/…/releases -> 200
+       uploaded dsh-history-fictionologists-0.3.0.tgz (148.5 kB)
+download     https://atomgit.com/Scombriformes/dsh-history-fictionologists/releases/download/v0.3.0/…
+             152089 bytes, sha256 de155aa1abd4981d… MATCHES the built tarball
+RESULT: PUBLISHED (artifact verified end-to-end)  [5 API steps]
+```
+
+命令 `node scripts/release-atomgit.mjs --publish`，原始输出
+[`_evidence/atomgit-publish-v0.3.0.txt`](<../_evidence/atomgit-publish-v0.3.0.txt>)。
+
+**独立复核**（
+[`_evidence/verify-atomgit-v0.3.0.mjs`](<../_evidence/verify-atomgit-v0.3.0.mjs>)，输出同目录 `.txt`）：
+Release `release_status: latest`、正文 8406 字符；附件列表里除我们上传的 `…-0.3.0.tgz`
+（id `219561`）外，还有平台**自动生成**的 4 个源码归档（zip / tar.gz / tar.bz2 / tar）。
+从公开下载地址取回 tgz → **152089 字节、SHA256 与本地构建逐字节一致**，
+因此**两个平台的附件是同一份字节**（`DE155AA1…D5C9`）。
+
+---
+
 ## 制品与验证（全部真跑，非推断）
 
 **附件**：`dsh-history-fictionologists-0.3.0.tgz`
