@@ -21,6 +21,7 @@
 | `gs_planets` 「星球列表」（原始 27 颗 + 已并入） | 模型调用（功能 4 第 1 步） | 无（原始列表编译在插件里，不需要网络） |
 | `gs_planet_save` 把新星球并入列表 | 模型调用（用户答「加入」后） | 工作区可写 |
 | `gs_planet_reset` 重置回原始 27 颗 | 模型调用（用户确认后带 `confirm: true`） | 工作区可写；**不带 `confirm` 只报告状态** |
+| `gs_equation_save` 虚构差分方程落盘（逐条校验后写入） | 模型调用（功能 5） | 工作区可写；既有方程缓存存在时叠加重名检查 |
 | `gs_save` 成品落盘 | 模型调用 | 工作区可写 |
 | 系统提示「语言风格总则 + 星神纪律」 | 自动注入 | 无 |
 
@@ -71,7 +72,7 @@ dsh --profile web --dump-config | Select-String history-fictionologists
 
 | | 内容 |
 |---|---|
-| **有** | `lib/`（插件本体）、`test/`（171 个离线用例）、`scripts/check.mjs`、`docs/`、`_evidence/`（自证与独立复核证据）、`BRIEF.md`（实现规格）、`cordis.patch.yml`、`hsr-worldview-cache/user-canon.json`（手工维护的裁定层） |
+| **有** | `lib/`（插件本体）、`test/`（200 个离线用例）、`scripts/check.mjs`、`docs/`、`_evidence/`（自证与独立复核证据）、`BRIEF.md`（实现规格）、`cordis.patch.yml`、`hsr-worldview-cache/user-canon.json`（手工维护的裁定层） |
 | **没有** | `hsr-missions/`（游戏原始剧本文本，约 20 MB，版权归米哈游）、`hsr-worldview-cache/*.json`（`gs_update` 可重新抓取）、`_probe/`（4.9 MB 原始渲染 HTML）、`hsr-stories/` 与 `hsr-broadcasts/`（本机成品） |
 
 被忽略的目录仍留在你的工作区里，只是不进版本库（见 [`.gitignore`](<.gitignore>)）。
@@ -112,7 +113,7 @@ sr-开拓续闻-完整/                  7 个系列 / 52 个开拓续闻任务
 
 ---
 
-## 四种功能
+## 五种功能
 
 ### 功能 1 · 神人制造机
 
@@ -137,21 +138,25 @@ sr-开拓续闻-完整/                  7 个系列 / 52 个开拓续闻任务
 
 ### 功能 3 · 星际构史播报
 
-约 **800–1200 字**、**3–5 条**新闻，固定格式：
+约 **800–1200 字**、**3–5 条**新闻，格式固定（报头人声随机，其余逐字照用）：
 
 ```
 （音乐）
 
-女声：这里是星际和平播报，观众朋友们晚上好。
-男声：晚上好。
+〈报头人声，女声或男声随机〉：这里是星际和平播报，观众朋友们晚上好。
+〈另一位〉：晚上好。
+〈报头人声〉：欢迎收听今天的星际和平播报节目：
 
-女声：第一条消息。……
-男声：第二条消息。……
+〈另一位〉：……
+〈报头人声〉：……
+〈另一位〉：……
 
-女声：本次播报到此结束，请在指定时间收听下一周期的星际和平播报。
+〈轮到的那一位〉：本次播报到此结束，请在指定时间收听下一周期的星际和平播报。
 （音乐）
 ```
 
+口径：不写「第X条消息」这类序号前缀；「晚上好」之后必须有过渡句；报头人声可女声可男声（随机），
+选定后全篇严格交替；报道对象是星球、地区、派系与它们身上发生的事件，不是某个普通个人的轶事。
 虚构文本必须足够科幻、足够太空、充满想象力——**不是对已有故事的重组**。
 
 ### 功能 4 · 星球制造机（0.3.0）
@@ -192,6 +197,41 @@ sr-开拓续闻-完整/                  7 个系列 / 52 个开拓续闻任务
   增量列表总上限 200 颗，到顶后拒绝写入并提示先重置。
 - 「出处」标注（`visited` 已探访 / `mentioned` 文本提及 / `ruined` 已毁或失去开拓意义 /
   `unknown` / `other`）是**本插件加的**，只用于给模型分组参考，不改变用户原文一个字。
+
+### 功能 5 · 虚构差分方程（0.5.0）
+
+写法**完全同「神人制造机」**：方程名称 + 详细设定 + 可能的故事方向。
+区别只有一条——叙事对象**不限于人物**，五类主题大致均分：
+
+| 主题类别 | 既有 212 条方程里的占比 | 本功能的目标 |
+|---|---|---|
+| 人物·职业/身份 | 59.0%（125 条） | 不再是主体，每批最多 1–2 条 |
+| 生物·物种/衍生体 | 14.6%（31 条） | 每批至少 1 条，且鱼鸟不少于 2、鸟类最多 1 |
+| 装置·器物/场所 | 9.4%（20 条） | 每批至少 1 条 |
+| 抽象概念·现象/事件 | 9.0%（19 条） | 每批至少 1 条 |
+| 派系·机构/组织 | 8.0%（17 条） | 每批至少 1 条，且必须新造机构名 |
+
+默认 **6 条**（`config.equationCount`，3–10）。**不要用 5 条**——5 条时无法同时满足
+「每类 ≥1 条」「单类 ≤2 条」「鱼类与鸟类 ≥2 条」；推荐配额是
+人物 1 / 生物 2 / 装置 1 / 概念 1 / 派系 1。输出格式：
+
+```
+【方程名称】
+〔主题类别〕命途归属：〈主命途〉/〈次命途〉
+详细设定：……（约 120–220 字，须带荒诞感）
+可能的故事方向：……（一到两句话）
+```
+
+- **正文不写游戏机制**：不出现方括号符号、百分比、暴击 / 护盾 / 战技点 / 终结技 / 削韧 / 回合等
+  机制语言（校验器会拒收）。
+- 生物类专项：名字**不少于 3 字**，不得沿用既有构词（蠧役 / 残嗣 / 虫帝 / 王虫 / 巨人 …）；
+  虫类 ≤ 四成、鱼鸟 ≥ 2 条、鸟类 ≤ 1 条、生僻字 ≤ 1 条——这四条按**提示**给出（风格偏好），
+  不硬拒批次。
+- 落盘：`gs_equation_save` 逐条校验后写入 `<工作区>/hsr-stories/equations/`，
+  同一目录里再写一份 `-equations.md` 自检记录（五类配比、生物构成、被拒原因）。
+  与既有 212 条方程的**重名检查**依赖缓存；缓存缺失时降级为「跳过重名检查」并在 warnings 里说明。
+- 规则实现集中在 [`lib/equations.mjs`](<lib/equations.mjs>)，完整口径见
+  [`docs/fiction-equation.md`](<docs/fiction-equation.md>)。
 
 ---
 
@@ -360,6 +400,7 @@ hsr-worldview-cache/
     defaultBroadcastWords: 1000
     inspirationCount: 4      # 3–5
     planetCount: 3           # 星球制造机默认颗数（1–10）
+    equationCount: 6         # 虚构差分方程默认条数（3–10；5 条无法同时满足每类≥1、单类≤2、鱼鸟≥2）
     saveOutputs: true
     userAgent: 'Mozilla/5.0 …'
 ```
@@ -373,7 +414,7 @@ dsh-history-fictionologists/
 ├── package.json            # dsh.bundle.patch 指向 cordis.patch.yml；main = lib/shell.js
 ├── cordis.patch.yml        # bundle 挂载声明
 ├── lib/
-│   ├── shell.js            # 插件外壳：/gs 命令、9 个工具、风格提示词、Config（包入口）
+│   ├── shell.js            # 插件外壳：/gs 命令、10 个工具、风格提示词、Config（包入口）
 │   ├── resolve.js          # @deepseek-ai/* 可选依赖的多 base 解析链
 │   ├── paths.js            # 工作区 / 缓存 / 成品目录解析
 │   ├── missions.js         # hsr-missions 读取与索引
@@ -436,11 +477,12 @@ node _evidence/verify-gs-e2e.mjs  # 隔离实例里端到端验证 /gs（约 15 
 
 | 层 | 文件 | 能证明什么 | 证明不了什么 |
 |---|---|---|---|
-| 契约 | `test/plugin.test.mjs` | 注册物齐全（9 工具 / 1 命令 / 1 section）、`/gs` handler 在异常与降级输入下不抛、规范 JSON | 返回值是否符合 `output.schema`（mock 不校验） |
-| 宿主校验 | `test/host-validator.test.mjs` | 用**宿主自己的** `validateJsonSchemaValue` 校验 9 个工具的全部降级路径；含元测试证明该断言会失败；含 args 层拒绝、卸载/重载与 stub 接缝的隔离断言 | 真实进程内的注册成功 |
+| 契约 | `test/plugin.test.mjs` | 注册物齐全（10 工具 / 1 命令 / 1 section）、`/gs` handler 在异常与降级输入下不抛、规范 JSON | 返回值是否符合 `output.schema`（mock 不校验） |
+| 宿主校验 | `test/host-validator.test.mjs` | 用**宿主自己的** `validateJsonSchemaValue` 校验全部工具（含新增的功能 5）的降级路径；含元测试证明该断言会失败；含 args 层拒绝、卸载/重载与 stub 接缝的隔离断言 | 真实进程内的注册成功 |
 | 解析 | `test/wiki.test.mjs` | 12 个抽取器对真实 HTML 的选择器正确性（离线重放）+ revid 短路 + WAF 重试 + 注入时钟的确定性限流断言 | 真机网络行为 |
 | 连续性 | `test/missions.test.mjs` | `hsr-missions` 三种 JSON 的读取、截断上界、缺失降级 | — |
 | 星球列表（0.3.0） | `test/planets.test.mjs` | 原始 27 颗与用户原文**逐条一致**、读取降级、重名规则（原始优先 + 星球名/英文名 + 大小写不敏感）、超限候选不静默丢弃、截断有告警、原子写、重置、上限、三个星球工具的 schema/渲染/无损 JSON、`/gs` 协议的两问 | 真机上模型是否照做（那取决于模型） |
+| 虚构差分方程（0.5.0） | `test/equations.test.mjs` | 五类配比（每类 ≥1 / 单类 ≤2 / 鱼鸟 ≥2 / 鸟 ≤1）、生物命名三条硬规则、星神纪律、机制语言拒收、与既有 **212 条**方程的重名、逐条落盘与自检记录、`saveOutputs=false` 与缓存缺失降级 | 真机上模型是否照做（那取决于模型） |
 
 > 全部离线（每个 `new WikiClient` 都注入了假 `fetch`，套件里 `globalThis.fetch` 一次都不会被调用）。
 > 需要联网的验证在 `_evidence/`（`run-extract.mjs --live`、`cache-roundtrip.mjs`、`e2e-wiring.mjs`）。
@@ -452,8 +494,11 @@ node _evidence/verify-gs-e2e.mjs  # 隔离实例里端到端验证 /gs（约 15 
 
 | 检出 | 命令 | 结果 |
 |---|---|---|
-| 作者工作区（`_probe/` 与 `hsr-missions/` 都在） | `node --test` | **171 用例 / 170 pass / 0 fail / 1 skip**（2026-09-27 实测；唯一 skip 是「缓存已存在时不再跑降级断言」） |
+| 作者工作区（`_probe/` 与 `hsr-missions/` 都在） | `node --test` | **200 用例 / 199 pass / 0 fail / 1 skip**（2026-09-29 实测；唯一 skip 是「缓存已存在时不再跑降级断言」） |
 | 全新克隆（两者都不在） | `node --test` | 用例总数相同，其中「重放 `_probe/` 夹具 / 依赖 `hsr-missions/`」的那些**显式 skip**（每一条都带原因） |
+
+> 第一行那个数字在本机（受限沙箱）是由逐文件 `node test/<name>.test.mjs` 直跑汇总的：
+> 沙箱禁止 `node --test` 为每个测试文件 spawn 子进程（EPERM）。跑的是同一批文件、同一套断言。
 
 **夹具/语料缺失导致的每一条 skip 都带原因**，直接印在输出里，例如：
 
@@ -465,7 +510,8 @@ node _evidence/verify-gs-e2e.mjs  # 隔离实例里端到端验证 /gs（约 15 
 
 设计口径：**夹具缺失 → 显式 skip；从不静默通过，也从不弱化断言**。
 所有与磁盘无关的用例（`client:` 限流与 WAF 重试、HTML/wikitext 解析、合成缓存降级、
-`gs_*` 工具输出的规范 JSON 与宿主校验器一致性、`test/planets.test.mjs` 的全部 22 条……）
+`gs_*` 工具输出的规范 JSON 与宿主校验器一致性、`test/planets.test.mjs` 的全部 22 条、
+`test/equations.test.mjs` 的全部 25 条……）
 在任何检出里都照跑。
 
 唯一的例外是 `test/host-validator.test.mjs`：这一层要解析**宿主的**

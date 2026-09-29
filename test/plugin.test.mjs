@@ -6,13 +6,15 @@
  * are the fastest signal that the plugin contract itself is intact.
  */
 import assert from 'node:assert/strict'
-import { existsSync, mkdtempSync, rmSync } from 'node:fs'
-import { tmpdir } from 'node:os'
+import { existsSync, mkdirSync, mkdtempSync, rmSync } from 'node:fs'
 import { join } from 'node:path'
 import test from 'node:test'
 import { pathToFileURL } from 'node:url'
 
 const ROOT = join(import.meta.dirname, '..')
+// 受限沙箱下系统 temp 不可写（EPERM）：临时目录统一放在工作区内。
+mkdirSync(join(ROOT, '.tmp-tests'), { recursive: true })
+const tmpdir = () => join(ROOT, '.tmp-tests')
 
 /** Minimal Cordis context double: effect() runs immediately and hands back a disposer. */
 function makeCtx() {
@@ -108,7 +110,7 @@ test('apply registers /gs, nine tools and one prompt section', async () => {
 
   const names = record.tools.map((t) => t.name).sort()
   assert.deepEqual(names, [
-    'gs_digest', 'gs_missions', 'gs_planet_reset', 'gs_planet_save', 'gs_planets',
+    'gs_digest', 'gs_equation_save', 'gs_missions', 'gs_planet_reset', 'gs_planet_save', 'gs_planets',
     'gs_read', 'gs_save', 'gs_setup', 'gs_update',
   ])
 
@@ -120,6 +122,11 @@ test('apply registers /gs, nine tools and one prompt section', async () => {
   assert.match(section.text, /方程一览/)
   assert.match(section.text, /本次播报到此结束/)
   assert.match(section.text, /星神不出场/, '系统提示段落必须带上星神纪律')
+  // 功能 5（虚构差分方程）的四条硬口径必须在系统提示里逐字出现
+  assert.match(section.text, /虚构差分方程/)
+  assert.match(section.text, /人物·职业\/身份/, '系统提示必须列出五类主题')
+  assert.match(section.text, /鱼类与鸟类不少于 2 条、其中鸟类最多 1 条/)
+  assert.match(section.text, /不写游戏机制/)
 
   // every registered tool must carry a描述 and a well-formed output schema
   for (const tool of record.tools) {
@@ -235,6 +242,8 @@ test('/gs handler hands the three-step protocol to the agent', async () => {
   assert.match(text, /神人制造机/)
   assert.match(text, /构史文集/)
   assert.match(text, /星际构史播报/)
+  assert.match(text, /虚构差分方程/, '/gs 协议必须带上第 5 个功能')
+  assert.match(text, /gs_equation_save/, '/gs 协议必须指明功能 5 的落点工具')
   assert.match(text, /ask_user_question/)
   assert.match(text, /欢愉命途的荒诞点子/)
   assertLossless(result, '/gs result')

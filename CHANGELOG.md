@@ -2,6 +2,96 @@
 
 本插件遵循 [Semantic Versioning](https://semver.org/lang/zh-CN/)。
 
+## 0.5.0 — 2026-09-29
+
+**新功能：虚构差分方程**（`/gs` 第 1 步的第 5 项）——模仿「神人制造机」的写法虚构新的差分方程，
+但叙事对象**不限于人物**：人物 / 生物 / 装置场所 / 概念事件 / 派系机构五类大致均分。
+
+按本仓库的语义化版本表「新增用户可见能力 → minor」，故为 `0.5.0`。
+
+### 新增
+
+- [`lib/equations.mjs`](<lib/equations.mjs>)：五类主题与命途白名单、生物类命名规则、
+  `validateFictionEquations()`（逐条 + 批级校验）、`renderEquationsMarkdown()` /
+  `renderEquationsCheckReport()`、`readExistingEquationNames()`、`describeEquationRules()`。
+- 新工具 `gs_equation_save`：逐条校验后写入 `<工作区>/hsr-stories/equations/`，
+  并在同目录写一份 `-equations.md` 自检记录；**只写入通过的条目**，被拒条目在 `rejected` 里逐条给原因。
+- [`lib/paths.js`](<lib/paths.js>)：新增 `equationsDir()`，并入 `ensureOutputDirs()` 与 `describePaths()`。
+- **新配置项 `equationCount`**（默认 `6`，schema 范围 3–10）：功能 5 一次生成几条。
+  描述里直接写明「不要用 5 条」——理由见下方设计口径。
+- 系统提示新增「功能 5 · 虚构差分方程」段；`/gs` 协议第 1 步改为**五个**功能。
+- [`scripts/check-fiction-equations-v2.mjs`](<scripts/check-fiction-equations-v2.mjs>)：离线自检脚本，
+  刻意做成**薄封装**——规则本体就是 `lib/equations.mjs`，不让「对话里生成」与「工具落盘」出现两套口径；
+  被它取代的第一版 [`scripts/check-fiction-equations.cjs`](<scripts/check-fiction-equations.cjs>) 留档不删。
+- [`test/equations.test.mjs`](<test/equations.test.mjs>)：25 条用例，覆盖配比、命名规则、
+  星神纪律、机制语言拒收、重名、落盘与降级（`saveOutputs=false`、缓存缺失）。
+- [`docs/fiction-equation.md`](<docs/fiction-equation.md>)：功能 5 的实现规格（含生物类命名法
+  与禁用表）；被废弃的第一版方案留档在
+  [`docs/fiction-equation-v1-mechanics.md`](<docs/fiction-equation-v1-mechanics.md>)。
+- [README.md](README.md)：新增「功能 5 · 虚构差分方程」一节（含既有 **212 条**方程的五类占比表）、
+  「四种功能」→「五种功能」、工具数 9 → 10、`equationCount` 配置示例，工具表补 `gs_equation_save`
+  一行；测试分层表补功能 5 一行，全量用例数按实测刷新（README 原记 171，而 0.3.0 发版笔记
+  当天记的就是 175——这个数字自 0.3.0 起就没对齐过，本次一并纠正为实测值）。
+
+### 设计口径（用户评审 2026-09-29 历次修订）
+
+- **默认 6 条**：5 条无法同时满足「每类 ≥1 条」「单类 ≤2 条」「鱼类与鸟类 ≥2 条」，
+  故 `equationCount` 默认 6（推荐配额 人物 1 / 生物 2 / 装置 1 / 概念 1 / 派系 1）。
+- **生物类命名**三条硬规则：名字 ≥3 字；不得沿用既有构词（蠧役 / 残嗣 / 虫帝 / 王虫 / 巨人 …）；
+  鱼类与鸟类占比高于虫类——虫类 ≤ 四成、鱼鸟 ≥ 2 条、鸟类 ≤ 1 条、生僻字 ≤ 1 条，**按提示定级**。
+- **正文不写游戏机制**：方括号符号、百分比、暴击 / 护盾 / 战技点 / 终结技 / 削韧 / 回合
+  等机制语言一律拒收（本功能产出的是「名称 + 详细设定」，不是方程卡）。
+- 派系类**必须新造机构名**，使用既有派系名即等于换皮。
+
+### Fixed
+
+- **测试临时目录改到工作区内**：受限沙箱（Windows ACL restricted token）下 Node 对系统 temp
+  的 `mkdtempSync` 会 EPERM，8 个测试文件此前都依赖系统 temp，现统一改用 `<工作区>/.tmp-tests/`
+  （见 [`test/helpers.mjs`](<test/helpers.mjs>) 与各文件头注释）。
+- [`test/planets.test.mjs`](<test/planets.test.mjs>)、[`test/plugin.test.mjs`](<test/plugin.test.mjs>)、
+  [`test/host-validator.test.mjs`](<test/host-validator.test.mjs>)：工具数与功能数断言同步
+  （9 → 10 个工具、4 → 5 个功能选项），并把新工具纳入宿主校验器的降级路径覆盖。
+- 系统提示总则里的「四个功能」表述同步为「五个功能」。
+- [`.gitignore`](<.gitignore>)：新增 `.tmp-tests/`——跑挂的用例留下的临时目录不再有机会混进版本库。
+
+### 验证（2026-09-29 实测）
+
+- 测试总数 **200 用例 / 199 pass / 0 fail / 1 skip**（唯一 skip 是 missions 的
+  「缓存已存在时不再跑降级断言」）。分文件：本功能 [`test/equations.test.mjs`](<test/equations.test.mjs>)
+  **25 条全绿**、星球 22、发版工具链 26（GitHub）+ 24（AtomGit）、wiki 29、missions 41、
+  宿主校验 13、契约 12、用户裁定 8。
+- 跑法：本机受限沙箱下 `node --test` 在**宿主侧**就 EPERM（测试运行器要为每个测试文件 spawn
+  子进程，而沙箱禁止管道 stdio），故改为逐文件 `node test/<name>.test.mjs` 直跑后汇总——
+  与 `node --test` 跑的是同一批文件、同一套断言，数字可比。
+- 与 0.3.0 记的 175 条相比 +25 条，差额正是本功能新增的用例文件。
+
+## 0.4.0 — 2026-09-27
+
+**改变默认行为：星际构史播报的格式与题材口径**（用户评审）。
+
+按本仓库的语义化版本表「改变默认行为 → minor」，故为 `0.4.0`。
+
+### Changed
+
+- **星际构史播报格式模板**四处同步（[`lib/shell.js`](<lib/shell.js>) 系统提示段落、
+  [`lib/digest.js`](<lib/digest.js>) 的 `FORMAT_TEMPLATE`、[BRIEF.md](BRIEF.md) §8 功能 3、
+  [README.md](README.md) 功能 3）：
+  - 删除「第一条消息。/第二条消息。」序号前缀，每条新闻直接从内容展开；
+  - 「晚上好」之后固定补一句过渡（「欢迎收听今天的星际和平播报节目：」）；
+  - 报头人声不再固定女声——改为女声／男声随机，选定后全篇严格交替；模板改用具名占位符
+    〈报头人声〉／〈另一位〉／〈轮到的那一位〉，开场问候句与结尾句仍逐字不变。
+- **播报题材口径**：报道对象是星球、地区、派系与它们身上发生的事件，不落到某个普通个人的
+  轶事上（要人物请走「神人制造机」）。两条裁定落在
+  [`hsr-worldview-cache/user-canon.json`](<hsr-worldview-cache/user-canon.json>)：
+  `broadcast-format-rules`（①②③三条格式）与 `broadcast-no-godman-maker-subject`（题材）。
+
+### Fixed
+
+- [`test/missions.test.mjs`](<test/missions.test.mjs>)：`broadcastDigest` 的格式模板断言同步为新模板，
+  并新增负向断言「模板中不得再出现『第一条消息』」，防止旧格式被无意写回。
+- [`_evidence/run-missions.mjs`](<_evidence/run-missions.mjs>)：证据脚本里对照 BRIEF 的期望模板同步更新
+  （`_evidence/*.txt` 里的历史输出保持原样，作为改动前记录）。
+
 ## 0.3.0 — 2026-09-27
 
 **新功能：星球制造机**（`/gs` 第 1 步的第 4 项）——参照「星球列表」生成全新星球，

@@ -23,8 +23,7 @@
  * This file is fully OFFLINE.
  */
 import assert from 'node:assert/strict'
-import { mkdtempSync, readFileSync, rmSync } from 'node:fs'
-import { tmpdir } from 'node:os'
+import { mkdirSync, mkdtempSync, readFileSync, rmSync } from 'node:fs'
 import { join } from 'node:path'
 import test from 'node:test'
 import { pathToFileURL } from 'node:url'
@@ -32,6 +31,9 @@ import { pathToFileURL } from 'node:url'
 import { optionalImport } from '../lib/resolve.js'
 
 const ROOT = join(import.meta.dirname, '..')
+// 受限沙箱下系统 temp 不可写（EPERM）：临时目录统一放在工作区内。
+mkdirSync(join(ROOT, '.tmp-tests'), { recursive: true })
+const tmpdir = () => join(ROOT, '.tmp-tests')
 const SHELL_PATH = join(ROOT, 'lib', 'shell.js')
 
 /** Load the plugin shell plus the host's validator. */
@@ -168,6 +170,20 @@ test('every tool result passes the host validator (degraded paths included)', as
     ['gs_planet_save', { planets: [{ name: '螺丝星', description: '撞名原始列表' }] }],
     ['gs_planet_save', { planets: [] }],
     ['gs_planet_reset', {}],
+    // 虚构差分方程（功能 5）：正常落盘 / 部分拒收 / 空数组 / 全部非法（不写盘）。
+    // 这些调用会把成品写进本用例自己的临时工作区，与 planet 条目同理，互不串状态。
+    ['gs_equation_save', { title: 'host-validator', entries: [] }],
+    ['gs_equation_save', {
+      title: 'host-validator',
+      entries: [
+        { name: '守秤员', topic: '人物·职业/身份', pathPrimary: '均衡', pathSecondary: '存护', detail: '甲'.repeat(130), hooks: '钩子。' },
+        { name: '鲎灯', topic: '生物·物种/衍生体', pathPrimary: '记忆', detail: '乙'.repeat(130), hooks: '钩子。' },
+      ],
+    }],
+    ['gs_equation_save', {
+      title: 'host-validator-全非法',
+      entries: [{ name: '守秤员', topic: '不存在的类别', pathPrimary: '财富', detail: '太短', hooks: '' }],
+    }],
     // OFFLINE: the wiki submodule is stubbed out, so this exercises the shell's
     // wiki-unavailable degraded branch (all 7 required keys present) with no I/O.
     ['gs_update', { datasets: ['aeons'] }],
@@ -392,10 +408,10 @@ test('unload disposes every registration; a reload leaves the registry consisten
   const mod = await import(pathToFileURL(SHELL_PATH).href)
   const { ctx, record } = makeCtx()
   mod.apply(ctx, { workspace })
-  assert.equal(record.tools.length, 9)
+  assert.equal(record.tools.length, 10)
   assert.equal(record.sections.length, 1)
   assert.equal(record.commands.length, 1)
-  assert.equal(record.live.size, 11, `应有 11 个生效注册，实际 ${JSON.stringify([...record.live])}`)
+  assert.equal(record.live.size, 12, `应有 12 个生效注册（10 工具 + 1 提示段 + 1 命令），实际 ${JSON.stringify([...record.live])}`)
 
   for (const dispose of record.disposers) dispose?.()
   assert.deepEqual([...record.live], [], '卸载后不应残留任何注册')
@@ -405,7 +421,7 @@ test('unload disposes every registration; a reload leaves the registry consisten
   // reload (the host's recovery path) must return to exactly one registration set
   const second = makeCtx()
   mod.apply(second.ctx, { workspace })
-  assert.equal(second.record.tools.length, 9, '重载不得重复注册')
+  assert.equal(second.record.tools.length, 10, '重载不得重复注册')
   assert.equal(second.record.commands.length, 1)
   assert.equal(second.record.sections.length, 1)
   rmSync(workspace, { recursive: true, force: true })

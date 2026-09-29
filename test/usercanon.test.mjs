@@ -9,7 +9,6 @@
  */
 import assert from 'node:assert/strict'
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
-import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import test from 'node:test'
 import { pathToFileURL } from 'node:url'
@@ -24,6 +23,9 @@ import {
 } from '../lib/usercanon.mjs'
 
 const ROOT = join(import.meta.dirname, '..')
+// 受限沙箱下系统 temp 不可写（EPERM）：临时目录统一放在工作区内。
+mkdirSync(join(ROOT, '.tmp-tests'), { recursive: true })
+const tmpdir = () => join(ROOT, '.tmp-tests')
 const SHELL_PATH = join(ROOT, 'lib', 'shell.js')
 
 /** Write a user-canon file into a fresh workspace; returns that workspace. */

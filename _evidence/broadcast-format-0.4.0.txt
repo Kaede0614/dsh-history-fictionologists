@@ -1,0 +1,149 @@
+================================================================================
+星际构史播报 格式口径变更 — 0.4.0 验证证据
+日期：2026-09-27
+触发：用户评审三条修改意见（不写「第X条消息」；「晚上好」后补过渡句；报头人声随机）
+================================================================================
+
+背景：插件内建模版（lib/shell.js 系统提示段落 + lib/digest.js FORMAT_TEMPLATE）
+原先硬编码「女声：第一条消息。……」「男声：第二条消息。……」并固定女声开场。
+本次把三条口径写进内建模版，四处同步（shell.js / digest.js / BRIEF.md §8 / README.md），
+并把裁定记录在 hsr-worldview-cache/user-canon.json 的 broadcast-format-rules。
+
+--------------------------------------------------------------------------------
+改动清单
+--------------------------------------------------------------------------------
+lib/shell.js          STYLE_GUIDE 的「星际构史播报」段落（新模版 + 播报纪律三句）
+lib/digest.js         FORMAT_TEMPLATE 常量 + broadcastDigest 的三条语体要点 + 小节标题
+BRIEF.md              §8 功能 3 模版与口径
+README.md             功能 3 模版与口径
+test/missions.test.mjs 模版断言改新值；新增负向断言「模板中不得再出现『第一条消息』」
+_evidence/run-missions.mjs  证据脚本对照 BRIEF 的期望模版同步（历史 *.txt 输出保持原样）
+package.json          0.3.0 → 0.4.0（按语义化版本表「改变默认行为 → minor」）
+CHANGELOG.md          新增 0.4.0 段落
+hsr-worldview-cache/user-canon.json  新增 broadcast-format-rules；修正旧 note 里
+                     「内建模板仍写着第一条消息」这句已过期的描述
+
+--------------------------------------------------------------------------------
+[1] node scripts/check.mjs
+--------------------------------------------------------------------------------
+-- syntax check (18 modules) --
+  OK    lib\digest.js  (30087 bytes)
+  OK    lib\shell.js  (87237 bytes)
+  ... (全部 18 个模块 OK，syntax failures: 0)
+
+-- offline test suite (node --test, auto-discovery) --
+ℹ tests 175
+ℹ pass 174
+ℹ fail 0
+ℹ skipped 1
+ℹ duration_ms 1523.0549
+
+RESULT: PASS (syntax failures: 0, test exit: 0)
+
+--------------------------------------------------------------------------------
+[2] FORMAT_TEMPLATE 实际值（从 lib/digest.js 导入，非目测）
+--------------------------------------------------------------------------------
+command:
+  node --input-type=module -e "import { broadcastDigest } from './lib/digest.js';
+    const d = broadcastDigest({ workspace: process.cwd() });
+    console.log('ok=' + d.ok); console.log(d.formatTemplate);
+    console.log('includes 第一条消息 ? ' + d.formatTemplate.includes('第一条消息'));"
+
+output:
+  ok=true
+  （音乐）
+
+  〈报头人声，女声或男声随机〉：这里是星际和平播报，观众朋友们晚上好。
+  〈另一位〉：晚上好。
+  〈报头人声〉：欢迎收听今天的星际和平播报节目：
+
+  〈另一位〉：……
+  〈报头人声〉：……
+  〈另一位〉：……
+
+  〈轮到的那一位〉：本次播报到此结束，请在指定时间收听下一周期的星际和平播报。
+  （音乐）
+  includes 第一条消息 ? false
+
+--------------------------------------------------------------------------------
+[3] 从「部署位置」导入（BRIEF §9 第 2 条；profile 里是 junction）
+--------------------------------------------------------------------------------
+profiles\web\node_modules\dsh-history-fictionologists
+  link   : Junction -> C:\Users\masha\Desktop\hsr-history-fictionologists
+  version: 0.4.0
+
+command:
+  node --input-type=module -e "const m = await import('file:///C:/Users/masha/.dsh/profiles/
+    web/node_modules/dsh-history-fictionologists/lib/shell.js'); ..."
+
+output:
+  name      : dsh-history-fictionologists
+  inject    : ["commands","tools","systemPrompt"]
+  apply     : function
+  Config!=null: true
+
+--------------------------------------------------------------------------------
+[4] node scripts/release.mjs --keep --allow-dirty（PLAN ONLY，未写任何远端）
+--------------------------------------------------------------------------------
+  package      dsh-history-fictionologists@0.4.0
+  mode         PLAN ONLY (nothing will be written)
+  tarball      dsh-history-fictionologists-0.4.0.tgz — 23 files, 150.3 kB
+               (read-back verified byte-for-byte against disk)
+  RESULT: PLAN OK (nothing written)  [0 API steps]
+  tarball: C:\Users\masha\Desktop\hsr-history-fictionologists\dsh-history-fictionologists-0.4.0.tgz
+
+--------------------------------------------------------------------------------
+[5] 制品（tarball）内的标记检查 —— 解包比对，不看源码
+--------------------------------------------------------------------------------
+command:
+  tar -xzf dsh-history-fictionologists-0.4.0.tgz -C <tmp> lib/digest.js lib/shell.js
+  Select-String -Pattern '第一条消息' / '欢迎收听今天的星际和平播报节目' / '女声或男声随机'
+
+output:
+  digest.js  第一条消息=1  过渡句=2  随机报头=1
+  shell.js   第一条消息=0  过渡句=1  随机报头=1
+
+  注：digest.js 里的 1 次「第一条消息」是解释性注释（说明旧序号已被用户裁定移除），
+      不是模版行；shell.js 为 0。
+
+包内 shell.js 第 158 行起（逐字）：
+  **星际构史播报**：约 800–1200 字、3–5 条新闻，格式固定（报头人声随机，其余逐字遵守）：
+  ```
+  （音乐）
+
+  〈报头人声，女声或男声随机〉：这里是星际和平播报，观众朋友们晚上好。
+  〈另一位〉：晚上好。
+  〈报头人声〉：欢迎收听今天的星际和平播报节目：
+
+  〈另一位〉：……
+  〈报头人声〉：……
+  〈另一位〉：……
+
+  〈轮到的那一位〉：本次播报到此结束，请在指定时间收听下一周期的星际和平播报。
+  （音乐）
+  ```
+  > 播报纪律：不写「第X条消息」这类序号前缀，每条新闻直接从内容展开；「晚上好」之后必须有过渡句；
+  > 报头人声可女声可男声（随机），选定后全篇严格女声／男声交替；报道对象是星球、地区、派系
+  > 与它们身上发生的事件，不是某个普通个人的轶事。
+
+--------------------------------------------------------------------------------
+[6] user-canon 层（三条裁定，作用域 *）
+--------------------------------------------------------------------------------
+command:
+  node --input-type=module -e "import { readUserCanon, matchUserCanon } from './lib/usercanon.mjs'; ..."
+
+output:
+  ok: true | count: 3 | updatedAt: 2026-09-27T19:05:00.000Z | warnings: []
+    - aeons-oroboros-sealed | dataset=aeon | 「贪饕」，奥博洛斯
+    - broadcast-no-godman-maker-subject | dataset=* | 星际构史播报的题材口径
+    - broadcast-format-rules | dataset=* | 星际构史播报的格式口径
+
+--------------------------------------------------------------------------------
+[7] 生效条件（未执行，需用户决定）
+--------------------------------------------------------------------------------
+插件以 junction 形式安装（dsh-profile-web 的 dependencies：
+"dsh-history-fictionologists": "link:C:/Users/masha/Desktop/hsr-history-fictionologists"），
+因此源码改动已经是部署位置的内容，无需重装。但系统提示是在进程启动时组合的：
+本会话（2026-09-27 启动）里注入的仍是旧模版。要让它对**新会话**生效，需重启 dsh 进程；
+按团队守则「本机用户日常实例只读」，本次未重启用户正在使用的实例。
+在重启之前，user-canon.json 的两条裁定（作用域 *）持续把新口径带给模型。

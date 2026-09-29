@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Offline test suite for the wiki data layer (BRIEF §9).
  *
  * Zero network: every extractor is replayed against the already-downloaded pages
@@ -9,8 +9,7 @@
  * Run: node --test test/wiki.test.mjs
  */
 import assert from 'node:assert/strict'
-import { existsSync, mkdtempSync, readFileSync, rmSync } from 'node:fs'
-import { tmpdir } from 'node:os'
+import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync } from 'node:fs'
 import { join } from 'node:path'
 import { test } from 'node:test'
 import { WikiClient } from '../lib/wiki/client.mjs'
@@ -21,6 +20,9 @@ import { read, sampleAll, status, update } from '../lib/wiki/index.mjs'
 import { field, parseTemplate, templateFields, wikitextToText } from '../lib/wiki/wikitext.mjs'
 
 const ROOT = join(import.meta.dirname, '..')
+// 受限沙箱下系统 temp 不可写（EPERM）：临时目录统一放在工作区内。
+mkdirSync(join(ROOT, '.tmp-tests'), { recursive: true })
+const tmpdir = () => join(ROOT, '.tmp-tests')
 const PROBE = join(ROOT, '_probe', 'html')
 
 /** Entry counts measured against the frozen offline fixtures (2026-09 snapshot). */

@@ -204,7 +204,7 @@ emit('  --- markdown verbatim ---')
 emit(eq.markdown.split('\n').map((line) => `  ${line}`).join('\n'))
 const bc = report('broadcastDigest(fixture)', digest.broadcastDigest({ workspace: fixtureRoot }), 'markdown')
 emit(`  entryCount=${bc.entryCount} speakers=${JSON.stringify(bc.speakers)} formatTemplateChars=${bc.formatTemplate.length} markdownChars=${bc.markdown.length}`)
-emit(`  formatTemplate === BRIEF §8 功能 3 ? ${bc.formatTemplate === ['（音乐）', '', '女声：这里是星际和平播报，观众朋友们晚上好。', '男声：晚上好。', '', '女声：第一条消息。……', '男声：第二条消息。……', '', '女声：本次播报到此结束，请在指定时间收听下一周期的星际和平播报。', '（音乐）'].join('\n')}`)
+emit(`  formatTemplate === BRIEF §8 功能 3 ? ${bc.formatTemplate === ['（音乐）', '', '〈报头人声，女声或男声随机〉：这里是星际和平播报，观众朋友们晚上好。', '〈另一位〉：晚上好。', '〈报头人声〉：欢迎收听今天的星际和平播报节目：', '', '〈另一位〉：……', '〈报头人声〉：……', '〈另一位〉：……', '', '〈轮到的那一位〉：本次播报到此结束，请在指定时间收听下一周期的星际和平播报。', '（音乐）'].join('\n')}`)
 emit('  --- markdown verbatim ---')
 emit(bc.markdown.split('\n').map((line) => `  ${line}`).join('\n'))
 

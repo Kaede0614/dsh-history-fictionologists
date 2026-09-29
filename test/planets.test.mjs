@@ -1,4 +1,4 @@
-/**
+﻿/**
  * 「星球制造机」契约测试（离线，无宿主、无网络）。
  *
  * 覆盖四层：
@@ -9,12 +9,14 @@
  */
 import assert from 'node:assert/strict'
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
-import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import test from 'node:test'
 import { pathToFileURL } from 'node:url'
 
 const ROOT = join(import.meta.dirname, '..')
+// 受限沙箱下系统 temp 不可写（EPERM）：临时目录统一放在工作区内。
+mkdirSync(join(ROOT, '.tmp-tests'), { recursive: true })
+const tmpdir = () => join(ROOT, '.tmp-tests')
 
 const planetsMod = await import(pathToFileURL(join(ROOT, 'lib', 'planets.mjs')).href)
 const shellMod = await import(pathToFileURL(join(ROOT, 'lib', 'shell.js')).href)
@@ -419,7 +421,7 @@ test('apply 注册三个星球工具，且输出 schema 形状合法', async () 
     const record = await boot(workspace)
     const names = record.tools.map((tool) => tool.name).sort()
     assert.deepEqual(names, [
-      'gs_digest', 'gs_missions', 'gs_planet_reset', 'gs_planet_save', 'gs_planets',
+      'gs_digest', 'gs_equation_save', 'gs_missions', 'gs_planet_reset', 'gs_planet_save', 'gs_planets',
       'gs_read', 'gs_save', 'gs_setup', 'gs_update',
     ])
     for (const name of ['gs_planets', 'gs_planet_save', 'gs_planet_reset']) {
@@ -606,7 +608,7 @@ test('renderSetup 对手工构造的旧值（无 planets 键）不抛异常', ()
 // ---------------------------------------------------------------------------
 // 4. /gs 协议与系统提示
 // ---------------------------------------------------------------------------
-test('/gs 协议：第 1 步有四个功能，收尾依次问「并入」与「重置」', async () => {
+test('/gs 协议：第 1 步有五个功能，收尾依次问「并入」与「重置」', async () => {
   await withWorkspace(async (workspace) => {
     const { ctx } = makeCtx()
     await shellMod.apply(ctx, { workspace })
@@ -630,8 +632,9 @@ test('/gs 协议：第 1 步有四个功能，收尾依次问「并入」与「�
     assert.equal(followed.length, 1)
     const text = followed[0].content[0].text
 
-    assert.match(text, /四个选项逐字为/)
+    assert.match(text, /五个选项逐字为/)
     assert.match(text, /4\) 星球制造机/)
+    assert.match(text, /5\) 虚构差分方程/)
     assert.match(text, /· 功能 4：先 gs_planets/)
     assert.match(text, /① 生成结束后用 ask_user_question 问/)
     assert.match(text, /gs_planet_save/)
@@ -639,6 +642,7 @@ test('/gs 协议：第 1 步有四个功能，收尾依次问「并入」与「�
     assert.match(text, /gs_planet_reset\(confirm=true\)/)
     assert.match(text, /星球列表：原始 27 颗/)
     assert.ok(!/三个选项逐字为/.test(text), '旧的三选项文案必须消失')
+    assert.ok(!/四个选项逐字为/.test(text), '旧的四选项文案必须消失')
     assertLossless(result, '/gs result(planets)')
   })
 })
@@ -649,6 +653,6 @@ test('系统提示总则：包含星球制造机格式与两问纪律', () => {
   assert.match(guide, /【星域名（English Name）】/)
   assert.match(guide, /gs_planet_save/)
   assert.match(guide, /gs_planet_reset/)
-  assert.match(guide, /四个功能的输出格式/)
-  assert.match(guide, /星神纪律（四个功能共同适用/)
+  assert.match(guide, /五个功能的输出格式/)
+  assert.match(guide, /星神纪律（五个功能共同适用/)
 })

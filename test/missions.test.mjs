@@ -8,7 +8,6 @@
  */
 import assert from 'node:assert/strict'
 import { existsSync, mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs'
-import { tmpdir } from 'node:os'
 import { join, resolve } from 'node:path'
 import { after, describe, it } from 'node:test'
 
@@ -28,6 +27,9 @@ import {
 } from '../lib/digest.js'
 
 const ROOT = resolve(import.meta.dirname, '..')
+// 受限沙箱下系统 temp 不可写（EPERM）：临时目录统一放在工作区内。
+mkdirSync(join(ROOT, '.tmp-tests'), { recursive: true })
+const tmpdir = () => join(ROOT, '.tmp-tests')
 const CFG = { workspace: ROOT }
 const MAX_JSON = 200 * 1024
 const MAX_DIGEST = 12000
@@ -419,7 +421,9 @@ describe('real workspace: happy path', () => {
     assert.ok(broadcast.markdown.length > 0)
     // The format template is static knowledge, so it survives even without a cache.
     assert.ok(broadcast.formatTemplate.includes('（音乐）'))
-    assert.ok(broadcast.formatTemplate.includes('女声：这里是星际和平播报'))
+    assert.ok(broadcast.formatTemplate.includes('这里是星际和平播报，观众朋友们晚上好。'))
+    assert.ok(broadcast.formatTemplate.includes('欢迎收听今天的星际和平播报节目：'))
+    assert.ok(!broadcast.formatTemplate.includes('第一条消息'), '序号前缀已被用户裁定移除')
   })
 })
 
@@ -513,16 +517,18 @@ describe('synthetic cache: digest happy path', () => {
       [
         '（音乐）',
         '',
-        '女声：这里是星际和平播报，观众朋友们晚上好。',
-        '男声：晚上好。',
+        '〈报头人声，女声或男声随机〉：这里是星际和平播报，观众朋友们晚上好。',
+        '〈另一位〉：晚上好。',
+        '〈报头人声〉：欢迎收听今天的星际和平播报节目：',
         '',
-        '女声：第一条消息。……',
-        '男声：第二条消息。……',
+        '〈另一位〉：……',
+        '〈报头人声〉：……',
+        '〈另一位〉：……',
         '',
-        '女声：本次播报到此结束，请在指定时间收听下一周期的星际和平播报。',
+        '〈轮到的那一位〉：本次播报到此结束，请在指定时间收听下一周期的星际和平播报。',
         '（音乐）',
       ].join('\n'),
-      'formatTemplate must match BRIEF §8 功能 3 verbatim',
+      'formatTemplate must match BRIEF §8 功能 3（报头人声随机，其余逐字照用）',
     )
     assert.ok(result.markdown.includes(result.formatTemplate))
   })
