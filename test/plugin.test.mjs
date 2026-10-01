@@ -122,10 +122,11 @@ test('apply registers /gs, nine tools and one prompt section', async () => {
   assert.match(section.text, /方程一览/)
   assert.match(section.text, /本次播报到此结束/)
   assert.match(section.text, /星神不出场/, '系统提示段落必须带上星神纪律')
-  // 功能 5（虚构差分方程）的四条硬口径必须在系统提示里逐字出现
+  // 功能 5（虚构差分方程）的硬口径必须在系统提示里逐字出现
   assert.match(section.text, /虚构差分方程/)
   assert.match(section.text, /人物·职业\/身份/, '系统提示必须列出五类主题')
-  assert.match(section.text, /鱼类与鸟类不少于 2 条、其中鸟类最多 1 条/)
+  assert.match(section.text, /生物类不受条数限制/, '生物类已豁免单类上限，系统提示必须写明')
+  assert.doesNotMatch(section.text, /鱼类与鸟类不少于/, '鱼鸟比重限制已删除')
   assert.match(section.text, /不写游戏机制/)
 
   // every registered tool must carry a描述 and a well-formed output schema
@@ -331,5 +332,56 @@ test('/gs 协议把星神纪律一并交给模型', async () => {
   assert.match(text, /星神与令使不得作为出场角色/)
   assert.match(text, /命途归属只作气质标签/)
   assert.ok(!/再 gs_read 取星神\//.test(text), '功能 1 不应再把「星神」列为取材主角')
+  rmSync(workspace, { recursive: true, force: true })
+})
+
+/**
+ * 输出格式是用户逐次评审敲定的产品契约。功能 1「神人制造机」与功能 5「虚构差分方程」
+ * 必须共用**同一套 Markdown 版式**：`## 名称` / 〔主题类别〕命途归属 / 详细设定 /
+ * 可能的故事方向，段间空一行，名称不带【】，「一句话简介」不再单独成段。
+ * 任一侧被改回旧版式，这两条用例就应当失败。
+ */
+test('功能 1 与功能 5 的系统提示共用同一套 Markdown 版式', async () => {
+  const mod = await loadPlugin()
+  const guide = mod.__internals.STYLE_GUIDE
+
+  assert.match(guide, /## 灵感名称/, '功能 1 的名称要写成二级标题')
+  assert.match(guide, /## 方程名称/, '功能 5 的名称要写成二级标题')
+  assert.match(guide, /〔人物·职业\/身份〕命途归属：〈主命途〉\/〈次命途〉/, '功能 1 固定标注人物类主题')
+  assert.match(guide, /〔主题类别〕命途归属：〈主命途〉\/〈次命途〉/, '功能 5 标注五类主题之一')
+  assert.ok(!guide.includes('【灵感名称】') && !guide.includes('【方程名称】'), '名称不再用【】包裹')
+  // 功能 4「星球制造机」仍保留「一句话简介」字段，所以只对功能 1 那一段判定：
+  // 段首到「构史文集」之间的格式块里不该再出现独立的「一句话简介：」行。
+  const inspirationBlock = guide.slice(guide.indexOf('**神人制造机**'), guide.indexOf('**构史文集**'))
+  assert.ok(inspirationBlock.length > 0, '功能 1 的格式块应当存在')
+  assert.ok(!/^一句话简介：/m.test(inspirationBlock), '「一句话简介」不再单独成段（并入详细设定首句）')
+  assert.match(inspirationBlock, /详细设定：.*谁 \/ 在哪 \/ 干什么/, '功能 1 的首句要求写进详细设定')
+})
+
+test('/gs 协议把统一版式交给功能 1 与功能 5', async () => {
+  const mod = await loadPlugin()
+  const workspace = mkdtempSync(join(tmpdir(), 'hsf-gs-layout-'))
+  const { ctx } = makeCtx()
+  await mod.apply(ctx, { workspace })
+
+  const followed = []
+  const result = await mod.__internals.runGsCommand(
+    { commandId: 'test-gs-layout', rawInput: '', attachments: [], signal: AbortSignal.timeout(20_000),
+      agent: { followup: (message) => followed.push(message) } },
+    {
+      cfg: { ...mod.__internals.DEFAULTS, workspace },
+      workspace: () => workspace,
+      logger: { warn: () => {}, info: () => {} },
+      createUserMessage: (input) => ({ kind: 'user-message', ...input }),
+    },
+  )
+
+  assert.equal(result.kind, 'success')
+  assert.equal(followed.length, 1)
+  const text = followed[0].content[0].text
+  assert.match(text, /## 灵感名称/, '功能 1 的协议文本要写二级标题版式')
+  assert.match(text, /## 方程名称/, '功能 5 的协议文本要写二级标题版式')
+  assert.match(text, /〔人物·职业\/身份〕命途归属/, '功能 1 须固定标注人物类主题')
+  assert.ok(!text.includes('【灵感名称】') && !text.includes('【方程名称】'), '协议里不应再保留【】版式')
   rmSync(workspace, { recursive: true, force: true })
 })

@@ -2,6 +2,81 @@
 
 本插件遵循 [Semantic Versioning](https://semver.org/lang/zh-CN/)。
 
+## 0.6.0 — 2026-10-01
+
+**版式统一：功能 1「神人制造机」与功能 5「虚构差分方程」共用同一套 Markdown 输出格式**（用户评审，本次修订）。
+
+- **功能 1 的新版式**：`## 灵感名称` → 空行 → `〔人物·职业/身份〕命途归属：〈主〉/〈次〉`
+  → 空行 → `详细设定：…` → 空行 → `可能的故事方向：…`。
+  名称不再用【】包裹；**「一句话简介」取消**，它承载的前提（谁 / 在哪 / 干什么）改为写进
+  「详细设定」首句——这样功能 1 与功能 5 的条目逐字同构，可以直接拼进同一份文档。
+- **功能 5 的版式同步**：`【方程名称】` → `## 方程名称`，其余三段不变。
+  `【` / `】` 本来就在 `lib/equations.mjs` 的 `MECHANIC_TERMS` 里，旧版式等于让产出格式与
+  自家校验器互相矛盾（名称带方括号会被逐条拒收）。
+- 落点：系统提示 `STYLE_GUIDE` 的两个格式块与「功能 1 / 功能 5 共用版式」说明、
+  `/gs` 第 3 步协议里功能 1 与功能 5 两条执行指令、[`lib/equations.mjs`](<lib/equations.mjs>)
+  的模块注释与落盘文件版式说明、[`test/plugin.test.mjs`](<test/plugin.test.mjs>)（新增两条用例钉住版式，
+  含「一句话简介不得单独成段」）、[README.md](README.md)、
+  [`docs/fiction-equation.md`](<docs/fiction-equation.md>)、[`docs/github-description.md`](<docs/github-description.md>)。
+- **未改**：功能 4「星球制造机」仍是【星域名（English Name）】+ 一句话简介的版式（本次只点功能 1 与功能 5）；
+  [`BRIEF.md`](<BRIEF.md>) 按本仓库惯例**保留原文不改**——它是写作期规格，勘误以代码与 `docs/` 为准；
+  `_evidence/` 下的历史证据脚本（`check-prompt-section.mjs`、`requirements-audit.mjs`、`where-style.mjs`）
+  仍在断言【灵感名称】旧版式，**保留原样**（它们是各轮评审的原始记录，不是现役检查）。
+- 版本：这是用户可见的产出格式变更，按本仓库的语义化版本表属 **minor**，本次定为 `0.6.0`
+  （`package.json` 已同步；本次**只同步代码与文档，不建 Release、不打 tag**）。
+- 验证：`lib/` 全 17 个模块 `node --check` 0 失败；9 个测试文件按**逐文件进程内运行**
+  （本机沙箱下 `node --test` 的 runner 会 `spawn EPERM`，故改用 `node <file>`）共
+  204 用例 / 203 通过 / 1 跳过 / **0 失败**，本轮新增 3 条用例：2 条版式用例见
+  [`test/plugin.test.mjs`](<test/plugin.test.mjs>)、1 条「贪饕命途」用例见
+  [`test/equations.test.mjs`](<test/equations.test.mjs>)；`.tmp-tests/probe-layout.mjs` 打印出的
+  功能 1 / 功能 5 两个格式块已人工核对。
+
+**命途白名单新增「贪饕」**（用户评审 2026-09-30）。
+
+- `EQUATION_PATHS` 增加 `贪饕`（现共 14 个命途）：既有 **212 条**方程里没有一条以它为主命途，
+  但世界观里这条命途要写的东西是存在的——吞噬 / 饥饿 / 永无餍足；此前这类条目会被
+  「主命途非法」直接拒收，等于整类题材写不了。
+- **这不是放宽星神纪律**：`奥博洛斯` 仍在 `STAR_GUARDIAN_TERMS` 拒收词表里，那位吞噬者
+  只能以旧传闻 / 遗物 / 过期教条出场。`test/equations.test.mjs` 新增一条用例同时钉住两面
+  （贪饕可作主命途、也可作次命途 + 点名奥博洛斯仍被拒收）。
+- 落点：[`lib/equations.mjs`](<lib/equations.mjs>)（白名单与注释）、
+  [`test/equations.test.mjs`](<test/equations.test.mjs>)、
+  [`docs/fiction-equation.md`](<docs/fiction-equation.md>)、[README.md](README.md)。
+
+**规则放宽：生物类条数与鱼鸟比例**（用户评审 2026-09-30，两条口径变更）。
+
+- **删除鱼类 / 鸟类的比重限制**：原「鱼类与鸟类合计 ≥2 条」「鸟类 ≤1 条」两条提示级口径整条删除。
+  这两条等于把生物配额钉死在「一条鱼 + 一只鸟」上，每批生物条目几乎全是鱼鸟；现在鱼类 / 鸟类
+  只出现在自检报告的构成统计里，**不产生任何判定**。
+- **删除生物类条目数量上限**：`MAX_PER_TOPIC`（单类 ≤2 条）不再约束生物类，生物类可以占满整批；
+  人物 / 装置 / 概念 / 派系四类仍受 ≤2 条约束，五类「不得为 0 条」不变。
+- 连带修正：`equationCount` 的描述不再写「不要用 5 条」——5 条（每类各 1 条）在旧口径下不合法，
+  删掉鱼鸟限制后已完全合法；系统提示与 `/gs` 协议同步。
+- 落点：[`lib/equations.mjs`](<lib/equations.mjs>)（删 `MIN_FISH_BIRD` / `MAX_BIRDS`，新增 `BIO_TOPIC`
+  与 `describeEquationRules().maxPerTopicExempt`）、[`lib/shell.js`](<lib/shell.js>)（`rules` 输出 schema 的
+  `minFishBird` / `maxBirds` → `maxPerTopicExempt`）、
+  [`scripts/check-fiction-equations.cjs`](<scripts/check-fiction-equations.cjs>)、
+  [`test/equations.test.mjs`](<test/equations.test.mjs>)、[`test/plugin.test.mjs`](<test/plugin.test.mjs>)、
+  [README.md](README.md)、[`docs/fiction-equation.md`](<docs/fiction-equation.md>)。
+- **仍保留**：虫类 ≤ 四成（提示级）、生物名 ≥3 字、不得沿用既有构词、生僻字（生物名）≤1 条、
+  星神纪律与「正文不写游戏机制」拒收。
+
+**文档勘误（同批补齐）**
+
+- [README.md](README.md) 的测试数字与实测不符：原写「200 个离线用例」与「201 用例 / 200 pass」，
+  逐文件实跑 9 个测试文件是 **204 用例 / 203 pass / 0 fail / 1 skip**，本次改正（另一处
+  「全部 26 条」也随之改为 27 条）。
+- [`lib/equations.mjs`](<lib/equations.mjs>) 生僻字词表的注释原写「仅提示」，与代码不符：
+  `rareCount > MAX_RARE_CHARS` 走的是 `errors`（**批级 FAIL**，自 0.5.0 的 `HEAD` 起就是这样），
+  0.5.0 的 CHANGELOG 正文也把它写成了「按提示定级」。注释与
+  [`docs/fiction-equation.md`](<docs/fiction-equation.md>) 的规则表本次改正；
+  **0.5.0 的历史条目保留原文不改**——那是当时的记录，正确的口径以本节与那份规格为准。
+- [`docs/github-description.md`](<docs/github-description.md>) 事实来源行仍停在 v0.3.0 /
+  9 个工具，「About 短描述」还是 0.2.1 版（只讲三种产出，既没有星球制造机、也没有虚构差分方程）。
+  已刷新为 v0.6.0 / 10 个工具 / 五种产出，并去掉那段「等有 0.3.0 文案再同步」的待办说明。
+  **线上仓库 About 的替换没做**：它要走 REST API，而本机没有 GitHub token（`GH_TOKEN` 与
+  `.gh-token` 都不存在，`gh` CLI 也没装），只能由你复制本文档 §1 的文案去仓库设置里贴。
+
 ## 0.5.0 — 2026-09-29
 
 **新功能：虚构差分方程**（`/gs` 第 1 步的第 5 项）——模仿「神人制造机」的写法虚构新的差分方程，

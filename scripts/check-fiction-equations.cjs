@@ -83,12 +83,13 @@ for (const e of entries) {
   rows.push({ e, chars, used: [...new Set(used)], problems, warns });
 }
 
-// 7) 主题配比
+// 7) 主题配比（生物类豁免单类上限：2026-09-30 用户口径，条数不设上限）
+const BIO_TOPIC = '生物·物种/衍生体';
 const ratioProblems = [];
 for (const t of TOPICS) {
   const n = counts[t] || 0;
   if (n === 0) ratioProblems.push(`类别 ${t} 为 0 条（软约束：不许空类）`);
-  if (n > 2 && entries.length >= 5) ratioProblems.push(`类别 ${t} 有 ${n} 条，超过单类上限 2（软约束）`);
+  if (n > 2 && t !== BIO_TOPIC && entries.length >= 5) ratioProblems.push(`类别 ${t} 有 ${n} 条，超过单类上限 2（软约束）`);
 }
 if (entries.some(e => !TOPICS.includes(e.topic))) ratioProblems.push('存在未归类的主题标签');
 

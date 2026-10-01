@@ -1,11 +1,13 @@
 # GitHub 仓库描述文案（dsh-history-fictionologists）
 
-> 事实来源：`package.json`（v0.3.0 / MIT / `private: true`）、`README.md`、`lib/shell.js`（9 个 `gs_*` 工具）、
-> 实跑 `node --test`（171 用例 / 170 pass / 1 skip / 0 fail，2026-09-27）。
+> 事实来源：`package.json`（v0.6.0 / MIT / `private: true`）、`README.md`、`lib/shell.js`（10 个 `gs_*` 工具）、
+> 逐文件实跑测试（204 用例 / 203 pass / 1 skip / 0 fail，2026-10-01）。
 > 所有数字都可回查，未编造。
 >
-> ⚠️ 下一节「About 短描述」的两条中文文案是 **0.2.1 版**的（只讲三种产出），
-> 若要随 0.3.0 一起同步仓库 About，请先把「星球制造机」写进去再 `--sync-meta`。
+> ⚠️ 线上仓库 About 目前在用 **0.2.1 版**文案（只讲三种产出）。本文档已改成含
+> 「星球制造机」与「虚构差分方程」的版本，但**替换动作没做**：`--sync-meta` 要 GitHub token，
+> 本机 `GH_TOKEN` / `.gh-token` 都不存在、`gh` 也没装。要改就复制 §1 的文案粘进仓库设置，
+> 或提供 token 后自行调 `PATCH /repos/:owner/:repo`（不必为此建 Release）。
 >
 > 本文只是**文案备料**：About 描述、Topics、长描述、电梯陈述，复制粘贴用。
 
@@ -13,23 +15,25 @@
 
 ## 1. About 短描述（GitHub 上限 350 字符）
 
-**主选（中文，105 字符）**
+**主选（中文，125 字符）**
 
 ```
-基于《崩坏：星穹铁道》官方世界观的 DSH 二创插件（/gs）：神人制造机出科幻灵感、构史文集写短篇、星际构史播报编新闻；12 个 Wiki 数据源增量抓取并本地缓存，抓不到就自动回退缓存。非营利二创，MIT。
+基于《崩坏：星穹铁道》官方世界观的 DSH 二创插件（/gs）：神人制造机出科幻灵感、构史文集写短篇、星际构史播报编新闻、星球制造机造新星球、虚构差分方程编方程；12 个 Wiki 数据源增量抓取并本地缓存，抓不到就自动回退缓存。非营利二创，MIT。
 ```
 
-**备用（中文，92 字符，更短）**
+**备用（中文，115 字符，更短）**
 
 ```
-基于《崩坏：星穹铁道》官方世界观的 DSH 二创插件（/gs）：灵感、短篇、虚构播报三种产出，12 个 Wiki 数据源增量抓取 + 本地缓存 + 用户设定裁定层。非营利二创，MIT。
+基于《崩坏：星穹铁道》官方世界观的 DSH 二创插件（/gs）：五种产出——科幻灵感 / 短篇 / 虚构播报 / 新星球 / 虚构差分方程，12 个 Wiki 数据源增量抓取 + 本地缓存 + 用户设定裁定层。非营利二创，MIT。
 ```
 
-**英文（226 字符，面向英文检索）**
+**英文（260 字符，面向英文检索）**
 
 ```
-A DeepSeek Harness (DSH) plugin (/gs) for Honkai: Star Rail fan fiction - generates sci-fi story ideas, short stories and fake interstellar news from 12 incrementally cached Bwiki datasets. Unofficial, non-commercial fan work.
+A DeepSeek Harness (DSH) plugin (/gs) for Honkai: Star Rail fan fiction - generates sci-fi story ideas, short stories, fake interstellar news, new planets and fictional equations from 12 incrementally cached Bwiki datasets. Unofficial, non-commercial fan work.
 ```
+
+> 上面的字符数是本篇写作时用 `[string].Length` 数出来的（UTF-16 码元），三条都远低于 GitHub 的 350 上限。
 
 ---
 
@@ -63,11 +67,15 @@ chinese
 把《崩坏：星穹铁道》的官方世界观当作素材库，用一个 `/gs` 命令产出二创内容。
 风格基调参考游戏内「差分宇宙 · 方程一览」——**用最严肃的格式包装最离谱的内容**。
 
-三种产出：
+五种产出：
 
-- **神人制造机**：3–5 条全新科幻灵感（灵感名称 / 命途归属 / 一句话简介 / 详细设定 / 可能的故事方向）
+- **神人制造机**：3–5 条全新科幻灵感（`##` 名称 / 〔人物·职业/身份〕命途归属 / 详细设定 / 可能的故事方向）
 - **构史文集**：默认约 2000 字短篇，先读既有故事避免冲突，参考「书架」书籍风格
 - **星际构史播报**：3–5 条虚构新闻，固定「女声 / 男声 +（音乐）」播报格式，800–1200 字
+- **星球制造机**：参照「星球列表」（27 颗原始星球 + 已并入的增量）造**新**星球，
+  严禁重名、严禁把既有星球改个说法再交一遍；用户确认后才并入列表，也能重置回原始 27 颗
+- **虚构差分方程**：一次 3–10 条（默认 6）全新方程，叙事对象覆盖人物 / 生物 / 装置场所 /
+  概念事件 / 派系机构五类；逐条校验后落盘，被拒条目如实回报原因
 
 数据分两层，这是它和普通「提示词模板」的区别：
 
@@ -149,7 +157,7 @@ node scripts/release.mjs --publish --sync-meta
 ```powershell
 # --- 万一以后装了 gh，这两条仍然可用（本仓库不需要）---
 gh repo create Kaede0614/dsh-history-fictionologists --public --source=. --push `
-  --description "基于《崩坏：星穹铁道》官方世界观的 DSH 二创插件（/gs）：神人制造机出科幻灵感、构史文集写短篇、星际构史播报编新闻；12 个 Wiki 数据源增量抓取并本地缓存，抓不到就自动回退缓存。非营利二创，MIT。"
+  --description "基于《崩坏：星穹铁道》官方世界观的 DSH 二创插件（/gs）：神人制造机出科幻灵感、构史文集写短篇、星际构史播报编新闻、星球制造机造新星球、虚构差分方程编方程；12 个 Wiki 数据源增量抓取并本地缓存，抓不到就自动回退缓存。非营利二创，MIT。"
 
 gh api -X PUT repos/Kaede0614/dsh-history-fictionologists/topics `
   -f names[]=dsh -f names[]=dsh-plugin -f names[]=deepseek-harness `

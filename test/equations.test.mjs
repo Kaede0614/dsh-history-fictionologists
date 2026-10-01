@@ -5,7 +5,7 @@
  *   1. 纯函数层——直接断言 `lib/equations.mjs` 的校验规则（不碰磁盘、不碰宿主）；
  *   2. 工具层——用 mock ctx 调 `gs_equation_save`，断言落盘、拒收、降级三条路径。
  *
- * 规则口径见 docs/fiction-equation.md（用户评审 2026-09-29 历次修订）。
+ * 规则口径见 docs/fiction-equation.md（用户评审 2026-09-29 / 2026-09-30 历次修订）。
  */
 import assert from 'node:assert/strict'
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs'
@@ -64,9 +64,9 @@ const clamp = (text, n) => {
 /**
  * 一个可落盘的最小合法批次：**6 条**。
  *
- * 为什么不是 5 条：配额要求「每类 ≥1 条」「单类 ≤2 条」与「鱼类+鸟类 ≥2 条」
- * 三者无法在 5 条时同时满足——5 条时生物类只容得下 1 条，鱼鸟必然只有 1 条。
- * 所以功能 5 的默认条数是 6（人物 1 / 生物 2 / 装置 1 / 概念 1 / 派系 1）。
+ * 默认条数 6 只是配额习惯（人物 1 / 生物 2 / 装置 1 / 概念 1 / 派系 1）；
+ * 规则上 5 条同样合法（每类各 1 条）。2026-09-30 起**生物类条数不设上限**、
+ * 鱼 / 鸟的比例也不再有任何约束，所以配额表只剩「每类 ≥1、非生物类 ≤2」两条硬约束。
  */
 const VALID_FIVE = [
   { name: '守秤员', topic: '人物·职业/身份', pathPrimary: '均衡', pathSecondary: '存护', detail: clamp('他在度量衡总署校正标准质量，自己却没有一杆秤。', 130), hooks: '库里一台天平开始自己报数。' },
@@ -98,14 +98,15 @@ test('六条批次（人物 1 / 生物 2 / 装置 1 / 概念 1 / 派系 1）通�
   assert.equal(total, result.accepted.length)
 })
 
-test('配额不可兼得时按「提示」处理而不是硬拒（5 条批次仍可写盘）', async () => {
+test('配额：5 条批次（每类各 1 条）合法，且不再提示鱼鸟偏少', async () => {
   const { validateFictionEquations } = await loadEquations()
   const five = [VALID_FIVE[0], VALID_FIVE[1], VALID_FIVE[3], VALID_FIVE[4], VALID_FIVE[5]]
   const result = validateFictionEquations({ entries: five })
   assert.equal(result.ok, true, `5 条（每类 1 条、生物 1 条）应当通过：${result.errors.join('；')}`)
+  assert.deepEqual(result.errors, [])
   assert.ok(
-    result.warnings.some((line) => line.includes('鱼类与鸟类只有 1 条')),
-    `应当提示鱼鸟偏少：${result.warnings.join('；')}`,
+    !result.warnings.some((line) => line.includes('鱼类与鸟类')),
+    `鱼鸟限制已删除，不该再出现相关提示：${result.warnings.join('；')}`,
   )
 })
 
@@ -177,17 +178,20 @@ test('生物类：虫类超过四成被提示（warnings，不是 errors）', as
   assert.ok(result.warnings.some((line) => line.includes('虫类')), `应当有虫类提示：${result.warnings.join('；')}`)
 })
 
-test('生物类：鱼类与鸟类少于 2 条 / 鸟类多于 1 条都按提示处理（不硬拒）', async () => {
+test('生物类：鱼类 / 鸟类比例不再判定（2026-09-30 删除鱼鸟比重限制）', async () => {
   const { validateFictionEquations } = await loadEquations()
-  const tooFew = validateFictionEquations({ skipRatio: true, entries: [
+  const noFishNoBird = validateFictionEquations({ skipRatio: true, entries: [
     { ...VALID_FIVE[1], name: '滤光囊' },
     { ...VALID_FIVE[1], name: '夜航丝' },
     { ...VALID_FIVE[1], name: '盐晶苔' },
     { ...VALID_FIVE[1], name: '里脊云' },
     { ...VALID_FIVE[1], name: '风坠羽' },
   ] })
-  assert.equal(tooFew.ok, true, `全是非鱼非鸟的生物也应放行：${tooFew.errors.join('；')}`)
-  assert.ok(tooFew.warnings.some((line) => line.includes('鱼类与鸟类')), tooFew.warnings.join('；'))
+  assert.equal(noFishNoBird.ok, true, `全是非鱼非鸟的生物也应放行：${noFishNoBird.errors.join('；')}`)
+  assert.ok(
+    !noFishNoBird.warnings.some((line) => line.includes('鱼类与鸟类')),
+    `不该再提示鱼鸟偏少：${noFishNoBird.warnings.join('；')}`,
+  )
 
   const tooManyBirds = validateFictionEquations({ skipRatio: true, entries: [
     { ...VALID_FIVE[1], name: '滤膜鸥' },
@@ -196,8 +200,31 @@ test('生物类：鱼类与鸟类少于 2 条 / 鸟类多于 1 条都按提示�
     { ...VALID_FIVE[1], name: '滤光囊' },
     { ...VALID_FIVE[1], name: '里脊云' },
   ] })
-  assert.equal(tooManyBirds.ok, true, `鸟类偏多应提示而非拒绝：${tooManyBirds.errors.join('；')}`)
-  assert.ok(tooManyBirds.warnings.some((line) => line.includes('鸟类')), tooManyBirds.warnings.join('；'))
+  assert.equal(tooManyBirds.ok, true, `鸟类偏多也应放行：${tooManyBirds.errors.join('；')}`)
+  assert.ok(
+    !tooManyBirds.warnings.some((line) => line.includes('鸟类')),
+    `不该再提示鸟类偏多：${tooManyBirds.warnings.join('；')}`,
+  )
+})
+
+test('配额：生物类条数不设上限（单类 ≤2 只约束其余四类）', async () => {
+  const { validateFictionEquations } = await loadEquations()
+  const entries = [
+    VALID_FIVE[0],                                   // 人物 1
+    { ...VALID_FIVE[1], name: '滞纳鲤' },             // 生物 4 条
+    { ...VALID_FIVE[1], name: '值夜鸮' },
+    { ...VALID_FIVE[1], name: '补票鳝' },
+    { ...VALID_FIVE[1], name: '盐晶苔' },
+    VALID_FIVE[3], VALID_FIVE[4], VALID_FIVE[5],      // 装置 / 概念 / 派系 各 1
+  ]
+  const result = validateFictionEquations({ entries })
+  assert.equal(result.ok, true, `生物 4 条不该再被单类上限拦下：${result.errors.join('；')}`)
+  assert.equal(result.counts['生物·物种/衍生体'], 4)
+  assert.ok(
+    !result.errors.some((line) => line.includes('生物·物种/衍生体') && line.includes('超过单类上限')),
+    `生物类已豁免单类上限：${result.errors.join('；')}`,
+  )
+  assert.equal(result.bio.total, 4)
 })
 
 test('星神纪律：星神 / 令使相关词被拒', async () => {
@@ -259,6 +286,35 @@ test('主题或命途非法被拒', async () => {
   const samePath = validateFictionEquations({ entries: [{ ...VALID_FIVE[0], pathSecondary: '均衡' }] })
   assert.equal(samePath.ok, false)
   assert.ok(samePath.rejected[0].reason.includes('主次命途相同'))
+})
+
+/**
+ * 「贪饕」是 2026-09-30 用户评审放宽的命途（0.6.0 生效）：既有 212 条方程里
+ * 没有一条以它为主命途，放开是为了能写吞噬 / 饥饿 / 永无餍足题材。
+ * 它只加白名单，**不放宽星神纪律**——「奥博洛斯」仍在拒收词表里。
+ */
+test('命途白名单：贪饕可用作主 / 次命途，但不是放宽星神纪律的借口', async () => {
+  const { validateFictionEquations, EQUATION_PATHS } = await loadEquations()
+  assert.ok(EQUATION_PATHS.includes('贪饕'), '贪饕必须在命途白名单里')
+
+  const asPrimary = validateFictionEquations({
+    skipRatio: true,
+    entries: [{ ...VALID_FIVE[0], pathPrimary: '贪饕', pathSecondary: '存护' }],
+  })
+  assert.equal(asPrimary.ok, true, `贪饕作主命途应当通过：${asPrimary.errors.join('；')}`)
+
+  const asSecondary = validateFictionEquations({
+    skipRatio: true,
+    entries: [{ ...VALID_FIVE[0], pathPrimary: '均衡', pathSecondary: '贪饕' }],
+  })
+  assert.equal(asSecondary.ok, true, `贪饕作次命途应当通过：${asSecondary.errors.join('；')}`)
+
+  const named = validateFictionEquations({
+    skipRatio: true,
+    entries: [{ ...VALID_FIVE[0], pathPrimary: '贪饕', detail: clamp('据说奥博洛斯会回来把这条街吃干净。', 130) }],
+  })
+  assert.equal(named.ok, false, '贪饕命途不等于可以点名星神')
+  assert.ok(named.rejected[0].reason.includes('星神'), named.rejected[0].reason)
 })
 
 test('空批次被拒，且不抛错', async () => {
@@ -441,8 +497,9 @@ test('系统提示与 /gs 协议都带上了功能 5 的口径', async () => {
   try {
     const section = record.sections[0].text
     assert.match(section, /功能 5 · 虚构差分方程/)
-    assert.match(section, /每类不得为 0 条，单类不超过 2 条/)
-    assert.match(section, /鱼类与鸟类不少于 2 条、其中鸟类最多 1 条/)
+    assert.match(section, /每类不得为 0 条/)
+    assert.match(section, /生物类不受条数限制/)
+    assert.doesNotMatch(section, /鱼类与鸟类不少于/, '鱼鸟比重限制已删除，系统提示不该再写')
     assert.match(section, /gs_equation_save/)
 
     const followed = []
