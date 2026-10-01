@@ -100,7 +100,9 @@ if (FROM_LINK) {
   const deployed = join(PROFILE, 'node_modules', PLUGIN_NAME)
   const deployedModules = [
     'lib/shell.js', 'lib/resolve.js', 'lib/paths.js', 'lib/missions.js',
-    'lib/digest.js', 'lib/usercanon.mjs', 'lib/wiki/index.mjs', 'lib/wiki/cache.mjs',
+    'lib/digest.js', 'lib/usercanon.mjs', 'lib/planets.mjs', 'lib/equations.mjs',
+    'lib/release-kit.mjs', 'lib/atomgit-kit.mjs',
+    'lib/wiki/index.mjs', 'lib/wiki/cache.mjs',
     'lib/wiki/client.mjs', 'lib/wiki/datasets.mjs', 'lib/wiki/extract.mjs',
     'lib/wiki/html.mjs', 'lib/wiki/wikitext.mjs',
   ]
